@@ -4,6 +4,8 @@ import Supabase
 
 @MainActor
 final class ProfileSetupViewModel: ObservableObject {
+    static let educationLevels = ["Primary school", "High school", "Diploma", "Degree", "Master", "PhD"]
+
     @Published var fullName = ""
     @Published var dateOfBirth = Calendar.current.date(byAdding: .year, value: -25, to: Date()) ?? Date()
     @Published var gender: GenderType = .male
@@ -11,7 +13,7 @@ final class ProfileSetupViewModel: ObservableObject {
     @Published var bio = ""
     @Published var jobTitle = ""
     @Published var companyName = ""
-    @Published var educationLevel = ""
+    @Published var educationLevel = "Degree"
     @Published var schoolName = ""
     @Published var heightCm = 170
     @Published var relationshipGoal: RelationshipIntention = .serious_relationship

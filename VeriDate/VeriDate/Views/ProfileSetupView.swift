@@ -31,7 +31,11 @@ struct ProfileSetupView: View {
                 Section("Work & Education") {
                     TextField("Job title", text: $vm.jobTitle)
                     TextField("Company", text: $vm.companyName)
-                    TextField("Education level", text: $vm.educationLevel)
+                    Picker("Education level", selection: $vm.educationLevel) {
+                        ForEach(ProfileSetupViewModel.educationLevels, id: \.self) { level in
+                            Text(level).tag(level)
+                        }
+                    }
                     TextField("School / University", text: $vm.schoolName)
                 }
 
