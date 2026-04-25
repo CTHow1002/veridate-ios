@@ -145,6 +145,17 @@ final class VerificationUploadViewModel: ObservableObject {
             let submitted_at: String
         }
 
+        struct LegacyVerificationSubmissionPayload: Encodable {
+            let user_id: UUID
+            let status: String
+            let selfie_file_path: String
+            let id_document_file_path: String
+            let job_proof_file_path: String
+            let education_proof_file_path: String
+            let rejection_reason: String?
+            let submitted_at: String
+        }
+
         let submittedAt = ISO8601DateFormatter().string(from: Date())
         let payload = VerificationSubmissionPayload(
             user_id: userId,
@@ -165,11 +176,35 @@ final class VerificationUploadViewModel: ObservableObject {
                 .execute()
         } catch {
             let underlying = error.localizedDescription
-            guard underlying.localizedCaseInsensitiveContains("liveness_prompt") else {
+            guard underlying.localizedCaseInsensitiveContains("liveness_prompt") ||
+                    underlying.localizedCaseInsensitiveContains("selfie_video_file_path") else {
                 throw VerificationUploadError.submissionRow(underlying: underlying)
             }
 
-            let fallbackPayload = VerificationSubmissionPayloadWithoutPrompt(
+            if underlying.localizedCaseInsensitiveContains("selfie_video_file_path") {
+                let legacyPayload = LegacyVerificationSubmissionPayload(
+                    user_id: userId,
+                    status: VerificationStatus.pending.rawValue,
+                    selfie_file_path: files.selfieVideoPath,
+                    id_document_file_path: files.idDocumentPath,
+                    job_proof_file_path: files.jobProofPath,
+                    education_proof_file_path: files.educationProofPath,
+                    rejection_reason: nil,
+                    submitted_at: submittedAt
+                )
+
+                do {
+                    try await supabase
+                        .from("verification_submissions")
+                        .upsert(legacyPayload, onConflict: "user_id")
+                        .execute()
+                    return
+                } catch {
+                    throw VerificationUploadError.submissionRow(underlying: error.localizedDescription)
+                }
+            }
+
+            let promptFallbackPayload = VerificationSubmissionPayloadWithoutPrompt(
                 user_id: userId,
                 status: VerificationStatus.pending.rawValue,
                 selfie_video_file_path: files.selfieVideoPath,
@@ -183,7 +218,7 @@ final class VerificationUploadViewModel: ObservableObject {
             do {
                 try await supabase
                     .from("verification_submissions")
-                    .upsert(fallbackPayload, onConflict: "user_id")
+                    .upsert(promptFallbackPayload, onConflict: "user_id")
                     .execute()
             } catch {
                 throw VerificationUploadError.submissionRow(underlying: error.localizedDescription)
