@@ -101,6 +101,26 @@ add column if not exists created_at timestamptz not null default now();
 alter table public.admin_users
 add column if not exists last_login_at timestamptz;
 
+-- Older VeriDate experiments may have created admin_users.email as a
+-- required column. The dashboard now keys admins by username only.
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'admin_users'
+      and column_name = 'email'
+  ) then
+    alter table public.admin_users alter column email drop not null;
+
+    update public.admin_users
+    set username = lower(email)
+    where username is null
+      and email is not null;
+  end if;
+end $$;
+
 create unique index if not exists admin_users_username_key
 on public.admin_users (username);
 
