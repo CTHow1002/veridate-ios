@@ -10,10 +10,22 @@ struct VerificationUploadView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Selfie") {
-                    PhotosPicker(selection: $selfieItem, matching: .images) {
-                        Label(vm.selfieData == nil ? "Choose Selfie Photo" : "Selfie Photo Added", systemImage: "camera")
+                if session.currentProfile?.verificationStatus == .rejected {
+                    Section("Review Feedback") {
+                        if vm.isLoadingRejectionReason {
+                            ProgressView("Loading feedback...")
+                        } else if let rejectionReason = vm.rejectionReason, !rejectionReason.isEmpty {
+                            Label(rejectionReason, systemImage: "exclamationmark.circle")
+                                .foregroundStyle(.red)
+                        } else {
+                            Text("Your verification was rejected. Please upload updated documents and submit again.")
+                                .foregroundStyle(.secondary)
+                        }
                     }
+                }
+
+                Section("Selfie") {
+                    SelfiePickerRow(hasSelfie: vm.selfieData != nil, selfieItem: $selfieItem)
                 }
 
                 Section("Documents") {
@@ -79,6 +91,14 @@ struct VerificationUploadView: View {
                     await loadSelfie(from: item)
                 }
             }
+            .task(id: session.currentUserId) {
+                guard session.currentProfile?.verificationStatus == .rejected,
+                      let userId = session.currentUserId else {
+                    return
+                }
+
+                await vm.loadRejectionReason(userId: userId)
+            }
         }
     }
 
@@ -105,6 +125,17 @@ struct VerificationUploadView: View {
             vm.errorMessage = nil
         } catch {
             vm.errorMessage = "Could not read that selfie photo. \(error.localizedDescription)"
+        }
+    }
+}
+
+private struct SelfiePickerRow: View {
+    let hasSelfie: Bool
+    @Binding var selfieItem: PhotosPickerItem?
+
+    var body: some View {
+        PhotosPicker(selection: $selfieItem, matching: .images) {
+            Label(hasSelfie ? "Selfie Photo Added" : "Choose Selfie Photo", systemImage: "camera")
         }
     }
 }

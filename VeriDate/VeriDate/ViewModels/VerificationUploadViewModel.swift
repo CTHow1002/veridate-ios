@@ -10,12 +10,40 @@ final class VerificationUploadViewModel: ObservableObject {
     @Published var jobProofURL: URL?
     @Published var educationProofURL: URL?
     @Published var isSubmitting = false
+    @Published var isLoadingRejectionReason = false
+    @Published var rejectionReason: String?
     @Published var errorMessage: String?
 
     private let supabase = SupabaseManager.shared.client
 
     var canSubmit: Bool {
         selfieData != nil && idDocumentURL != nil && jobProofURL != nil && educationProofURL != nil && !isSubmitting
+    }
+
+    func loadRejectionReason(userId: UUID) async {
+        struct RejectedSubmission: Decodable {
+            let rejection_reason: String?
+        }
+
+        isLoadingRejectionReason = true
+        defer { isLoadingRejectionReason = false }
+
+        do {
+            let submissions: [RejectedSubmission] = try await supabase
+                .from("verification_submissions")
+                .select("rejection_reason")
+                .eq("user_id", value: userId)
+                .eq("status", value: VerificationStatus.rejected.rawValue)
+                .order("reviewed_at", ascending: false)
+                .limit(1)
+                .execute()
+                .value
+
+            rejectionReason = submissions.first?.rejection_reason
+        } catch {
+            rejectionReason = nil
+            errorMessage = "Could not load rejection reason. \(error.localizedDescription)"
+        }
     }
 
     func submitVerification(userId: UUID) async -> Bool {
@@ -29,6 +57,7 @@ final class VerificationUploadViewModel: ObservableObject {
         defer { isSubmitting = false }
 
         do {
+            rejectionReason = nil
             let selfiePath = try await uploadData(
                 selfieData,
                 path: "\(userId.uuidString)/selfie/\(selfieFileName)",
