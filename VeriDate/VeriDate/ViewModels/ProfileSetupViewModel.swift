@@ -5,7 +5,7 @@ import Supabase
 @MainActor
 final class ProfileSetupViewModel: ObservableObject {
     @Published var fullName = ""
-    @Published var dateOfBirth = ""
+    @Published var dateOfBirth = Calendar.current.date(byAdding: .year, value: -25, to: Date()) ?? Date()
     @Published var gender: GenderType = .male
     @Published var city = ""
     @Published var bio = ""
@@ -13,12 +13,19 @@ final class ProfileSetupViewModel: ObservableObject {
     @Published var companyName = ""
     @Published var educationLevel = ""
     @Published var schoolName = ""
-    @Published var heightCm = ""
+    @Published var heightCm = 170
     @Published var relationshipGoal: RelationshipIntention = .serious_relationship
     @Published var errorMessage: String?
     @Published var isSaving = false
 
     private let supabase = SupabaseManager.shared.client
+    private static let birthDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
 
     func save(userId: UUID) async -> Bool {
         errorMessage = nil
@@ -47,7 +54,7 @@ final class ProfileSetupViewModel: ObservableObject {
 
         let payload = UpdateProfile(
             full_name: fullName.trimmingCharacters(in: .whitespacesAndNewlines),
-            date_of_birth: optionalText(dateOfBirth),
+            date_of_birth: Self.birthDateFormatter.string(from: dateOfBirth),
             gender: gender.rawValue,
             city: city.trimmingCharacters(in: .whitespacesAndNewlines),
             bio: bio.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -55,7 +62,7 @@ final class ProfileSetupViewModel: ObservableObject {
             company_name: companyName.trimmingCharacters(in: .whitespacesAndNewlines),
             education_level: educationLevel.trimmingCharacters(in: .whitespacesAndNewlines),
             school_name: schoolName.trimmingCharacters(in: .whitespacesAndNewlines),
-            height_cm: Int(heightCm),
+            height_cm: heightCm,
             relationship_goal: relationshipGoal.rawValue
         )
 
@@ -72,8 +79,10 @@ final class ProfileSetupViewModel: ObservableObject {
         }
     }
 
-    private func optionalText(_ text: String) -> String? {
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? nil : trimmed
+    var birthDateRange: ClosedRange<Date> {
+        let calendar = Calendar.current
+        let oldest = calendar.date(byAdding: .year, value: -100, to: Date()) ?? Date()
+        let youngest = calendar.date(byAdding: .year, value: -18, to: Date()) ?? Date()
+        return oldest...youngest
     }
 }

@@ -9,14 +9,23 @@ struct ProfileSetupView: View {
             Form {
                 Section("Basic") {
                     TextField("Full name", text: $vm.fullName)
-                    TextField("Date of birth, e.g. 1995-10-02", text: $vm.dateOfBirth)
+                    DatePicker(
+                        "Date of birth",
+                        selection: $vm.dateOfBirth,
+                        in: vm.birthDateRange,
+                        displayedComponents: .date
+                    )
                     Picker("Gender", selection: $vm.gender) {
                         ForEach(GenderType.allCases, id: \.self) { gender in
                             Text(gender.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
                         }
                     }
                     TextField("City", text: $vm.city)
-                    TextField("Height in cm", text: $vm.heightCm)
+                    Picker("Height", selection: $vm.heightCm) {
+                        ForEach(120...220, id: \.self) { height in
+                            Text("\(height) cm").tag(height)
+                        }
+                    }
                 }
 
                 Section("Work & Education") {
