@@ -17,6 +17,15 @@ The Supabase service role key is used only in server-side route handlers and ser
 4. Add your admin username to the allowlist:
 
 ```sql
+alter table public.admin_users
+add column if not exists username text;
+
+alter table public.admin_users
+add column if not exists is_active boolean not null default true;
+
+create unique index if not exists admin_users_username_key
+on public.admin_users (username);
+
 do $$
 begin
   if exists (
