@@ -6,6 +6,7 @@ export type Profile = {
   company_name?: string | null;
   education_level?: string | null;
   school_name?: string | null;
+  verification_status?: string | null;
 };
 
 export type SignedFile = {
@@ -13,13 +14,18 @@ export type SignedFile = {
   url: string;
 };
 
+export type LivenessVideo = SignedFile & {
+  prompt: string | null;
+};
+
 export type PendingSubmission = {
   id: string;
   userId: string;
   submittedAt: string | null;
+  livenessPrompt: string | null;
   profile: Profile;
   files: {
-    selfie: SignedFile | null;
+    selfieVideo: LivenessVideo | null;
     idDocument: SignedFile | null;
     jobProof: SignedFile | null;
     educationProof: SignedFile | null;

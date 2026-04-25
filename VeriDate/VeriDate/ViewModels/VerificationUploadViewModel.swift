@@ -4,8 +4,9 @@ import Supabase
 
 @MainActor
 final class VerificationUploadViewModel: ObservableObject {
-    @Published var selfieData: Data?
-    @Published var selfieFileName = "selfie.jpg"
+    @Published var selfieVideoData: Data?
+    @Published var selfieVideoFileName = "selfie-video.mov"
+    @Published var livenessPrompt = "Turn your head slightly left, then look back at the camera."
     @Published var idDocumentURL: URL?
     @Published var jobProofURL: URL?
     @Published var educationProofURL: URL?
@@ -17,7 +18,7 @@ final class VerificationUploadViewModel: ObservableObject {
     private let supabase = SupabaseManager.shared.client
 
     var canSubmit: Bool {
-        selfieData != nil && idDocumentURL != nil && jobProofURL != nil && educationProofURL != nil && !isSubmitting
+        selfieVideoData != nil && idDocumentURL != nil && jobProofURL != nil && educationProofURL != nil && !isSubmitting
     }
 
     func loadRejectionReason(userId: UUID) async {
@@ -47,8 +48,8 @@ final class VerificationUploadViewModel: ObservableObject {
     }
 
     func submitVerification(userId: UUID) async -> Bool {
-        guard let selfieData, let idDocumentURL, let jobProofURL, let educationProofURL else {
-            errorMessage = "Add all four verification files before submitting."
+        guard let selfieVideoData, let idDocumentURL, let jobProofURL, let educationProofURL else {
+            errorMessage = "Add your verification video and all three documents before submitting."
             return false
         }
 
@@ -58,11 +59,11 @@ final class VerificationUploadViewModel: ObservableObject {
 
         do {
             rejectionReason = nil
-            let selfiePath = try await uploadData(
-                selfieData,
-                path: "\(userId.uuidString)/selfie/\(selfieFileName)",
-                contentType: "image/jpeg",
-                label: "selfie photo"
+            let selfieVideoPath = try await uploadData(
+                selfieVideoData,
+                path: "\(userId.uuidString)/selfie-video/\(selfieVideoFileName)",
+                contentType: "video/quicktime",
+                label: "selfie verification video"
             )
             let idDocumentPath = try await uploadFile(idDocumentURL, userId: userId, folder: "id-document", label: "ID document")
             let jobProofPath = try await uploadFile(jobProofURL, userId: userId, folder: "job-proof", label: "job proof")
@@ -71,7 +72,7 @@ final class VerificationUploadViewModel: ObservableObject {
             try await createVerificationSubmission(
                 userId: userId,
                 files: UploadedVerificationFiles(
-                    selfiePath: selfiePath,
+                    selfieVideoPath: selfieVideoPath,
                     idDocumentPath: idDocumentPath,
                     jobProofPath: jobProofPath,
                     educationProofPath: educationProofPath
@@ -124,7 +125,8 @@ final class VerificationUploadViewModel: ObservableObject {
         struct VerificationSubmissionPayload: Encodable {
             let user_id: UUID
             let status: String
-            let selfie_file_path: String
+            let selfie_video_file_path: String
+            let liveness_prompt: String
             let id_document_file_path: String
             let job_proof_file_path: String
             let education_proof_file_path: String
@@ -135,7 +137,8 @@ final class VerificationUploadViewModel: ObservableObject {
         let payload = VerificationSubmissionPayload(
             user_id: userId,
             status: VerificationStatus.pending.rawValue,
-            selfie_file_path: files.selfiePath,
+            selfie_video_file_path: files.selfieVideoPath,
+            liveness_prompt: livenessPrompt,
             id_document_file_path: files.idDocumentPath,
             job_proof_file_path: files.jobProofPath,
             education_proof_file_path: files.educationProofPath,
@@ -163,6 +166,10 @@ final class VerificationUploadViewModel: ObservableObject {
             return "image/heic"
         case "pdf":
             return "application/pdf"
+        case "mov":
+            return "video/quicktime"
+        case "mp4", "m4v":
+            return "video/mp4"
         default:
             return "application/octet-stream"
         }
@@ -181,7 +188,7 @@ final class VerificationUploadViewModel: ObservableObject {
 }
 
 private struct UploadedVerificationFiles {
-    let selfiePath: String
+    let selfieVideoPath: String
     let idDocumentPath: String
     let jobProofPath: String
     let educationProofPath: String

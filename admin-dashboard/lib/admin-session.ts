@@ -2,6 +2,7 @@ import "server-only";
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+import { isAdminAllowed } from "@/lib/admin-users";
 import { getSessionConfig } from "@/lib/config";
 
 export const sessionCookieOptions = {
@@ -14,7 +15,7 @@ export const sessionCookieOptions = {
 export function signSession(username: string) {
   const payload = Buffer.from(
     JSON.stringify({
-      username,
+      username: username.trim().toLowerCase(),
       expiresAt: Date.now() + 1000 * 60 * 60 * 8,
     })
   ).toString("base64url");
@@ -23,23 +24,31 @@ export function signSession(username: string) {
 }
 
 export async function isAuthenticated() {
+  return (await getAuthenticatedAdmin()) !== null;
+}
+
+export async function getAuthenticatedAdmin() {
   const cookieStore = await cookies();
   const cookie = cookieStore.get("admin_session")?.value;
-  if (!cookie) return false;
+  if (!cookie) return null;
 
   const [payload, signature] = cookie.split(".");
-  if (!payload || !signature) return false;
+  if (!payload || !signature) return null;
 
-  if (!safeEqual(signature, sign(payload))) return false;
+  if (!safeEqual(signature, sign(payload))) return null;
 
   try {
     const session = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as {
       username?: string;
       expiresAt?: number;
     };
-    return session.username === getSessionConfig().adminUsername && Number(session.expiresAt) > Date.now();
+    const username = session.username?.trim().toLowerCase();
+    if (!username || Number(session.expiresAt) <= Date.now()) return null;
+    if (!(await isAdminAllowed(username))) return null;
+
+    return username;
   } catch {
-    return false;
+    return null;
   }
 }
 

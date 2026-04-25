@@ -5,7 +5,7 @@ import UniformTypeIdentifiers
 struct VerificationUploadView: View {
     @EnvironmentObject var session: SessionViewModel
     @StateObject private var vm = VerificationUploadViewModel()
-    @State private var selfieItem: PhotosPickerItem?
+    @State private var selfieVideoItem: PhotosPickerItem?
 
     var body: some View {
         NavigationStack {
@@ -24,8 +24,12 @@ struct VerificationUploadView: View {
                     }
                 }
 
-                Section("Selfie") {
-                    SelfiePickerRow(hasSelfie: vm.selfieData != nil, selfieItem: $selfieItem)
+                Section("Video Verification") {
+                    Text(vm.livenessPrompt)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    SelfieVideoPickerRow(hasVideo: vm.selfieVideoData != nil, selfieVideoItem: $selfieVideoItem)
                 }
 
                 Section("Documents") {
@@ -86,9 +90,9 @@ struct VerificationUploadView: View {
                     Task { await session.signOut() }
                 }
             }
-            .onChange(of: selfieItem) { _, item in
+            .onChange(of: selfieVideoItem) { _, item in
                 Task {
-                    await loadSelfie(from: item)
+                    await loadSelfieVideo(from: item)
                 }
             }
             .task(id: session.currentUserId) {
@@ -112,30 +116,30 @@ struct VerificationUploadView: View {
         }
     }
 
-    private func loadSelfie(from item: PhotosPickerItem?) async {
+    private func loadSelfieVideo(from item: PhotosPickerItem?) async {
         do {
             guard let item else { return }
             guard let data = try await item.loadTransferable(type: Data.self) else {
-                vm.errorMessage = "Could not read that selfie photo."
+                vm.errorMessage = "Could not read that verification video."
                 return
             }
 
-            vm.selfieData = data
-            vm.selfieFileName = "\(UUID().uuidString).jpg"
+            vm.selfieVideoData = data
+            vm.selfieVideoFileName = "\(UUID().uuidString).mov"
             vm.errorMessage = nil
         } catch {
-            vm.errorMessage = "Could not read that selfie photo. \(error.localizedDescription)"
+            vm.errorMessage = "Could not read that verification video. \(error.localizedDescription)"
         }
     }
 }
 
-private struct SelfiePickerRow: View {
-    let hasSelfie: Bool
-    @Binding var selfieItem: PhotosPickerItem?
+private struct SelfieVideoPickerRow: View {
+    let hasVideo: Bool
+    @Binding var selfieVideoItem: PhotosPickerItem?
 
     var body: some View {
-        PhotosPicker(selection: $selfieItem, matching: .images) {
-            Label(hasSelfie ? "Selfie Photo Added" : "Choose Selfie Photo", systemImage: "camera")
+        PhotosPicker(selection: $selfieVideoItem, matching: .videos) {
+            Label(hasVideo ? "Verification Video Added" : "Choose Short Video", systemImage: "video")
         }
     }
 }

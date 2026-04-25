@@ -1,8 +1,8 @@
 # VeriDate Admin Dashboard
 
-Simple private Next.js dashboard for reviewing pending VeriDate verification submissions.
+Simple private Next.js dashboard for reviewing pending VeriDate verification submissions, including short video verification clips.
 
-The Supabase service role key is used only in server-side route handlers and server-only libraries. It is never sent to browser/client components.
+The Supabase service role key is used only in server-side route handlers and server-only libraries. It is never sent to browser/client components. Private verification files are shown through short-lived Supabase signed URLs.
 
 ## Local Setup
 
@@ -14,13 +14,21 @@ The Supabase service role key is used only in server-side route handlers and ser
    - `ADMIN_PASSWORD`
    - `ADMIN_SESSION_SECRET`
 3. If needed, run `supabase.sql` in the Supabase SQL Editor.
-4. Install dependencies:
+4. Add your admin username to the allowlist:
+
+```sql
+insert into public.admin_users (username)
+values ('admin')
+on conflict (username) do update set is_active = true;
+```
+
+5. Install dependencies:
 
 ```bash
 npm install
 ```
 
-5. Start the dashboard:
+6. Start the dashboard:
 
 ```bash
 npm run dev

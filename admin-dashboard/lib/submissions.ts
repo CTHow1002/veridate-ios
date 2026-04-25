@@ -7,8 +7,11 @@ import type { PendingSubmission, Profile, SignedFile } from "@/lib/types";
 type VerificationSubmission = {
   id: string;
   user_id: string;
+  status?: string | null;
   submitted_at?: string | null;
   created_at?: string | null;
+  selfie_video_file_path?: string | null;
+  liveness_prompt?: string | null;
   selfie_file_path?: string | null;
   selfie_path?: string | null;
   selfie_file?: string | null;
@@ -38,6 +41,7 @@ export async function getPendingSubmissions(): Promise<PendingSubmission[]> {
         id: submission.id,
         userId: submission.user_id,
         submittedAt: submission.submitted_at || submission.created_at || null,
+        livenessPrompt: submission.liveness_prompt || null,
         profile,
         files: await signedFileLinks(submission),
       };
@@ -47,11 +51,15 @@ export async function getPendingSubmissions(): Promise<PendingSubmission[]> {
 
 export async function reviewSubmission(id: string, status: "verified" | "rejected", rejectionReason?: string) {
   const [submission] = await supabaseRequest<VerificationSubmission[]>(
-    `/rest/v1/verification_submissions?id=eq.${encodeURIComponent(id)}&select=*`
+    `/rest/v1/verification_submissions?id=eq.${encodeURIComponent(id)}&select=id,user_id,status`
   );
 
   if (!submission) {
     throw new Error("Submission not found.");
+  }
+
+  if (submission.status !== "pending") {
+    throw new Error("This submission is no longer pending.");
   }
 
   await supabaseRequest(`/rest/v1/verification_submissions?id=eq.${encodeURIComponent(id)}`, {
@@ -69,21 +77,36 @@ export async function reviewSubmission(id: string, status: "verified" | "rejecte
       verification_status: status,
     },
   });
+
+  const [profile] = await supabaseRequest<Pick<Profile, "verification_status">[]>(
+    `/rest/v1/profiles?id=eq.${encodeURIComponent(submission.user_id)}&select=verification_status&limit=1`
+  );
+
+  if (profile?.verification_status !== status) {
+    throw new Error("Review saved, but the user's profile status did not update. Check the profiles table.");
+  }
 }
 
 async function fetchProfilesById(userIds: string[]) {
   if (userIds.length === 0) return new Map<string, Profile>();
 
   const profiles = await supabaseRequest<Profile[]>(
-    `/rest/v1/profiles?id=in.(${userIds.join(",")})&select=id,full_name,date_of_birth,job_title,company_name,education_level,school_name`
+    `/rest/v1/profiles?id=in.(${userIds.join(",")})&select=id,full_name,date_of_birth,job_title,company_name,education_level,school_name,verification_status`
   );
 
   return new Map(profiles.map((profile) => [profile.id, profile]));
 }
 
 async function signedFileLinks(submission: VerificationSubmission): Promise<PendingSubmission["files"]> {
-  const [selfie, idDocument, jobProof, educationProof] = await Promise.all([
-    signedStorageLink(firstValue([submission.selfie_file_path, submission.selfie_path, submission.selfie_file])),
+  const [selfieVideo, idDocument, jobProof, educationProof] = await Promise.all([
+    signedStorageLink(
+      firstValue([
+        submission.selfie_video_file_path,
+        submission.selfie_file_path,
+        submission.selfie_path,
+        submission.selfie_file,
+      ])
+    ),
     signedStorageLink(
       firstValue([submission.id_document_file_path, submission.id_document_path, submission.id_document_file])
     ),
@@ -98,7 +121,7 @@ async function signedFileLinks(submission: VerificationSubmission): Promise<Pend
   ]);
 
   return {
-    selfie,
+    selfieVideo: selfieVideo ? { ...selfieVideo, prompt: submission.liveness_prompt || null } : null,
     idDocument,
     jobProof,
     educationProof,

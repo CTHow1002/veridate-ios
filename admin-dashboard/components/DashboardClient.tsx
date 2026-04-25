@@ -151,7 +151,7 @@ function SubmissionCard({
         </dl>
 
         <div className="file-grid">
-          <FileLink label="Selfie" file={submission.files.selfie} />
+          <VideoReview file={submission.files.selfieVideo} prompt={submission.livenessPrompt} />
           <FileLink label="ID Document" file={submission.files.idDocument} />
           <FileLink label="Job Proof" file={submission.files.jobProof} />
           <FileLink label="Education Proof" file={submission.files.educationProof} />
@@ -178,7 +178,29 @@ function SubmissionCard({
   );
 }
 
-function FileLink({ label, file }: { label: string; file: PendingSubmission["files"]["selfie"] }) {
+function VideoReview({
+  file,
+  prompt,
+}: {
+  file: PendingSubmission["files"]["selfieVideo"];
+  prompt: string | null;
+}) {
+  if (!file?.url) {
+    return <span className="missing-file video-review">Video missing</span>;
+  }
+
+  return (
+    <div className="video-review">
+      <video controls preload="metadata" src={file.url} />
+      <p>{prompt || file.prompt || "No liveness prompt saved."}</p>
+      <a href={file.url} title={file.path} target="_blank" rel="noreferrer">
+        Open video
+      </a>
+    </div>
+  );
+}
+
+function FileLink({ label, file }: { label: string; file: PendingSubmission["files"]["idDocument"] }) {
   if (!file?.url) {
     return <span className="missing-file">{label} missing</span>;
   }
