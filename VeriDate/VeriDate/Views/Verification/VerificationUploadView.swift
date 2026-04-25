@@ -1,11 +1,11 @@
-import PhotosUI
 import SwiftUI
+import UIKit
 import UniformTypeIdentifiers
 
 struct VerificationUploadView: View {
     @EnvironmentObject var session: SessionViewModel
     @StateObject private var vm = VerificationUploadViewModel()
-    @State private var selfieVideoItem: PhotosPickerItem?
+    @State private var isShowingCamera = false
 
     var body: some View {
         NavigationStack {
@@ -29,7 +29,16 @@ struct VerificationUploadView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
-                    SelfieVideoPickerRow(hasVideo: vm.selfieVideoData != nil, selfieVideoItem: $selfieVideoItem)
+                    Button {
+                        guard VideoCameraRecorder.isCameraAvailable else {
+                            vm.errorMessage = "Camera is not available on this device. Please test video verification on a real iPhone."
+                            return
+                        }
+
+                        isShowingCamera = true
+                    } label: {
+                        Label(vm.selfieVideoData == nil ? "Record Short Video" : "Retake Verification Video", systemImage: "video")
+                    }
                 }
 
                 Section("Documents") {
@@ -90,10 +99,11 @@ struct VerificationUploadView: View {
                     Task { await session.signOut() }
                 }
             }
-            .onChange(of: selfieVideoItem) { _, item in
-                Task {
-                    await loadSelfieVideo(from: item)
+            .sheet(isPresented: $isShowingCamera) {
+                VideoCameraRecorder(maximumDuration: 6) { videoURL in
+                    loadCapturedSelfieVideo(from: videoURL)
                 }
+                .ignoresSafeArea()
             }
             .task(id: session.currentUserId) {
                 guard session.currentProfile?.verificationStatus == .rejected,
@@ -116,14 +126,9 @@ struct VerificationUploadView: View {
         }
     }
 
-    private func loadSelfieVideo(from item: PhotosPickerItem?) async {
+    private func loadCapturedSelfieVideo(from url: URL) {
         do {
-            guard let item else { return }
-            guard let data = try await item.loadTransferable(type: Data.self) else {
-                vm.errorMessage = "Could not read that verification video."
-                return
-            }
-
+            let data = try Data(contentsOf: url)
             vm.selfieVideoData = data
             vm.selfieVideoFileName = "\(UUID().uuidString).mov"
             vm.errorMessage = nil
@@ -133,13 +138,51 @@ struct VerificationUploadView: View {
     }
 }
 
-private struct SelfieVideoPickerRow: View {
-    let hasVideo: Bool
-    @Binding var selfieVideoItem: PhotosPickerItem?
+private struct VideoCameraRecorder: UIViewControllerRepresentable {
+    static var isCameraAvailable: Bool {
+        UIImagePickerController.isSourceTypeAvailable(.camera)
+    }
 
-    var body: some View {
-        PhotosPicker(selection: $selfieVideoItem, matching: .videos) {
-            Label(hasVideo ? "Verification Video Added" : "Choose Short Video", systemImage: "video")
+    let maximumDuration: TimeInterval
+    let onVideoCaptured: (URL) -> Void
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        picker.sourceType = .camera
+        picker.mediaTypes = [UTType.movie.identifier]
+        picker.cameraCaptureMode = .video
+        picker.videoMaximumDuration = maximumDuration
+        picker.videoQuality = .typeMedium
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onVideoCaptured: onVideoCaptured)
+    }
+
+    final class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        let onVideoCaptured: (URL) -> Void
+
+        init(onVideoCaptured: @escaping (URL) -> Void) {
+            self.onVideoCaptured = onVideoCaptured
+        }
+
+        func imagePickerController(
+            _ picker: UIImagePickerController,
+            didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
+        ) {
+            if let videoURL = info[.mediaURL] as? URL {
+                onVideoCaptured(videoURL)
+            }
+
+            picker.dismiss(animated: true)
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            picker.dismiss(animated: true)
         }
     }
 }
