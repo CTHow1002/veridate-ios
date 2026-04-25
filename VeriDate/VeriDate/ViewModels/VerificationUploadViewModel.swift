@@ -134,6 +134,18 @@ final class VerificationUploadViewModel: ObservableObject {
             let submitted_at: String
         }
 
+        struct VerificationSubmissionPayloadWithoutPrompt: Encodable {
+            let user_id: UUID
+            let status: String
+            let selfie_video_file_path: String
+            let id_document_file_path: String
+            let job_proof_file_path: String
+            let education_proof_file_path: String
+            let rejection_reason: String?
+            let submitted_at: String
+        }
+
+        let submittedAt = ISO8601DateFormatter().string(from: Date())
         let payload = VerificationSubmissionPayload(
             user_id: userId,
             status: VerificationStatus.pending.rawValue,
@@ -143,7 +155,7 @@ final class VerificationUploadViewModel: ObservableObject {
             job_proof_file_path: files.jobProofPath,
             education_proof_file_path: files.educationProofPath,
             rejection_reason: nil,
-            submitted_at: ISO8601DateFormatter().string(from: Date())
+            submitted_at: submittedAt
         )
 
         do {
@@ -152,7 +164,30 @@ final class VerificationUploadViewModel: ObservableObject {
                 .upsert(payload, onConflict: "user_id")
                 .execute()
         } catch {
-            throw VerificationUploadError.submissionRow(underlying: error.localizedDescription)
+            let underlying = error.localizedDescription
+            guard underlying.localizedCaseInsensitiveContains("liveness_prompt") else {
+                throw VerificationUploadError.submissionRow(underlying: underlying)
+            }
+
+            let fallbackPayload = VerificationSubmissionPayloadWithoutPrompt(
+                user_id: userId,
+                status: VerificationStatus.pending.rawValue,
+                selfie_video_file_path: files.selfieVideoPath,
+                id_document_file_path: files.idDocumentPath,
+                job_proof_file_path: files.jobProofPath,
+                education_proof_file_path: files.educationProofPath,
+                rejection_reason: nil,
+                submitted_at: submittedAt
+            )
+
+            do {
+                try await supabase
+                    .from("verification_submissions")
+                    .upsert(fallbackPayload, onConflict: "user_id")
+                    .execute()
+            } catch {
+                throw VerificationUploadError.submissionRow(underlying: error.localizedDescription)
+            }
         }
     }
 
