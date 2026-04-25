@@ -109,7 +109,8 @@ async function signedStorageLink(path: string | null): Promise<SignedFile | null
   if (!path) return null;
   if (/^https?:\/\//i.test(path)) return { path, url: path };
 
-  const safePath = path
+  const objectPath = normalizeStoragePath(path);
+  const safePath = objectPath
     .split("/")
     .map((part) => encodeURIComponent(part))
     .join("/");
@@ -123,11 +124,33 @@ async function signedStorageLink(path: string | null): Promise<SignedFile | null
   );
 
   return {
-    path,
-    url: `${getSupabaseConfig().supabaseUrl}${response.signedURL}`,
+    path: objectPath,
+    url: storageObjectUrl(response.signedURL),
   };
 }
 
 function firstValue(values: Array<string | null | undefined>) {
   return values.find(Boolean) || null;
+}
+
+function normalizeStoragePath(path: string) {
+  return path
+    .replace(/^\/+/, "")
+    .replace(/^storage\/v1\/object\/(?:public\/|sign\/)?verification-documents\//, "")
+    .replace(/^object\/(?:public\/|sign\/)?verification-documents\//, "")
+    .replace(/^verification-documents\//, "");
+}
+
+function storageObjectUrl(signedURL: string) {
+  const supabaseUrl = getSupabaseConfig().supabaseUrl.replace(/\/$/, "");
+
+  if (/^https?:\/\//i.test(signedURL)) {
+    return signedURL;
+  }
+
+  if (signedURL.startsWith("/storage/v1/")) {
+    return `${supabaseUrl}${signedURL}`;
+  }
+
+  return `${supabaseUrl}/storage/v1${signedURL.startsWith("/") ? "" : "/"}${signedURL}`;
 }
