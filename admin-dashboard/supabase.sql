@@ -15,6 +15,30 @@ create table if not exists public.verification_submissions (
   unique (user_id)
 );
 
+-- If the table already existed before the admin dashboard was added,
+-- create table if not exists will not add new columns. These keep older
+-- VeriDate projects compatible with the current iOS upload payload.
+alter table public.verification_submissions
+add column if not exists selfie_file_path text;
+
+alter table public.verification_submissions
+add column if not exists id_document_file_path text;
+
+alter table public.verification_submissions
+add column if not exists job_proof_file_path text;
+
+alter table public.verification_submissions
+add column if not exists education_proof_file_path text;
+
+alter table public.verification_submissions
+add column if not exists rejection_reason text;
+
+alter table public.verification_submissions
+add column if not exists submitted_at timestamptz not null default now();
+
+alter table public.verification_submissions
+add column if not exists reviewed_at timestamptz;
+
 alter table public.verification_submissions enable row level security;
 
 drop policy if exists "Users can create own verification submission" on public.verification_submissions;
