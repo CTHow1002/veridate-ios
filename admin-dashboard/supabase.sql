@@ -87,6 +87,23 @@ create table if not exists public.admin_users (
   last_login_at timestamptz
 );
 
+-- If admin_users already existed, create table if not exists will not add
+-- these dashboard columns. Keep this migration safe to rerun.
+alter table public.admin_users
+add column if not exists username text;
+
+alter table public.admin_users
+add column if not exists is_active boolean not null default true;
+
+alter table public.admin_users
+add column if not exists created_at timestamptz not null default now();
+
+alter table public.admin_users
+add column if not exists last_login_at timestamptz;
+
+create unique index if not exists admin_users_username_key
+on public.admin_users (username);
+
 alter table public.admin_users enable row level security;
 
 -- The admin dashboard reads this table only through its server-side service_role key.
