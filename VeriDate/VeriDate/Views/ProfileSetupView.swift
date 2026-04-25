@@ -36,7 +36,7 @@ struct ProfileSetupView: View {
                 }
 
                 Section {
-                    Button("Save & Continue to Verification") {
+                    Button {
                         Task {
                             guard let userId = session.currentUserId else { return }
                             let saved = await vm.save(userId: userId)
@@ -44,7 +44,14 @@ struct ProfileSetupView: View {
                                 await session.loadProfile()
                             }
                         }
+                    } label: {
+                        if vm.isSaving {
+                            ProgressView()
+                        } else {
+                            Text("Save & Continue to Verification")
+                        }
                     }
+                    .disabled(vm.isSaving)
                 }
 
                 if let error = vm.errorMessage {

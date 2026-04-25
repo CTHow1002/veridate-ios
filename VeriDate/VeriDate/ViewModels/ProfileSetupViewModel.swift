@@ -1,7 +1,6 @@
 import Foundation
 import Combine
 import Supabase
-import PostgREST
 
 @MainActor
 final class ProfileSetupViewModel: ObservableObject {
@@ -17,13 +16,24 @@ final class ProfileSetupViewModel: ObservableObject {
     @Published var heightCm = ""
     @Published var relationshipGoal: RelationshipIntention = .serious_relationship
     @Published var errorMessage: String?
+    @Published var isSaving = false
 
     private let supabase = SupabaseManager.shared.client
 
     func save(userId: UUID) async -> Bool {
+        errorMessage = nil
+
+        guard !fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            errorMessage = "Enter your full name before continuing."
+            return false
+        }
+
+        isSaving = true
+        defer { isSaving = false }
+
         struct UpdateProfile: Encodable {
             let full_name: String
-            let date_of_birth: String
+            let date_of_birth: String?
             let gender: String
             let city: String
             let bio: String
@@ -36,15 +46,15 @@ final class ProfileSetupViewModel: ObservableObject {
         }
 
         let payload = UpdateProfile(
-            full_name: fullName,
-            date_of_birth: dateOfBirth,
+            full_name: fullName.trimmingCharacters(in: .whitespacesAndNewlines),
+            date_of_birth: optionalText(dateOfBirth),
             gender: gender.rawValue,
-            city: city,
-            bio: bio,
-            job_title: jobTitle,
-            company_name: companyName,
-            education_level: educationLevel,
-            school_name: schoolName,
+            city: city.trimmingCharacters(in: .whitespacesAndNewlines),
+            bio: bio.trimmingCharacters(in: .whitespacesAndNewlines),
+            job_title: jobTitle.trimmingCharacters(in: .whitespacesAndNewlines),
+            company_name: companyName.trimmingCharacters(in: .whitespacesAndNewlines),
+            education_level: educationLevel.trimmingCharacters(in: .whitespacesAndNewlines),
+            school_name: schoolName.trimmingCharacters(in: .whitespacesAndNewlines),
             height_cm: Int(heightCm),
             relationship_goal: relationshipGoal.rawValue
         )
@@ -57,8 +67,13 @@ final class ProfileSetupViewModel: ObservableObject {
                 .execute()
             return true
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = "Could not save your profile. \(error.localizedDescription)"
             return false
         }
+    }
+
+    private func optionalText(_ text: String) -> String? {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
     }
 }

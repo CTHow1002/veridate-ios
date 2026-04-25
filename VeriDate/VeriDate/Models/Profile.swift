@@ -39,6 +39,14 @@ struct Profile: Identifiable, Codable, Hashable {
     var profilePhotoURL: String?
     var verificationStatus: VerificationStatus
 
+    var hasCompletedBasicProfile: Bool {
+        guard let fullName, !fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return false
+        }
+
+        return true
+    }
+
     enum CodingKeys: String, CodingKey {
         case id
         case fullName = "full_name"
@@ -56,5 +64,62 @@ struct Profile: Identifiable, Codable, Hashable {
         case relationshipGoal = "relationship_goal"
         case profilePhotoURL = "profile_photo_url"
         case verificationStatus = "verification_status"
+    }
+
+    init(
+        id: UUID,
+        fullName: String? = nil,
+        dateOfBirth: String? = nil,
+        age: Int? = nil,
+        gender: GenderType? = nil,
+        city: String? = nil,
+        country: String? = nil,
+        bio: String? = nil,
+        jobTitle: String? = nil,
+        companyName: String? = nil,
+        educationLevel: String? = nil,
+        schoolName: String? = nil,
+        heightCm: Int? = nil,
+        relationshipGoal: RelationshipIntention? = nil,
+        profilePhotoURL: String? = nil,
+        verificationStatus: VerificationStatus = .unsubmitted
+    ) {
+        self.id = id
+        self.fullName = fullName
+        self.dateOfBirth = dateOfBirth
+        self.age = age
+        self.gender = gender
+        self.city = city
+        self.country = country
+        self.bio = bio
+        self.jobTitle = jobTitle
+        self.companyName = companyName
+        self.educationLevel = educationLevel
+        self.schoolName = schoolName
+        self.heightCm = heightCm
+        self.relationshipGoal = relationshipGoal
+        self.profilePhotoURL = profilePhotoURL
+        self.verificationStatus = verificationStatus
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(UUID.self, forKey: .id)
+        fullName = try container.decodeIfPresent(String.self, forKey: .fullName)
+        dateOfBirth = try container.decodeIfPresent(String.self, forKey: .dateOfBirth)
+        age = try container.decodeIfPresent(Int.self, forKey: .age)
+        gender = try container.decodeIfPresent(GenderType.self, forKey: .gender)
+        city = try container.decodeIfPresent(String.self, forKey: .city)
+        country = try container.decodeIfPresent(String.self, forKey: .country)
+        bio = try container.decodeIfPresent(String.self, forKey: .bio)
+        jobTitle = try container.decodeIfPresent(String.self, forKey: .jobTitle)
+        companyName = try container.decodeIfPresent(String.self, forKey: .companyName)
+        educationLevel = try container.decodeIfPresent(String.self, forKey: .educationLevel)
+        schoolName = try container.decodeIfPresent(String.self, forKey: .schoolName)
+        heightCm = try container.decodeIfPresent(Int.self, forKey: .heightCm)
+        relationshipGoal = try container.decodeIfPresent(RelationshipIntention.self, forKey: .relationshipGoal)
+        profilePhotoURL = try container.decodeIfPresent(String.self, forKey: .profilePhotoURL)
+        verificationStatus = try container.decodeIfPresent(VerificationStatus.self, forKey: .verificationStatus) ?? .unsubmitted
     }
 }
