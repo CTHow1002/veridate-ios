@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getAdminConfig } from "@/lib/config";
+import { getSupabaseConfig } from "@/lib/config";
 import { supabaseRequest } from "@/lib/supabase-admin";
 import type { PendingSubmission, Profile, SignedFile } from "@/lib/types";
 
@@ -124,7 +124,7 @@ async function signedStorageLink(path: string | null): Promise<SignedFile | null
 
   return {
     path,
-    url: `${getAdminConfig().supabaseUrl}${response.signedURL}`,
+    url: `${getSupabaseConfig().supabaseUrl}${response.signedURL}`,
   };
 }
 

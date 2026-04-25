@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getAdminConfig } from "@/lib/config";
+import { getSupabaseConfig } from "@/lib/config";
 
 type SupabaseRequestOptions = {
   method?: "GET" | "PATCH" | "POST";
@@ -8,7 +8,7 @@ type SupabaseRequestOptions = {
 };
 
 export async function supabaseRequest<T>(path: string, options: SupabaseRequestOptions = {}) {
-  const config = getAdminConfig();
+  const config = getSupabaseConfig();
   const response = await fetch(`${config.supabaseUrl}${path}`, {
     method: options.method || "GET",
     headers: {

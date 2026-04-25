@@ -2,7 +2,7 @@ import "server-only";
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
-import { getAdminConfig } from "@/lib/config";
+import { getSessionConfig } from "@/lib/config";
 
 export const sessionCookieOptions = {
   httpOnly: true,
@@ -37,14 +37,14 @@ export async function isAuthenticated() {
       username?: string;
       expiresAt?: number;
     };
-    return session.username === getAdminConfig().adminUsername && Number(session.expiresAt) > Date.now();
+    return session.username === getSessionConfig().adminUsername && Number(session.expiresAt) > Date.now();
   } catch {
     return false;
   }
 }
 
 function sign(value: string) {
-  return createHmac("sha256", getAdminConfig().sessionSecret).update(value).digest("base64url");
+  return createHmac("sha256", getSessionConfig().sessionSecret).update(value).digest("base64url");
 }
 
 function safeEqual(left: string, right: string) {
