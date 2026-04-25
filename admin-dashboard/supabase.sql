@@ -39,6 +39,9 @@ add column if not exists submitted_at timestamptz not null default now();
 alter table public.verification_submissions
 add column if not exists reviewed_at timestamptz;
 
+create unique index if not exists verification_submissions_user_id_key
+on public.verification_submissions (user_id);
+
 alter table public.verification_submissions enable row level security;
 
 drop policy if exists "Users can create own verification submission" on public.verification_submissions;
