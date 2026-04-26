@@ -3,6 +3,11 @@ import SwiftUI
 struct MatchesView: View {
     @EnvironmentObject var session: SessionViewModel
     @StateObject private var vm = MatchesViewModel()
+    let navigationTitle: String
+
+    init(navigationTitle: String = "Matches") {
+        self.navigationTitle = navigationTitle
+    }
 
     var body: some View {
         NavigationStack {
@@ -21,14 +26,18 @@ struct MatchesView: View {
                     ContentUnavailableView("No Matches Yet", systemImage: "heart", description: Text("When someone likes you back, they will appear here."))
                 } else {
                     List(vm.matches) { row in
-                        MatchRowView(row: row)
+                        NavigationLink {
+                            ChatThreadView(row: row)
+                        } label: {
+                            MatchRowView(row: row)
+                        }
                     }
                     .refreshable {
                         await load()
                     }
                 }
             }
-            .navigationTitle("Matches")
+            .navigationTitle(navigationTitle)
             .task(id: session.currentUserId) {
                 await load()
             }
@@ -52,10 +61,17 @@ private struct MatchRowView: View {
                 Text(row.profile.fullName ?? "Verified User")
                     .font(.headline)
 
-                Text(subtitle)
+                Text(lastMessageText)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
+
+                if !subtitle.isEmpty {
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                        .lineLimit(1)
+                }
             }
         }
         .padding(.vertical, 4)
@@ -92,13 +108,22 @@ private struct MatchRowView: View {
     }
 
     private var subtitle: String {
+        let age = row.profile.age.map { "\($0)" }
         let city = row.profile.city?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let job = row.profile.jobTitle?.trimmingCharacters(in: .whitespacesAndNewlines)
-        return [city, job]
+
+        return [age, city]
             .compactMap { value in
                 guard let value, !value.isEmpty else { return nil }
                 return value
             }
             .joined(separator: " • ")
+    }
+
+    private var lastMessageText: String {
+        guard let lastMessage = row.lastMessage else {
+            return "Start the conversation"
+        }
+
+        return lastMessage.body
     }
 }

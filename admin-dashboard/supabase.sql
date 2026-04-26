@@ -225,6 +225,133 @@ for select
 to authenticated
 using (auth.uid() = user_one_id or auth.uid() = user_two_id);
 
+-- Chat support for matched users.
+create table if not exists public.messages (
+  id uuid primary key default gen_random_uuid(),
+  match_id uuid not null references public.matches(id) on delete cascade,
+  sender_id uuid not null references public.profiles(id) on delete cascade,
+  body text not null check (length(trim(body)) > 0),
+  is_read boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists messages_match_created_at_idx
+on public.messages (match_id, created_at);
+
+alter table public.messages enable row level security;
+
+drop policy if exists "Matched users can read messages" on public.messages;
+create policy "Matched users can read messages"
+on public.messages
+for select
+to authenticated
+using (
+  exists (
+    select 1
+    from public.matches
+    where matches.id = messages.match_id
+      and (auth.uid() = matches.user_one_id or auth.uid() = matches.user_two_id)
+  )
+);
+
+drop policy if exists "Matched users can send messages" on public.messages;
+create policy "Matched users can send messages"
+on public.messages
+for insert
+to authenticated
+with check (
+  auth.uid() = sender_id
+  and exists (
+    select 1
+    from public.matches
+    where matches.id = messages.match_id
+      and (auth.uid() = matches.user_one_id or auth.uid() = matches.user_two_id)
+  )
+);
+
+drop policy if exists "Matched users can mark messages read" on public.messages;
+create policy "Matched users can mark messages read"
+on public.messages
+for update
+to authenticated
+using (
+  exists (
+    select 1
+    from public.matches
+    where matches.id = messages.match_id
+      and (auth.uid() = matches.user_one_id or auth.uid() = matches.user_two_id)
+  )
+)
+with check (
+  exists (
+    select 1
+    from public.matches
+    where matches.id = messages.match_id
+      and (auth.uid() = matches.user_one_id or auth.uid() = matches.user_two_id)
+  )
+);
+
+create table if not exists public.user_blocks (
+  id uuid primary key default gen_random_uuid(),
+  blocker_user_id uuid not null references public.profiles(id) on delete cascade,
+  blocked_user_id uuid not null references public.profiles(id) on delete cascade,
+  match_id uuid references public.matches(id) on delete set null,
+  reason text,
+  created_at timestamptz not null default now(),
+  check (blocker_user_id <> blocked_user_id),
+  unique (blocker_user_id, blocked_user_id)
+);
+
+alter table public.user_blocks enable row level security;
+
+drop policy if exists "Users can create own blocks" on public.user_blocks;
+create policy "Users can create own blocks"
+on public.user_blocks
+for insert
+to authenticated
+with check (auth.uid() = blocker_user_id);
+
+drop policy if exists "Users can read own blocks" on public.user_blocks;
+create policy "Users can read own blocks"
+on public.user_blocks
+for select
+to authenticated
+using (auth.uid() = blocker_user_id);
+
+drop policy if exists "Users can update own blocks" on public.user_blocks;
+create policy "Users can update own blocks"
+on public.user_blocks
+for update
+to authenticated
+using (auth.uid() = blocker_user_id)
+with check (auth.uid() = blocker_user_id);
+
+create table if not exists public.user_reports (
+  id uuid primary key default gen_random_uuid(),
+  reporter_user_id uuid not null references public.profiles(id) on delete cascade,
+  reported_user_id uuid not null references public.profiles(id) on delete cascade,
+  match_id uuid references public.matches(id) on delete set null,
+  reason text not null,
+  created_at timestamptz not null default now(),
+  check (reporter_user_id <> reported_user_id)
+);
+
+alter table public.user_reports enable row level security;
+
+drop policy if exists "Users can create own reports" on public.user_reports;
+create policy "Users can create own reports"
+on public.user_reports
+for insert
+to authenticated
+with check (auth.uid() = reporter_user_id);
+
+drop policy if exists "Users can read own reports" on public.user_reports;
+create policy "Users can read own reports"
+on public.user_reports
+for select
+to authenticated
+using (auth.uid() = reporter_user_id);
+
 create or replace function public.create_match_on_mutual_like()
 returns trigger
 language plpgsql

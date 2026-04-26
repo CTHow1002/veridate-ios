@@ -5,9 +5,14 @@ import Supabase
 struct MatchRow: Identifiable, Hashable {
     let match: Match
     let profile: Profile
+    let lastMessage: Message?
 
     var id: UUID {
         match.id
+    }
+
+    func otherUserId(for currentUserId: UUID) -> UUID {
+        match.userOneId == currentUserId ? match.userTwoId : match.userOneId
     }
 }
 
@@ -43,7 +48,7 @@ final class MatchesViewModel: ObservableObject {
             for match in rows {
                 let otherUserId = match.userOneId == userId ? match.userTwoId : match.userOneId
                 if let profile = try await loadProfile(userId: otherUserId) {
-                    loaded.append(MatchRow(match: match, profile: profile))
+                    loaded.append(MatchRow(match: match, profile: profile, lastMessage: try await loadLastMessage(matchId: match.id)))
                 }
             }
 
@@ -63,5 +68,18 @@ final class MatchesViewModel: ObservableObject {
             .value
 
         return profiles.first
+    }
+
+    private func loadLastMessage(matchId: UUID) async throws -> Message? {
+        let messages: [Message] = try await supabase
+            .from("messages")
+            .select()
+            .eq("match_id", value: matchId)
+            .order("created_at", ascending: false)
+            .limit(1)
+            .execute()
+            .value
+
+        return messages.first
     }
 }
