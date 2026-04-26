@@ -13,11 +13,6 @@ struct MainTabView: View {
                     Label("Matches", systemImage: "person.2")
                 }
 
-            ChatListView()
-                .tabItem {
-                    Label("Chats", systemImage: "message")
-                }
-
             ProfileView()
                 .tabItem {
                     Label("Me", systemImage: "person")
