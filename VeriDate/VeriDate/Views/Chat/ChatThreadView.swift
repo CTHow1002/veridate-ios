@@ -68,6 +68,7 @@ struct ChatThreadView: View {
         }
         .task(id: row.id) {
             await load()
+            await keepChatSynced()
         }
     }
 
@@ -157,6 +158,22 @@ struct ChatThreadView: View {
     private func load() async {
         guard let userId = session.currentUserId else { return }
         await vm.loadMessages(match: row.match, userId: userId, currentProfile: session.currentProfile)
+    }
+
+    private func keepChatSynced() async {
+        while !Task.isCancelled {
+            try? await Task.sleep(for: .seconds(2))
+
+            guard !Task.isCancelled, let userId = session.currentUserId else {
+                return
+            }
+
+            await vm.refreshMessages(
+                match: row.match,
+                userId: userId,
+                currentProfile: session.currentProfile
+            )
+        }
     }
 
     private func send() async {

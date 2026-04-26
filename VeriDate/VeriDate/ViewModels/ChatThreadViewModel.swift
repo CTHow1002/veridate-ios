@@ -30,18 +30,28 @@ final class ChatThreadViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            let rows: [Message] = try await supabase
-                .from("messages")
-                .select()
-                .eq("match_id", value: match.id)
-                .order("created_at", ascending: true)
-                .execute()
-                .value
-
-            messages = rows
+            messages = try await fetchMessages(matchId: match.id)
             await markMessagesRead(matchId: match.id, userId: userId)
         } catch {
             errorMessage = "Could not load messages. \(error.localizedDescription)"
+        }
+    }
+
+    func refreshMessages(match: Match, userId: UUID, currentProfile: Profile?) async {
+        guard currentProfile?.verificationStatus == .verified, match.includes(userId: userId) else {
+            return
+        }
+
+        do {
+            let latestMessages = try await fetchMessages(matchId: match.id)
+            guard latestMessages != messages else { return }
+
+            messages = latestMessages
+            await markMessagesRead(matchId: match.id, userId: userId)
+        } catch {
+            if messages.isEmpty {
+                errorMessage = "Could not refresh messages. \(error.localizedDescription)"
+            }
         }
     }
 
@@ -172,6 +182,16 @@ final class ChatThreadViewModel: ObservableObject {
         } catch {
             errorMessage = "Messages loaded, but could not mark them as read."
         }
+    }
+
+    private func fetchMessages(matchId: UUID) async throws -> [Message] {
+        try await supabase
+            .from("messages")
+            .select()
+            .eq("match_id", value: matchId)
+            .order("created_at", ascending: true)
+            .execute()
+            .value
     }
 
     private func clean(_ value: String?) -> String? {
