@@ -6,8 +6,10 @@ struct DatingFilter: Codable {
     var minAge: Int
     var maxAge: Int
     var preferredCity: String?
+    var minDistanceKm: Int
     var maxDistanceKm: Int
     var minHeightCm: Int?
+    var maxHeightCm: Int?
     var educationLevel: String?
     var relationshipGoal: RelationshipIntention?
     var verifiedOnly: Bool
@@ -18,8 +20,10 @@ struct DatingFilter: Codable {
         case minAge = "min_age"
         case maxAge = "max_age"
         case preferredCity = "preferred_city"
+        case minDistanceKm = "min_distance_km"
         case maxDistanceKm = "max_distance_km"
         case minHeightCm = "min_height_cm"
+        case maxHeightCm = "max_height_cm"
         case educationLevel = "education_level"
         case relationshipGoal = "relationship_goal"
         case verifiedOnly = "verified_only"

@@ -13,9 +13,12 @@ final class DiscoveryViewModel: ObservableObject {
 
     @Published var preferredGender: GenderType?
     @Published var minAge = 18
-    @Published var maxAge = 100
+    @Published var maxAge = 50
     @Published var preferredCity = ""
+    @Published var minDistanceKm = 0
+    @Published var maxDistanceKm = 100
     @Published var minHeightCm = 120
+    @Published var maxHeightCm = 200
     @Published var educationLevel = ""
     @Published var relationshipGoal: RelationshipIntention?
 
@@ -50,16 +53,18 @@ final class DiscoveryViewModel: ObservableObject {
             let min_age: Int?
             let max_age: Int?
             let preferred_city: String?
+            let min_distance_km: Int?
+            let max_distance_km: Int?
             let min_height_cm: Int?
+            let max_height_cm: Int?
             let education_level: String?
             let relationship_goal: RelationshipIntention?
-            let max_distance_km: Int?
         }
 
         do {
             let filters: [FilterRow] = try await supabase
                 .from("dating_filters")
-                .select("preferred_gender,min_age,max_age,preferred_city,min_height_cm,education_level,relationship_goal,max_distance_km")
+                .select("preferred_gender,min_age,max_age,preferred_city,min_distance_km,max_distance_km,min_height_cm,max_height_cm,education_level,relationship_goal")
                 .eq("user_id", value: userId)
                 .limit(1)
                 .execute()
@@ -70,7 +75,10 @@ final class DiscoveryViewModel: ObservableObject {
             minAge = filter.min_age ?? minAge
             maxAge = filter.max_age ?? maxAge
             preferredCity = filter.preferred_city ?? ""
+            minDistanceKm = filter.min_distance_km ?? minDistanceKm
+            maxDistanceKm = filter.max_distance_km ?? maxDistanceKm
             minHeightCm = filter.min_height_cm ?? minHeightCm
+            maxHeightCm = filter.max_height_cm ?? maxHeightCm
             educationLevel = filter.education_level ?? ""
             relationshipGoal = filter.relationship_goal
         } catch {
@@ -85,7 +93,10 @@ final class DiscoveryViewModel: ObservableObject {
             let min_age: Int
             let max_age: Int
             let preferred_city: String?
+            let min_distance_km: Int
+            let max_distance_km: Int
             let min_height_cm: Int?
+            let max_height_cm: Int?
             let education_level: String?
             let relationship_goal: String?
             let verified_only: Bool
@@ -105,7 +116,10 @@ final class DiscoveryViewModel: ObservableObject {
                         min_age: min(minAge, maxAge),
                         max_age: max(minAge, maxAge),
                         preferred_city: trimmedOrNil(preferredCity),
-                        min_height_cm: minHeightCm,
+                        min_distance_km: min(minDistanceKm, maxDistanceKm),
+                        max_distance_km: max(minDistanceKm, maxDistanceKm),
+                        min_height_cm: min(minHeightCm, maxHeightCm),
+                        max_height_cm: max(minHeightCm, maxHeightCm),
                         education_level: trimmedOrNil(educationLevel),
                         relationship_goal: relationshipGoal?.rawValue,
                         verified_only: true

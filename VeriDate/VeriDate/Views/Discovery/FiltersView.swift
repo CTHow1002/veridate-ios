@@ -17,13 +17,35 @@ struct FiltersView: View {
                         }
                     }
 
-                    Stepper("Min age: \(vm.minAge)", value: $vm.minAge, in: 18...100)
-                    Stepper("Max age: \(vm.maxAge)", value: $vm.maxAge, in: 18...100)
+                    RangeSliderSection(
+                        title: "Age",
+                        unit: "years old",
+                        minValue: $vm.minAge,
+                        maxValue: $vm.maxAge,
+                        bounds: 18...100,
+                        step: 1
+                    )
 
                     TextField("City", text: $vm.preferredCity)
                         .textInputAutocapitalization(.words)
 
-                    Stepper("Min height: \(vm.minHeightCm) cm", value: $vm.minHeightCm, in: 120...220)
+                    RangeSliderSection(
+                        title: "Distance",
+                        unit: "km",
+                        minValue: $vm.minDistanceKm,
+                        maxValue: $vm.maxDistanceKm,
+                        bounds: 0...200,
+                        step: 5
+                    )
+
+                    RangeSliderSection(
+                        title: "Height",
+                        unit: "cm",
+                        minValue: $vm.minHeightCm,
+                        maxValue: $vm.maxHeightCm,
+                        bounds: 120...220,
+                        step: 1
+                    )
                 }
 
                 Section("Background") {
@@ -94,5 +116,66 @@ struct FiltersView: View {
 
     private func display(_ value: String) -> String {
         value.replacingOccurrences(of: "_", with: " ").capitalized
+    }
+}
+
+private struct RangeSliderSection: View {
+    let title: String
+    let unit: String
+    @Binding var minValue: Int
+    @Binding var maxValue: Int
+    let bounds: ClosedRange<Int>
+    let step: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text(title)
+                Spacer()
+                Text("\(min(minValue, maxValue)) - \(max(minValue, maxValue)) \(unit)")
+                    .foregroundStyle(.secondary)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Minimum")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Slider(
+                    value: Binding(
+                        get: { Double(minValue) },
+                        set: { newValue in
+                            minValue = Int(newValue.rounded())
+                            if minValue > maxValue {
+                                maxValue = minValue
+                            }
+                        }
+                    ),
+                    in: Double(bounds.lowerBound)...Double(bounds.upperBound),
+                    step: Double(step)
+                )
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Maximum")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Slider(
+                    value: Binding(
+                        get: { Double(maxValue) },
+                        set: { newValue in
+                            maxValue = Int(newValue.rounded())
+                            if maxValue < minValue {
+                                minValue = maxValue
+                            }
+                        }
+                    ),
+                    in: Double(bounds.lowerBound)...Double(bounds.upperBound),
+                    step: Double(step)
+                )
+            }
+        }
+        .padding(.vertical, 4)
     }
 }

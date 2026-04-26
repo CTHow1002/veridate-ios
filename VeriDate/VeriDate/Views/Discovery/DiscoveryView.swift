@@ -20,7 +20,7 @@ struct DiscoveryView: View {
                     ContentUnavailableView("Could Not Load Profiles", systemImage: "exclamationmark.triangle", description: Text(error))
                 } else if let profile = vm.profiles.first {
                     ScrollView {
-                        DiscoveryProfileCard(profile: profile)
+                        DiscoveryProfileCard(profile: profile, currentProfile: session.currentProfile)
                             .padding()
 
                         actionBar(for: profile)
@@ -96,6 +96,7 @@ struct DiscoveryView: View {
 
 private struct DiscoveryProfileCard: View {
     let profile: Profile
+    let currentProfile: Profile?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -107,20 +108,12 @@ private struct DiscoveryProfileCard: View {
                         .font(.title2)
                         .fontWeight(.semibold)
 
-                    if let age = profile.age {
-                        Text("\(age)")
-                            .font(.title3)
-                            .foregroundStyle(.secondary)
-                    }
+                    Text(ageText)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
                 }
 
                 infoRows
-
-                if let bio = clean(profile.bio) {
-                    Text(bio)
-                        .font(.body)
-                        .padding(.top, 4)
-                }
             }
             .padding([.horizontal, .bottom], 16)
         }
@@ -134,32 +127,90 @@ private struct DiscoveryProfileCard: View {
 
     private var infoRows: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label(clean(profile.city) ?? "City not added", systemImage: "mappin.and.ellipse")
+            Label(genderText, systemImage: "person")
 
-            if let job = clean(profile.jobTitle) {
-                Label(job, systemImage: "briefcase")
-            }
+            Label(distanceText, systemImage: "location")
 
-            if let education = clean(profile.educationLevel) {
-                Label(education, systemImage: "graduationcap")
-            }
-
-            if let goal = profile.relationshipGoal {
-                Label(display(goal.rawValue), systemImage: "heart.text.square")
-            }
+            Label(relationshipGoalText, systemImage: "heart.text.square")
         }
         .font(.subheadline)
         .foregroundStyle(.secondary)
     }
 
-    private func clean(_ value: String?) -> String? {
-        guard let value else { return nil }
-        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? nil : trimmed
+    private var ageText: String {
+        guard let age = profile.age else {
+            return "Age not added"
+        }
+
+        return "\(age)"
+    }
+
+    private var genderText: String {
+        guard let gender = profile.gender else {
+            return "Gender not added"
+        }
+
+        return display(gender.rawValue)
+    }
+
+    private var relationshipGoalText: String {
+        guard let goal = profile.relationshipGoal else {
+            return "Relationship goal not added"
+        }
+
+        return display(goal.rawValue)
     }
 
     private func display(_ value: String) -> String {
         value.replacingOccurrences(of: "_", with: " ").capitalized
+    }
+
+    private var distanceText: String {
+        guard
+            let currentLatitude = currentProfile?.latitude,
+            let currentLongitude = currentProfile?.longitude,
+            let profileLatitude = profile.latitude,
+            let profileLongitude = profile.longitude
+        else {
+            return "Distance unavailable"
+        }
+
+        let distance = haversineDistanceKm(
+            fromLatitude: currentLatitude,
+            fromLongitude: currentLongitude,
+            toLatitude: profileLatitude,
+            toLongitude: profileLongitude
+        )
+
+        if distance < 1 {
+            return "Less than 1 km away"
+        }
+
+        return "\(Int(distance.rounded())) km away"
+    }
+
+    private func haversineDistanceKm(
+        fromLatitude: Double,
+        fromLongitude: Double,
+        toLatitude: Double,
+        toLongitude: Double
+    ) -> Double {
+        let earthRadiusKm = 6_371.0
+        let latitudeDelta = degreesToRadians(toLatitude - fromLatitude)
+        let longitudeDelta = degreesToRadians(toLongitude - fromLongitude)
+        let fromLatitudeRadians = degreesToRadians(fromLatitude)
+        let toLatitudeRadians = degreesToRadians(toLatitude)
+
+        let a = sin(latitudeDelta / 2) * sin(latitudeDelta / 2)
+            + cos(fromLatitudeRadians) * cos(toLatitudeRadians)
+            * sin(longitudeDelta / 2) * sin(longitudeDelta / 2)
+        let c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        return earthRadiusKm * c
+    }
+
+    private func degreesToRadians(_ degrees: Double) -> Double {
+        degrees * .pi / 180
     }
 }
 

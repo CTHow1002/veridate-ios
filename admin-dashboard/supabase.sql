@@ -93,17 +93,22 @@ create table if not exists public.dating_filters (
   min_age integer,
   max_age integer,
   preferred_city text,
+  min_distance_km integer not null default 0,
+  max_distance_km integer not null default 100,
   min_height_cm integer,
+  max_height_cm integer,
   education_level text,
   relationship_goal text,
   verified_only boolean not null default false,
-  max_distance_km integer not null default 50,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
 alter table public.dating_filters
-add column if not exists max_distance_km integer not null default 50;
+add column if not exists min_distance_km integer not null default 0;
+
+alter table public.dating_filters
+add column if not exists max_distance_km integer not null default 100;
 
 alter table public.dating_filters
 add column if not exists preferred_gender text;
@@ -121,6 +126,9 @@ alter table public.dating_filters
 add column if not exists min_height_cm integer;
 
 alter table public.dating_filters
+add column if not exists max_height_cm integer;
+
+alter table public.dating_filters
 add column if not exists education_level text;
 
 alter table public.dating_filters
@@ -130,7 +138,22 @@ alter table public.dating_filters
 add column if not exists verified_only boolean not null default false;
 
 alter table public.dating_filters
-alter column max_distance_km set default 50;
+alter column min_distance_km set default 0;
+
+alter table public.dating_filters
+alter column max_distance_km set default 100;
+
+alter table public.dating_filters
+alter column min_age set default 18;
+
+alter table public.dating_filters
+alter column max_age set default 50;
+
+alter table public.dating_filters
+alter column min_height_cm set default 120;
+
+alter table public.dating_filters
+alter column max_height_cm set default 200;
 
 create unique index if not exists dating_filters_user_id_key
 on public.dating_filters (user_id);
@@ -263,11 +286,13 @@ as $$
       min_age,
       max_age,
       preferred_city,
+      min_distance_km,
+      max_distance_km,
       min_height_cm,
+      max_height_cm,
       education_level,
       relationship_goal,
-      verified_only,
-      max_distance_km
+      verified_only
     from public.dating_filters
     where user_id = requesting_user_id
   ),
@@ -308,6 +333,7 @@ as $$
         or p.city ilike '%' || filter.preferred_city || '%'
       )
       and (filter.min_height_cm is null or p.height_cm >= filter.min_height_cm)
+      and (filter.max_height_cm is null or p.height_cm <= filter.max_height_cm)
       and (filter.education_level is null or p.education_level = filter.education_level)
       and (filter.relationship_goal is null or p.relationship_goal = filter.relationship_goal)
       and (coalesce(filter.verified_only, false) = false or p.verification_status = 'verified')
@@ -316,12 +342,13 @@ as $$
   from candidates
   left join filter on true
   where (
-    filter.max_distance_km is null
-    or filter.max_distance_km <= 0
-    or candidates.distance_km is null
+    candidates.distance_km is null
     or (candidates.profile).latitude is null
     or (candidates.profile).longitude is null
-    or candidates.distance_km <= filter.max_distance_km
+    or (
+      candidates.distance_km >= coalesce(filter.min_distance_km, 0)
+      and candidates.distance_km <= coalesce(filter.max_distance_km, 100)
+    )
   )
   order by candidates.distance_km asc nulls last;
 $$;
