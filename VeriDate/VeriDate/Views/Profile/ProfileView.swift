@@ -1,5 +1,6 @@
 import CoreLocation
 import Combine
+import Foundation
 import MapKit
 import SwiftUI
 
@@ -108,13 +109,48 @@ struct ProfileView: View {
                 return
             }
 
-            if let fullAddress = mapItem.address?.fullAddress, !fullAddress.isEmpty {
-                readableLocation = fullAddress
+            if let cityWithContext = mapItem.addressRepresentations?.cityWithContext,
+               let cityState = conciseCityState(from: cityWithContext) {
+                readableLocation = cityState
+            } else if let fullAddress = mapItem.address?.fullAddress,
+                      let cityState = conciseCityState(from: fullAddress) {
+                readableLocation = cityState
             } else if let name = mapItem.name, !name.isEmpty {
                 readableLocation = name
             }
         } catch {
             readableLocation = coordinateFallback
         }
+    }
+
+    private func conciseCityState(from address: String) -> String? {
+        var parts = address
+            .replacingOccurrences(of: "\n", with: ",")
+            .components(separatedBy: ",")
+            .map { cleanAddressPart($0) }
+            .filter { !$0.isEmpty }
+
+        parts.removeAll { part in
+            let lowercased = part.lowercased()
+            return lowercased == "malaysia" || lowercased == "my"
+        }
+
+        guard parts.count >= 2 else {
+            return parts.first
+        }
+
+        let city = parts[parts.count - 2]
+        let state = parts[parts.count - 1]
+        return "\(city), \(state)"
+    }
+
+    private func cleanAddressPart(_ part: String) -> String {
+        part
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(
+                of: #"^\d{4,6}\s*"#,
+                with: "",
+                options: .regularExpression
+            )
     }
 }
