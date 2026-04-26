@@ -1,4 +1,5 @@
 import CoreLocation
+import MapKit
 import SwiftUI
 
 struct ProfileView: View {
@@ -96,19 +97,20 @@ struct ProfileView: View {
         let coordinateFallback = String(format: "%.4f, %.4f", latitude, longitude)
         readableLocation = coordinateFallback
 
-        do {
-            let location = CLLocation(latitude: latitude, longitude: longitude)
-            let placemark = try await CLGeocoder().reverseGeocodeLocation(location).first
-            let parts = [
-                placemark?.locality,
-                placemark?.administrativeArea,
-                placemark?.country
-            ]
-            .compactMap { $0 }
-            .filter { !$0.isEmpty }
+        guard #available(iOS 26.0, *) else {
+            return
+        }
 
-            if !parts.isEmpty {
-                readableLocation = parts.joined(separator: ", ")
+        do {
+            guard let request = MKReverseGeocodingRequest(location: CLLocation(latitude: latitude, longitude: longitude)),
+                  let mapItem = try await request.mapItems.first else {
+                return
+            }
+
+            if let fullAddress = mapItem.address?.fullAddress, !fullAddress.isEmpty {
+                readableLocation = fullAddress
+            } else if let name = mapItem.name, !name.isEmpty {
+                readableLocation = name
             }
         } catch {
             readableLocation = coordinateFallback
