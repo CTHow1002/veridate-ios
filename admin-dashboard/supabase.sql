@@ -92,6 +92,7 @@ create table if not exists public.dating_filters (
   preferred_gender text,
   min_age integer,
   max_age integer,
+  preferred_city text,
   min_height_cm integer,
   education_level text,
   relationship_goal text,
@@ -103,6 +104,30 @@ create table if not exists public.dating_filters (
 
 alter table public.dating_filters
 add column if not exists max_distance_km integer not null default 50;
+
+alter table public.dating_filters
+add column if not exists preferred_gender text;
+
+alter table public.dating_filters
+add column if not exists min_age integer;
+
+alter table public.dating_filters
+add column if not exists max_age integer;
+
+alter table public.dating_filters
+add column if not exists preferred_city text;
+
+alter table public.dating_filters
+add column if not exists min_height_cm integer;
+
+alter table public.dating_filters
+add column if not exists education_level text;
+
+alter table public.dating_filters
+add column if not exists relationship_goal text;
+
+alter table public.dating_filters
+add column if not exists verified_only boolean not null default false;
 
 alter table public.dating_filters
 alter column max_distance_km set default 50;
@@ -134,6 +159,93 @@ to authenticated
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);
 
+create table if not exists public.profile_actions (
+  id uuid primary key default gen_random_uuid(),
+  actor_user_id uuid not null references public.profiles(id) on delete cascade,
+  target_user_id uuid not null references public.profiles(id) on delete cascade,
+  action text not null check (action in ('like', 'pass')),
+  created_at timestamptz not null default now(),
+  unique (actor_user_id, target_user_id)
+);
+
+alter table public.profile_actions enable row level security;
+
+drop policy if exists "Users can create own profile actions" on public.profile_actions;
+create policy "Users can create own profile actions"
+on public.profile_actions
+for insert
+to authenticated
+with check (auth.uid() = actor_user_id);
+
+drop policy if exists "Users can read own profile actions" on public.profile_actions;
+create policy "Users can read own profile actions"
+on public.profile_actions
+for select
+to authenticated
+using (auth.uid() = actor_user_id);
+
+create table if not exists public.matches (
+  id uuid primary key default gen_random_uuid(),
+  user_one_id uuid not null references public.profiles(id) on delete cascade,
+  user_two_id uuid not null references public.profiles(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  check (user_one_id <> user_two_id),
+  unique (user_one_id, user_two_id)
+);
+
+alter table public.matches enable row level security;
+
+drop policy if exists "Users can read their matches" on public.matches;
+create policy "Users can read their matches"
+on public.matches
+for select
+to authenticated
+using (auth.uid() = user_one_id or auth.uid() = user_two_id);
+
+create or replace function public.create_match_on_mutual_like()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  first_user uuid;
+  second_user uuid;
+begin
+  if new.action <> 'like' then
+    return new;
+  end if;
+
+  if exists (
+    select 1
+    from public.profile_actions
+    where actor_user_id = new.target_user_id
+      and target_user_id = new.actor_user_id
+      and action = 'like'
+  ) then
+    if new.actor_user_id < new.target_user_id then
+      first_user := new.actor_user_id;
+      second_user := new.target_user_id;
+    else
+      first_user := new.target_user_id;
+      second_user := new.actor_user_id;
+    end if;
+
+    insert into public.matches (user_one_id, user_two_id)
+    values (first_user, second_user)
+    on conflict (user_one_id, user_two_id) do nothing;
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists profile_actions_create_match on public.profile_actions;
+create trigger profile_actions_create_match
+after insert or update of action on public.profile_actions
+for each row
+execute function public.create_match_on_mutual_like();
+
 create or replace function public.get_discovery_profiles(requesting_user_id uuid)
 returns setof public.profiles
 language sql
@@ -150,6 +262,7 @@ as $$
       preferred_gender,
       min_age,
       max_age,
+      preferred_city,
       min_height_cm,
       education_level,
       relationship_goal,
@@ -178,11 +291,8 @@ as $$
     cross join requester
     left join filter on true
     where p.id <> requesting_user_id
-      and requester.latitude is not null
-      and requester.longitude is not null
-      and p.latitude is not null
-      and p.longitude is not null
       and p.full_name is not null
+      and p.verification_status = 'verified'
       and not exists (
         select 1
         from public.profile_actions pa
@@ -192,6 +302,11 @@ as $$
       and (filter.preferred_gender is null or p.gender = filter.preferred_gender)
       and (filter.min_age is null or p.age >= filter.min_age)
       and (filter.max_age is null or p.age <= filter.max_age)
+      and (
+        filter.preferred_city is null
+        or filter.preferred_city = ''
+        or p.city ilike '%' || filter.preferred_city || '%'
+      )
       and (filter.min_height_cm is null or p.height_cm >= filter.min_height_cm)
       and (filter.education_level is null or p.education_level = filter.education_level)
       and (filter.relationship_goal is null or p.relationship_goal = filter.relationship_goal)
@@ -200,8 +315,15 @@ as $$
   select (candidates.profile).*
   from candidates
   left join filter on true
-  where candidates.distance_km <= coalesce(filter.max_distance_km, 50)
-  order by candidates.distance_km asc;
+  where (
+    filter.max_distance_km is null
+    or filter.max_distance_km <= 0
+    or candidates.distance_km is null
+    or (candidates.profile).latitude is null
+    or (candidates.profile).longitude is null
+    or candidates.distance_km <= filter.max_distance_km
+  )
+  order by candidates.distance_km asc nulls last;
 $$;
 
 create table if not exists public.admin_users (

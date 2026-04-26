@@ -9,25 +9,36 @@ struct FiltersView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Distance") {
-                    LabeledContent("Maximum") {
-                        Text("\(vm.maxDistanceKm) km")
+                Section("Who You Want To Meet") {
+                    Picker("Preferred gender", selection: preferredGenderBinding) {
+                        Text("Any").tag("")
+                        ForEach(GenderType.allCases, id: \.self) { gender in
+                            Text(display(gender.rawValue)).tag(gender.rawValue)
+                        }
                     }
 
-                    Slider(
-                        value: Binding(
-                            get: { Double(vm.maxDistanceKm) },
-                            set: { vm.maxDistanceKm = Int($0.rounded()) }
-                        ),
-                        in: 0...200,
-                        step: 5
-                    )
+                    Stepper("Min age: \(vm.minAge)", value: $vm.minAge, in: 18...100)
+                    Stepper("Max age: \(vm.maxAge)", value: $vm.maxAge, in: 18...100)
+
+                    TextField("City", text: $vm.preferredCity)
+                        .textInputAutocapitalization(.words)
+
+                    Stepper("Min height: \(vm.minHeightCm) cm", value: $vm.minHeightCm, in: 120...220)
                 }
 
-                if currentProfile?.latitude == nil || currentProfile?.longitude == nil {
-                    Section {
-                        Label("Add your location in your profile to use distance matching.", systemImage: "location")
-                            .foregroundStyle(.secondary)
+                Section("Background") {
+                    Picker("Education", selection: $vm.educationLevel) {
+                        Text("Any").tag("")
+                        ForEach(ProfileSetupViewModel.educationLevels, id: \.self) { level in
+                            Text(level).tag(level)
+                        }
+                    }
+
+                    Picker("Relationship goal", selection: relationshipGoalBinding) {
+                        Text("Any").tag("")
+                        ForEach(RelationshipIntention.allCases, id: \.self) { goal in
+                            Text(display(goal.rawValue)).tag(goal.rawValue)
+                        }
                     }
                 }
 
@@ -65,5 +76,23 @@ struct FiltersView: View {
                 }
             }
         }
+    }
+
+    private var preferredGenderBinding: Binding<String> {
+        Binding(
+            get: { vm.preferredGender?.rawValue ?? "" },
+            set: { vm.preferredGender = GenderType(rawValue: $0) }
+        )
+    }
+
+    private var relationshipGoalBinding: Binding<String> {
+        Binding(
+            get: { vm.relationshipGoal?.rawValue ?? "" },
+            set: { vm.relationshipGoal = RelationshipIntention(rawValue: $0) }
+        )
+    }
+
+    private func display(_ value: String) -> String {
+        value.replacingOccurrences(of: "_", with: " ").capitalized
     }
 }

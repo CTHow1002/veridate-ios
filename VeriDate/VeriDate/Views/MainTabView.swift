@@ -8,6 +8,11 @@ struct MainTabView: View {
                     Label("Discover", systemImage: "heart")
                 }
 
+            MatchesView()
+                .tabItem {
+                    Label("Matches", systemImage: "person.2")
+                }
+
             ChatListView()
                 .tabItem {
                     Label("Chats", systemImage: "message")

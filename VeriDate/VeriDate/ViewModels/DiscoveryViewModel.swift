@@ -7,20 +7,32 @@ import PostgREST
 final class DiscoveryViewModel: ObservableObject {
     @Published var profiles: [Profile] = []
     @Published var errorMessage: String?
-    @Published var maxDistanceKm = 50
+    @Published var isLoading = false
     @Published var isSavingFilters = false
+    @Published var actingProfileIds: Set<UUID> = []
+
+    @Published var preferredGender: GenderType?
+    @Published var minAge = 18
+    @Published var maxAge = 100
+    @Published var preferredCity = ""
+    @Published var minHeightCm = 120
+    @Published var educationLevel = ""
+    @Published var relationshipGoal: RelationshipIntention?
 
     private let supabase = SupabaseManager.shared.client
 
     func loadProfiles(userId: UUID, currentProfile: Profile?) async {
-        guard currentProfile?.latitude != nil, currentProfile?.longitude != nil else {
+        guard currentProfile?.verificationStatus == .verified else {
             profiles = []
-            errorMessage = "Add your location in your profile to see nearby matches."
+            errorMessage = "Only verified users can use Discover."
             return
         }
 
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+
         do {
-            errorMessage = nil
             let response: [Profile] = try await supabase
                 .rpc("get_discovery_profiles", params: ["requesting_user_id": userId.uuidString])
                 .execute()
@@ -28,25 +40,39 @@ final class DiscoveryViewModel: ObservableObject {
 
             profiles = response
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = "Could not load discovery profiles. \(error.localizedDescription)"
         }
     }
 
     func loadFilters(userId: UUID) async {
         struct FilterRow: Decodable {
+            let preferred_gender: GenderType?
+            let min_age: Int?
+            let max_age: Int?
+            let preferred_city: String?
+            let min_height_cm: Int?
+            let education_level: String?
+            let relationship_goal: RelationshipIntention?
             let max_distance_km: Int?
         }
 
         do {
             let filters: [FilterRow] = try await supabase
                 .from("dating_filters")
-                .select("max_distance_km")
+                .select("preferred_gender,min_age,max_age,preferred_city,min_height_cm,education_level,relationship_goal,max_distance_km")
                 .eq("user_id", value: userId)
                 .limit(1)
                 .execute()
                 .value
 
-            maxDistanceKm = filters.first?.max_distance_km ?? maxDistanceKm
+            guard let filter = filters.first else { return }
+            preferredGender = filter.preferred_gender
+            minAge = filter.min_age ?? minAge
+            maxAge = filter.max_age ?? maxAge
+            preferredCity = filter.preferred_city ?? ""
+            minHeightCm = filter.min_height_cm ?? minHeightCm
+            educationLevel = filter.education_level ?? ""
+            relationshipGoal = filter.relationship_goal
         } catch {
             errorMessage = "Could not load filters. \(error.localizedDescription)"
         }
@@ -55,9 +81,13 @@ final class DiscoveryViewModel: ObservableObject {
     func saveFilters(userId: UUID) async -> Bool {
         struct FilterPayload: Encodable {
             let user_id: UUID
+            let preferred_gender: String?
             let min_age: Int
             let max_age: Int
-            let max_distance_km: Int
+            let preferred_city: String?
+            let min_height_cm: Int?
+            let education_level: String?
+            let relationship_goal: String?
             let verified_only: Bool
         }
 
@@ -71,10 +101,14 @@ final class DiscoveryViewModel: ObservableObject {
                 .upsert(
                     FilterPayload(
                         user_id: userId,
-                        min_age: 18,
-                        max_age: 100,
-                        max_distance_km: maxDistanceKm,
-                        verified_only: false
+                        preferred_gender: preferredGender?.rawValue,
+                        min_age: min(minAge, maxAge),
+                        max_age: max(minAge, maxAge),
+                        preferred_city: trimmedOrNil(preferredCity),
+                        min_height_cm: minHeightCm,
+                        education_level: trimmedOrNil(educationLevel),
+                        relationship_goal: relationshipGoal?.rawValue,
+                        verified_only: true
                     ),
                     onConflict: "user_id"
                 )
@@ -102,6 +136,10 @@ final class DiscoveryViewModel: ObservableObject {
             let action: String
         }
 
+        actingProfileIds.insert(targetUserId)
+        errorMessage = nil
+        defer { actingProfileIds.remove(targetUserId) }
+
         do {
             try await supabase
                 .from("profile_actions")
@@ -110,7 +148,12 @@ final class DiscoveryViewModel: ObservableObject {
 
             profiles.removeAll { $0.id == targetUserId }
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = "Could not save your \(action). \(error.localizedDescription)"
         }
+    }
+
+    private func trimmedOrNil(_ value: String) -> String? {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
     }
 }
