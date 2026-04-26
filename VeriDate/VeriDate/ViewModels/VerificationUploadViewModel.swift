@@ -7,9 +7,9 @@ final class VerificationUploadViewModel: ObservableObject {
     @Published var selfieVideoData: Data?
     @Published var selfieVideoFileName = "selfie-video.mov"
     @Published var livenessPrompt = "Turn your head slightly left, then look back at the camera."
-    @Published var idDocumentURL: URL?
-    @Published var jobProofURL: URL?
-    @Published var educationProofURL: URL?
+    @Published var idDocument: VerificationDocument?
+    @Published var jobProof: VerificationDocument?
+    @Published var educationProof: VerificationDocument?
     @Published var isSubmitting = false
     @Published var isLoadingRejectionReason = false
     @Published var rejectionReason: String?
@@ -18,7 +18,7 @@ final class VerificationUploadViewModel: ObservableObject {
     private let supabase = SupabaseManager.shared.client
 
     var canSubmit: Bool {
-        selfieVideoData != nil && idDocumentURL != nil && jobProofURL != nil && educationProofURL != nil && !isSubmitting
+        selfieVideoData != nil && idDocument != nil && jobProof != nil && educationProof != nil && !isSubmitting
     }
 
     func loadRejectionReason(userId: UUID) async {
@@ -48,7 +48,7 @@ final class VerificationUploadViewModel: ObservableObject {
     }
 
     func submitVerification(userId: UUID) async -> Bool {
-        guard let selfieVideoData, let idDocumentURL, let jobProofURL, let educationProofURL else {
+        guard let selfieVideoData, let idDocument, let jobProof, let educationProof else {
             errorMessage = "Add your verification video and all three documents before submitting."
             return false
         }
@@ -65,9 +65,9 @@ final class VerificationUploadViewModel: ObservableObject {
                 contentType: "video/quicktime",
                 label: "selfie verification video"
             )
-            let idDocumentPath = try await uploadFile(idDocumentURL, userId: userId, folder: "id-document", label: "ID document")
-            let jobProofPath = try await uploadFile(jobProofURL, userId: userId, folder: "job-proof", label: "job proof")
-            let educationProofPath = try await uploadFile(educationProofURL, userId: userId, folder: "education-proof", label: "education proof")
+            let idDocumentPath = try await uploadDocument(idDocument, userId: userId, folder: "id-document", label: "ID document")
+            let jobProofPath = try await uploadDocument(jobProof, userId: userId, folder: "job-proof", label: "job proof")
+            let educationProofPath = try await uploadDocument(educationProof, userId: userId, folder: "education-proof", label: "education proof")
 
             try await createVerificationSubmission(
                 userId: userId,
@@ -86,7 +86,28 @@ final class VerificationUploadViewModel: ObservableObject {
         }
     }
 
-    private func uploadFile(_ url: URL, userId: UUID, folder: String, label: String) async throws -> String {
+    private func uploadDocument(_ document: VerificationDocument, userId: UUID, folder: String, label: String) async throws -> String {
+        let data: Data
+
+        if let fileURL = document.fileURL {
+            data = try readFileData(from: fileURL)
+        } else if let photoData = document.data {
+            data = photoData
+        } else {
+            throw VerificationUploadError.missingDocument(label: label)
+        }
+
+        let fileName = cleanFileName(document.fileName, fallback: "\(folder).pdf")
+
+        return try await uploadData(
+            data,
+            path: "\(userId.uuidString)/\(folder)/\(fileName)",
+            contentType: document.contentType,
+            label: label
+        )
+    }
+
+    private func readFileData(from url: URL) throws -> Data {
         let hasScopedAccess = url.startAccessingSecurityScopedResource()
         defer {
             if hasScopedAccess {
@@ -94,16 +115,7 @@ final class VerificationUploadViewModel: ObservableObject {
             }
         }
 
-        let data = try Data(contentsOf: url)
-        let fileName = cleanFileName(url.lastPathComponent, fallback: "\(folder).pdf")
-        let contentType = contentType(for: url)
-
-        return try await uploadData(
-            data,
-            path: "\(userId.uuidString)/\(folder)/\(fileName)",
-            contentType: contentType,
-            label: label
-        )
+        return try Data(contentsOf: url)
     }
 
     private func uploadData(_ data: Data, path: String, contentType: String, label: String) async throws -> String {
@@ -226,25 +238,6 @@ final class VerificationUploadViewModel: ObservableObject {
         }
     }
 
-    private func contentType(for url: URL) -> String {
-        switch url.pathExtension.lowercased() {
-        case "jpg", "jpeg":
-            return "image/jpeg"
-        case "png":
-            return "image/png"
-        case "heic":
-            return "image/heic"
-        case "pdf":
-            return "application/pdf"
-        case "mov":
-            return "video/quicktime"
-        case "mp4", "m4v":
-            return "video/mp4"
-        default:
-            return "application/octet-stream"
-        }
-    }
-
     private func cleanFileName(_ fileName: String, fallback: String) -> String {
         let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: ".-_"))
         let cleaned = fileName
@@ -257,6 +250,35 @@ final class VerificationUploadViewModel: ObservableObject {
     }
 }
 
+struct VerificationDocument {
+    let fileName: String
+    let contentType: String
+    let data: Data?
+    let fileURL: URL?
+
+    var displayName: String {
+        fileName
+    }
+
+    static func file(url: URL, contentType: String) -> VerificationDocument {
+        VerificationDocument(
+            fileName: url.lastPathComponent,
+            contentType: contentType,
+            data: nil,
+            fileURL: url
+        )
+    }
+
+    static func photo(data: Data, fileName: String, contentType: String) -> VerificationDocument {
+        VerificationDocument(
+            fileName: fileName,
+            contentType: contentType,
+            data: data,
+            fileURL: nil
+        )
+    }
+}
+
 private struct UploadedVerificationFiles {
     let selfieVideoPath: String
     let idDocumentPath: String
@@ -265,11 +287,14 @@ private struct UploadedVerificationFiles {
 }
 
 private enum VerificationUploadError: LocalizedError {
+    case missingDocument(label: String)
     case blockedStep(label: String, path: String, underlying: String)
     case submissionRow(underlying: String)
 
     var errorDescription: String? {
         switch self {
+        case .missingDocument(let label):
+            return "Could not read the \(label). Please choose a photo or file again."
         case .blockedStep(let label, let path, let underlying):
             return "Supabase blocked the \(label) upload at \(path). \(underlying)"
         case .submissionRow(let underlying):

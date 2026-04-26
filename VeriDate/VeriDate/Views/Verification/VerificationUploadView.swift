@@ -1,3 +1,4 @@
+import PhotosUI
 import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
@@ -45,19 +46,19 @@ struct VerificationUploadView: View {
                     documentImporter(
                         title: "ID Document",
                         systemImage: "person.text.rectangle",
-                        selection: $vm.idDocumentURL
+                        selection: $vm.idDocument
                     )
 
                     documentImporter(
                         title: "Job Proof",
                         systemImage: "briefcase",
-                        selection: $vm.jobProofURL
+                        selection: $vm.jobProof
                     )
 
                     documentImporter(
                         title: "Education Proof",
                         systemImage: "graduationcap",
-                        selection: $vm.educationProofURL
+                        selection: $vm.educationProof
                     )
                 }
 
@@ -119,10 +120,10 @@ struct VerificationUploadView: View {
     private func documentImporter(
         title: String,
         systemImage: String,
-        selection: Binding<URL?>
+        selection: Binding<VerificationDocument?>
     ) -> some View {
         LabeledContent(title) {
-            FileImporterButton(title: title, systemImage: systemImage, selection: selection)
+            DocumentPickerButton(title: title, systemImage: systemImage, selection: selection)
         }
     }
 
@@ -187,19 +188,26 @@ private struct VideoCameraRecorder: UIViewControllerRepresentable {
     }
 }
 
-private struct FileImporterButton: View {
+private struct DocumentPickerButton: View {
     let title: String
     let systemImage: String
-    @Binding var selection: URL?
+    @Binding var selection: VerificationDocument?
+    @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isImporting = false
     @State private var importerError: String?
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 4) {
-            Button {
-                isImporting = true
-            } label: {
-                Label(selection == nil ? "Choose" : "Replace", systemImage: systemImage)
+            HStack {
+                PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
+                    Label("Photo", systemImage: "photo")
+                }
+
+                Button {
+                    isImporting = true
+                } label: {
+                    Label("File", systemImage: systemImage)
+                }
             }
             .fileImporter(
                 isPresented: $isImporting,
@@ -208,15 +216,22 @@ private struct FileImporterButton: View {
             ) { result in
                 switch result {
                 case .success(let urls):
-                    selection = urls.first
+                    if let url = urls.first {
+                        selection = .file(url: url, contentType: contentType(for: url))
+                    }
                     importerError = nil
                 case .failure(let error):
                     importerError = error.localizedDescription
                 }
             }
+            .onChange(of: selectedPhotoItem) { _, newItem in
+                Task {
+                    await loadPhoto(newItem)
+                }
+            }
 
             if let selection {
-                Text(selection.lastPathComponent)
+                Text(selection.displayName)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -229,5 +244,43 @@ private struct FileImporterButton: View {
             }
         }
         .accessibilityLabel(title)
+    }
+
+    private func loadPhoto(_ item: PhotosPickerItem?) async {
+        guard let item else { return }
+
+        do {
+            guard let data = try await item.loadTransferable(type: Data.self) else {
+                importerError = "Could not read that photo."
+                return
+            }
+
+            let type = item.supportedContentTypes.first { $0.conforms(to: .image) } ?? .jpeg
+            let fileExtension = type.preferredFilenameExtension ?? "jpg"
+            let contentType = type.preferredMIMEType ?? "image/jpeg"
+            selection = .photo(
+                data: data,
+                fileName: "\(UUID().uuidString).\(fileExtension)",
+                contentType: contentType
+            )
+            importerError = nil
+        } catch {
+            importerError = error.localizedDescription
+        }
+    }
+
+    private func contentType(for url: URL) -> String {
+        switch url.pathExtension.lowercased() {
+        case "jpg", "jpeg":
+            return "image/jpeg"
+        case "png":
+            return "image/png"
+        case "heic":
+            return "image/heic"
+        case "pdf":
+            return "application/pdf"
+        default:
+            return "application/octet-stream"
+        }
     }
 }
