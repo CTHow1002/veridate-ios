@@ -47,6 +47,7 @@ final class ChatThreadViewModel: ObservableObject {
             guard latestMessages != messages else { return }
 
             messages = latestMessages
+            await markMessagesDelivered(matchId: match.id, userId: userId)
             await markMessagesRead(matchId: match.id, userId: userId)
         } catch {
             if messages.isEmpty {
@@ -170,17 +171,37 @@ final class ChatThreadViewModel: ObservableObject {
     private func markMessagesRead(matchId: UUID, userId: UUID) async {
         struct ReadPayload: Encodable {
             let is_read: Bool
+            let delivered_at: String
+            let read_at: String
         }
 
         do {
+            let now = ISO8601DateFormatter().string(from: Date())
             try await supabase
                 .from("messages")
-                .update(ReadPayload(is_read: true))
+                .update(ReadPayload(is_read: true, delivered_at: now, read_at: now))
                 .eq("match_id", value: matchId)
                 .neq("sender_id", value: userId)
                 .execute()
         } catch {
             errorMessage = "Messages loaded, but could not mark them as read."
+        }
+    }
+
+    private func markMessagesDelivered(matchId: UUID, userId: UUID) async {
+        struct DeliveryPayload: Encodable {
+            let delivered_at: String
+        }
+
+        do {
+            try await supabase
+                .from("messages")
+                .update(DeliveryPayload(delivered_at: ISO8601DateFormatter().string(from: Date())))
+                .eq("match_id", value: matchId)
+                .neq("sender_id", value: userId)
+                .execute()
+        } catch {
+            // Delivery receipts are best-effort.
         }
     }
 

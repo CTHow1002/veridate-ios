@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @EnvironmentObject var session: SessionViewModel
+
     var body: some View {
         TabView {
             DiscoveryView()
@@ -17,6 +19,9 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Me", systemImage: "person")
                 }
+        }
+        .task {
+            await session.keepPresenceUpdated()
         }
     }
 }

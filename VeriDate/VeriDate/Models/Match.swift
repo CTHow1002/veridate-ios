@@ -20,6 +20,8 @@ struct Message: Identifiable, Codable, Hashable {
     let senderId: UUID
     let body: String
     let isRead: Bool
+    let deliveredAt: String?
+    let readAt: String?
     let createdAt: String
 
     enum CodingKeys: String, CodingKey {
@@ -28,6 +30,8 @@ struct Message: Identifiable, Codable, Hashable {
         case senderId = "sender_id"
         case body
         case isRead = "is_read"
+        case deliveredAt = "delivered_at"
+        case readAt = "read_at"
         case createdAt = "created_at"
     }
 }

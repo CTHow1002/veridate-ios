@@ -229,9 +229,15 @@ private struct MessageBubble: View {
                     .background(isMine ? Color.accentColor : Color.secondary.opacity(0.14))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                Text(timeText)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 4) {
+                    Text(timeText)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+
+                    if isMine {
+                        MessageStatusTicks(message: message)
+                    }
+                }
             }
 
             if !isMine {

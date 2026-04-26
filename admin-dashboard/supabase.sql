@@ -86,6 +86,12 @@ add column if not exists latitude double precision;
 alter table public.profiles
 add column if not exists longitude double precision;
 
+alter table public.profiles
+add column if not exists is_online boolean not null default false;
+
+alter table public.profiles
+add column if not exists last_seen_at timestamptz;
+
 create table if not exists public.dating_filters (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id) on delete cascade,
@@ -232,8 +238,16 @@ create table if not exists public.messages (
   sender_id uuid not null references public.profiles(id) on delete cascade,
   body text not null check (length(trim(body)) > 0),
   is_read boolean not null default false,
+  delivered_at timestamptz,
+  read_at timestamptz,
   created_at timestamptz not null default now()
 );
+
+alter table public.messages
+add column if not exists delivered_at timestamptz;
+
+alter table public.messages
+add column if not exists read_at timestamptz;
 
 create index if not exists messages_match_created_at_idx
 on public.messages (match_id, created_at);

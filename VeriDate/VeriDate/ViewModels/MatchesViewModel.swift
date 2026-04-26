@@ -21,6 +21,7 @@ final class MatchesViewModel: ObservableObject {
     @Published var matches: [MatchRow] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    private var hasLoadedOnce = false
 
     private let supabase = SupabaseManager.shared.client
 
@@ -31,7 +32,9 @@ final class MatchesViewModel: ObservableObject {
             return
         }
 
-        isLoading = true
+        if !hasLoadedOnce {
+            isLoading = true
+        }
         errorMessage = nil
         defer { isLoading = false }
 
@@ -48,11 +51,16 @@ final class MatchesViewModel: ObservableObject {
             for match in rows {
                 let otherUserId = match.userOneId == userId ? match.userTwoId : match.userOneId
                 if let profile = try await loadProfile(userId: otherUserId) {
-                    loaded.append(MatchRow(match: match, profile: profile, lastMessage: try await loadLastMessage(matchId: match.id)))
+                    let lastMessage = try await loadLastMessage(matchId: match.id)
+                    if let lastMessage, lastMessage.senderId != userId {
+                        await markMessageDelivered(lastMessage)
+                    }
+                    loaded.append(MatchRow(match: match, profile: profile, lastMessage: lastMessage))
                 }
             }
 
             matches = loaded
+            hasLoadedOnce = true
         } catch {
             errorMessage = "Could not load matches. \(error.localizedDescription)"
         }
@@ -81,5 +89,23 @@ final class MatchesViewModel: ObservableObject {
             .value
 
         return messages.first
+    }
+
+    private func markMessageDelivered(_ message: Message) async {
+        guard message.deliveredAt == nil else { return }
+
+        struct DeliveryPayload: Encodable {
+            let delivered_at: String
+        }
+
+        do {
+            try await supabase
+                .from("messages")
+                .update(DeliveryPayload(delivered_at: ISO8601DateFormatter().string(from: Date())))
+                .eq("id", value: message.id)
+                .execute()
+        } catch {
+            // Delivery receipts are best-effort; the list should still load.
+        }
     }
 }

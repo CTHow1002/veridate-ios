@@ -39,6 +39,8 @@ struct Profile: Identifiable, Codable, Hashable {
     var heightCm: Int?
     var relationshipGoal: RelationshipIntention?
     var profilePhotoURL: String?
+    var isOnline: Bool
+    var lastSeenAt: String?
     var verificationStatus: VerificationStatus
 
     var hasCompletedBasicProfile: Bool {
@@ -67,6 +69,8 @@ struct Profile: Identifiable, Codable, Hashable {
         case heightCm = "height_cm"
         case relationshipGoal = "relationship_goal"
         case profilePhotoURL = "profile_photo_url"
+        case isOnline = "is_online"
+        case lastSeenAt = "last_seen_at"
         case verificationStatus = "verification_status"
     }
 
@@ -88,6 +92,8 @@ struct Profile: Identifiable, Codable, Hashable {
         heightCm: Int? = nil,
         relationshipGoal: RelationshipIntention? = nil,
         profilePhotoURL: String? = nil,
+        isOnline: Bool = false,
+        lastSeenAt: String? = nil,
         verificationStatus: VerificationStatus = .unsubmitted
     ) {
         self.id = id
@@ -107,6 +113,8 @@ struct Profile: Identifiable, Codable, Hashable {
         self.heightCm = heightCm
         self.relationshipGoal = relationshipGoal
         self.profilePhotoURL = profilePhotoURL
+        self.isOnline = isOnline
+        self.lastSeenAt = lastSeenAt
         self.verificationStatus = verificationStatus
     }
 
@@ -130,6 +138,8 @@ struct Profile: Identifiable, Codable, Hashable {
         heightCm = try container.decodeIfPresent(Int.self, forKey: .heightCm)
         relationshipGoal = try container.decodeIfPresent(RelationshipIntention.self, forKey: .relationshipGoal)
         profilePhotoURL = try container.decodeIfPresent(String.self, forKey: .profilePhotoURL)
+        isOnline = try container.decodeIfPresent(Bool.self, forKey: .isOnline) ?? false
+        lastSeenAt = try container.decodeIfPresent(String.self, forKey: .lastSeenAt)
         verificationStatus = try container.decodeIfPresent(VerificationStatus.self, forKey: .verificationStatus) ?? .unsubmitted
     }
 }

@@ -40,6 +40,7 @@ struct MatchesView: View {
             .navigationTitle(navigationTitle)
             .task(id: session.currentUserId) {
                 await load()
+                await keepMatchesSynced()
             }
         }
     }
@@ -48,9 +49,22 @@ struct MatchesView: View {
         guard let userId = session.currentUserId else { return }
         await vm.loadMatches(userId: userId, currentProfile: session.currentProfile)
     }
+
+    private func keepMatchesSynced() async {
+        while !Task.isCancelled {
+            try? await Task.sleep(for: .seconds(5))
+
+            guard !Task.isCancelled else {
+                return
+            }
+
+            await load()
+        }
+    }
 }
 
 private struct MatchRowView: View {
+    @EnvironmentObject private var session: SessionViewModel
     let row: MatchRow
 
     var body: some View {
@@ -58,13 +72,25 @@ private struct MatchRowView: View {
             avatar
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(row.profile.fullName ?? "Verified User")
-                    .font(.headline)
+                HStack(spacing: 6) {
+                    Text(row.profile.fullName ?? "Verified User")
+                        .font(.headline)
 
-                Text(lastMessageText)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                    PresenceDot(isOnline: isRecentlyOnline)
+                }
+
+                HStack(spacing: 4) {
+                    if let lastMessage = row.lastMessage,
+                       let currentUserId = session.currentUserId,
+                       lastMessage.senderId == currentUserId {
+                        MessageStatusTicks(message: lastMessage)
+                    }
+
+                    Text(lastMessageText)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
 
                 if !subtitle.isEmpty {
                     Text(subtitle)
@@ -111,7 +137,7 @@ private struct MatchRowView: View {
         let age = row.profile.age.map { "\($0)" }
         let city = row.profile.city?.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        return [age, city]
+        return [age, city, presenceText]
             .compactMap { value in
                 guard let value, !value.isEmpty else { return nil }
                 return value
@@ -125,5 +151,80 @@ private struct MatchRowView: View {
         }
 
         return lastMessage.body
+    }
+
+    private var presenceText: String {
+        if isRecentlyOnline {
+            return "Online"
+        }
+
+        guard let lastSeenAt = row.profile.lastSeenAt, let date = parseDate(lastSeenAt) else {
+            return "Offline"
+        }
+
+        return "Last seen \(date.formatted(.relative(presentation: .named)))"
+    }
+
+    private var isRecentlyOnline: Bool {
+        guard row.profile.isOnline else { return false }
+        guard let lastSeenAt = row.profile.lastSeenAt, let date = parseDate(lastSeenAt) else {
+            return true
+        }
+
+        return Date().timeIntervalSince(date) < 90
+    }
+
+    private func parseDate(_ value: String) -> Date? {
+        let fractionalFormatter = ISO8601DateFormatter()
+        fractionalFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        return fractionalFormatter.date(from: value) ?? ISO8601DateFormatter().date(from: value)
+    }
+}
+
+private struct PresenceDot: View {
+    let isOnline: Bool
+
+    var body: some View {
+        Circle()
+            .fill(isOnline ? .green : .secondary.opacity(0.45))
+            .frame(width: 8, height: 8)
+            .accessibilityLabel(isOnline ? "Online" : "Offline")
+    }
+}
+
+struct MessageStatusTicks: View {
+    let message: Message
+
+    var body: some View {
+        HStack(spacing: -4) {
+            ForEach(0..<tickCount, id: \.self) { _ in
+                Image(systemName: "checkmark")
+                    .font(.caption2)
+                    .fontWeight(.bold)
+            }
+        }
+        .foregroundStyle(statusColor)
+        .accessibilityLabel(accessibilityText)
+    }
+
+    private var statusColor: Color {
+        message.isRead || message.readAt != nil ? .blue : .secondary
+    }
+
+    private var tickCount: Int {
+        message.deliveredAt != nil || message.isRead || message.readAt != nil ? 2 : 1
+    }
+
+    private var accessibilityText: String {
+        if message.isRead || message.readAt != nil {
+            return "Read"
+        }
+
+        if message.deliveredAt != nil {
+            return "Delivered"
+        }
+
+        return "Sent"
     }
 }

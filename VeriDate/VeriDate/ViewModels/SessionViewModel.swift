@@ -83,6 +83,7 @@ final class SessionViewModel: ObservableObject {
         errorMessage = nil
 
         do {
+            await updatePresence(isOnline: false)
             try await supabase.auth.signOut()
             isAuthenticated = false
             currentUserId = nil
@@ -189,6 +190,32 @@ final class SessionViewModel: ObservableObject {
         } catch {
             errorMessage = userFacingMessage(for: error, fallback: "Could not update your location.")
             return false
+        }
+    }
+
+    func keepPresenceUpdated() async {
+        while !Task.isCancelled, isAuthenticated {
+            await updatePresence(isOnline: true)
+            try? await Task.sleep(for: .seconds(30))
+        }
+    }
+
+    func updatePresence(isOnline: Bool) async {
+        guard let userId = currentUserId else { return }
+
+        struct PresencePayload: Encodable {
+            let is_online: Bool
+            let last_seen_at: String
+        }
+
+        do {
+            try await supabase
+                .from("profiles")
+                .update(PresencePayload(is_online: isOnline, last_seen_at: ISO8601DateFormatter().string(from: Date())))
+                .eq("id", value: userId)
+                .execute()
+        } catch {
+            // Presence is helpful but should never block the app.
         }
     }
 
