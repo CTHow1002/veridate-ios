@@ -136,46 +136,97 @@ private struct RangeSliderSection: View {
                     .foregroundStyle(.secondary)
             }
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Minimum")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Slider(
-                    value: Binding(
-                        get: { Double(minValue) },
-                        set: { newValue in
-                            minValue = Int(newValue.rounded())
-                            if minValue > maxValue {
-                                maxValue = minValue
-                            }
-                        }
-                    ),
-                    in: Double(bounds.lowerBound)...Double(bounds.upperBound),
-                    step: Double(step)
-                )
-            }
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Maximum")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Slider(
-                    value: Binding(
-                        get: { Double(maxValue) },
-                        set: { newValue in
-                            maxValue = Int(newValue.rounded())
-                            if maxValue < minValue {
-                                minValue = maxValue
-                            }
-                        }
-                    ),
-                    in: Double(bounds.lowerBound)...Double(bounds.upperBound),
-                    step: Double(step)
-                )
-            }
+            RangeSlider(
+                minValue: $minValue,
+                maxValue: $maxValue,
+                bounds: bounds,
+                step: step
+            )
         }
         .padding(.vertical, 4)
+    }
+}
+
+private struct RangeSlider: View {
+    @Binding var minValue: Int
+    @Binding var maxValue: Int
+    let bounds: ClosedRange<Int>
+    let step: Int
+
+    private let thumbSize: CGFloat = 28
+    private let trackHeight: CGFloat = 6
+
+    var body: some View {
+        GeometryReader { geometry in
+            let width = max(geometry.size.width - thumbSize, 1)
+            let minX = xPosition(for: minValue, width: width)
+            let maxX = xPosition(for: maxValue, width: width)
+
+            ZStack(alignment: .leading) {
+                Capsule()
+                    .fill(.secondary.opacity(0.18))
+                    .frame(height: trackHeight)
+                    .offset(x: thumbSize / 2)
+
+                Capsule()
+                    .fill(.tint)
+                    .frame(width: max(maxX - minX, 0), height: trackHeight)
+                    .offset(x: minX + thumbSize / 2)
+
+                thumb
+                    .offset(x: minX)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { value in
+                                minValue = snappedValue(for: value.location.x - thumbSize / 2, width: width)
+                                if minValue > maxValue {
+                                    minValue = maxValue
+                                }
+                            }
+                    )
+                    .accessibilityLabel("Minimum")
+                    .accessibilityValue("\(minValue)")
+
+                thumb
+                    .offset(x: maxX)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { value in
+                                maxValue = snappedValue(for: value.location.x - thumbSize / 2, width: width)
+                                if maxValue < minValue {
+                                    maxValue = minValue
+                                }
+                            }
+                    )
+                    .accessibilityLabel("Maximum")
+                    .accessibilityValue("\(maxValue)")
+            }
+            .frame(height: thumbSize)
+        }
+        .frame(height: 36)
+    }
+
+    private var thumb: some View {
+        Circle()
+            .fill(.background)
+            .frame(width: thumbSize, height: thumbSize)
+            .shadow(color: .black.opacity(0.18), radius: 4, x: 0, y: 2)
+            .overlay {
+                Circle()
+                    .stroke(.tint, lineWidth: 2)
+            }
+    }
+
+    private func xPosition(for value: Int, width: CGFloat) -> CGFloat {
+        let clamped = min(max(value, bounds.lowerBound), bounds.upperBound)
+        let percent = CGFloat(clamped - bounds.lowerBound) / CGFloat(bounds.upperBound - bounds.lowerBound)
+        return percent * width
+    }
+
+    private func snappedValue(for xPosition: CGFloat, width: CGFloat) -> Int {
+        let percent = min(max(xPosition / width, 0), 1)
+        let rawValue = Double(bounds.lowerBound) + Double(percent) * Double(bounds.upperBound - bounds.lowerBound)
+        let steppedValue = (rawValue / Double(step)).rounded() * Double(step)
+        return min(max(Int(steppedValue), bounds.lowerBound), bounds.upperBound)
     }
 }
