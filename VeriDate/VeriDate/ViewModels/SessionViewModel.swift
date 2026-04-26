@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CoreLocation
 import Supabase
 
 @MainActor
@@ -161,6 +162,32 @@ final class SessionViewModel: ObservableObject {
             return true
         } catch {
             errorMessage = userFacingMessage(for: error, fallback: "Uploaded your files, but could not submit verification.")
+            return false
+        }
+    }
+
+    func updateProfileLocation(_ coordinate: CLLocationCoordinate2D) async -> Bool {
+        guard let userId = currentUserId else {
+            errorMessage = "Please sign in again before updating your location."
+            return false
+        }
+
+        struct UpdateLocation: Encodable {
+            let latitude: Double
+            let longitude: Double
+        }
+
+        do {
+            try await supabase
+                .from("profiles")
+                .update(UpdateLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
+                .eq("id", value: userId)
+                .execute()
+
+            await loadProfile()
+            return true
+        } catch {
+            errorMessage = userFacingMessage(for: error, fallback: "Could not update your location.")
             return false
         }
     }
