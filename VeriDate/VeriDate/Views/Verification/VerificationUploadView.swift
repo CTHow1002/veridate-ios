@@ -122,9 +122,7 @@ struct VerificationUploadView: View {
         systemImage: String,
         selection: Binding<VerificationDocument?>
     ) -> some View {
-        LabeledContent(title) {
-            DocumentPickerButton(title: title, systemImage: systemImage, selection: selection)
-        }
+        DocumentPickerRow(title: title, systemImage: systemImage, selection: selection)
     }
 
     private func loadCapturedSelfieVideo(from url: URL) {
@@ -188,27 +186,59 @@ private struct VideoCameraRecorder: UIViewControllerRepresentable {
     }
 }
 
-private struct DocumentPickerButton: View {
+private struct DocumentPickerRow: View {
     let title: String
     let systemImage: String
     @Binding var selection: VerificationDocument?
     @State private var selectedPhotoItem: PhotosPickerItem?
+    @State private var isChoosingSource = false
+    @State private var isPickingPhoto = false
+    @State private var isUsingCamera = false
     @State private var isImporting = false
     @State private var importerError: String?
 
     var body: some View {
-        VStack(alignment: .trailing, spacing: 4) {
-            HStack {
-                PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
-                    Label("Photo", systemImage: "photo")
-                }
+        VStack(alignment: .leading, spacing: 6) {
+            Button {
+                isChoosingSource = true
+            } label: {
+                HStack(spacing: 12) {
+                    Label(title, systemImage: systemImage)
 
-                Button {
-                    isImporting = true
-                } label: {
-                    Label("File", systemImage: systemImage)
+                    Spacer()
+
+                    Text(selection?.displayName ?? "Choose")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+
+                    Image(systemName: "chevron.right")
+                        .font(.footnote)
+                        .foregroundStyle(.tertiary)
                 }
             }
+            .buttonStyle(.plain)
+            .confirmationDialog("Choose \(title)", isPresented: $isChoosingSource, titleVisibility: .visible) {
+                Button("Photos") {
+                    isPickingPhoto = true
+                }
+
+                Button("Camera") {
+                    guard DocumentPhotoCamera.isCameraAvailable else {
+                        importerError = "Camera is not available on this device. Please use Photos or Files."
+                        return
+                    }
+
+                    isUsingCamera = true
+                }
+
+                Button("Files") {
+                    isImporting = true
+                }
+
+                Button("Cancel", role: .cancel) {}
+            }
+            .photosPicker(isPresented: $isPickingPhoto, selection: $selectedPhotoItem, matching: .images)
             .fileImporter(
                 isPresented: $isImporting,
                 allowedContentTypes: [.pdf, .image],
@@ -229,12 +259,11 @@ private struct DocumentPickerButton: View {
                     await loadPhoto(newItem)
                 }
             }
-
-            if let selection {
-                Text(selection.displayName)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+            .sheet(isPresented: $isUsingCamera) {
+                DocumentPhotoCamera { image in
+                    loadCameraImage(image)
+                }
+                .ignoresSafeArea()
             }
 
             if let importerError {
@@ -269,6 +298,20 @@ private struct DocumentPickerButton: View {
         }
     }
 
+    private func loadCameraImage(_ image: UIImage) {
+        guard let data = image.jpegData(compressionQuality: 0.85) else {
+            importerError = "Could not read that camera photo."
+            return
+        }
+
+        selection = .photo(
+            data: data,
+            fileName: "\(UUID().uuidString).jpg",
+            contentType: "image/jpeg"
+        )
+        importerError = nil
+    }
+
     private func contentType(for url: URL) -> String {
         switch url.pathExtension.lowercased() {
         case "jpg", "jpeg":
@@ -281,6 +324,52 @@ private struct DocumentPickerButton: View {
             return "application/pdf"
         default:
             return "application/octet-stream"
+        }
+    }
+}
+
+private struct DocumentPhotoCamera: UIViewControllerRepresentable {
+    static var isCameraAvailable: Bool {
+        UIImagePickerController.isSourceTypeAvailable(.camera)
+    }
+
+    let onImageCaptured: (UIImage) -> Void
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        picker.sourceType = .camera
+        picker.mediaTypes = [UTType.image.identifier]
+        picker.cameraCaptureMode = .photo
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onImageCaptured: onImageCaptured)
+    }
+
+    final class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        let onImageCaptured: (UIImage) -> Void
+
+        init(onImageCaptured: @escaping (UIImage) -> Void) {
+            self.onImageCaptured = onImageCaptured
+        }
+
+        func imagePickerController(
+            _ picker: UIImagePickerController,
+            didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
+        ) {
+            if let image = info[.originalImage] as? UIImage {
+                onImageCaptured(image)
+            }
+
+            picker.dismiss(animated: true)
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            picker.dismiss(animated: true)
         }
     }
 }
