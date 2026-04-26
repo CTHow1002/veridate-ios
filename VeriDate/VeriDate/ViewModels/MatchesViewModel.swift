@@ -51,9 +51,10 @@ final class MatchesViewModel: ObservableObject {
             for match in rows {
                 let otherUserId = match.userOneId == userId ? match.userTwoId : match.userOneId
                 if let profile = try await loadProfile(userId: otherUserId) {
-                    let lastMessage = try await loadLastMessage(matchId: match.id)
-                    if let lastMessage, lastMessage.senderId != userId {
-                        await markMessageDelivered(lastMessage)
+                    var lastMessage = try await loadLastMessage(matchId: match.id)
+                    if let message = lastMessage, message.senderId != userId {
+                        await markMessagesDelivered(matchId: match.id)
+                        lastMessage = try await loadLastMessage(matchId: match.id)
                     }
                     loaded.append(MatchRow(match: match, profile: profile, lastMessage: lastMessage))
                 }
@@ -91,21 +92,17 @@ final class MatchesViewModel: ObservableObject {
         return messages.first
     }
 
-    private func markMessageDelivered(_ message: Message) async {
-        guard message.deliveredAt == nil else { return }
-
-        struct DeliveryPayload: Encodable {
-            let delivered_at: String
+    private func markMessagesDelivered(matchId: UUID) async {
+        struct ReceiptParams: Encodable {
+            let p_match_id: UUID
         }
 
         do {
             try await supabase
-                .from("messages")
-                .update(DeliveryPayload(delivered_at: ISO8601DateFormatter().string(from: Date())))
-                .eq("id", value: message.id)
+                .rpc("mark_match_messages_delivered", params: ReceiptParams(p_match_id: matchId))
                 .execute()
         } catch {
-            // Delivery receipts are best-effort; the list should still load.
+            errorMessage = "Could not update message delivery status. \(error.localizedDescription)"
         }
     }
 }

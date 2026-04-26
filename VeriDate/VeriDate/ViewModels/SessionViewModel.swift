@@ -203,19 +203,21 @@ final class SessionViewModel: ObservableObject {
     func updatePresence(isOnline: Bool) async {
         guard let userId = currentUserId else { return }
 
-        struct PresencePayload: Encodable {
-            let is_online: Bool
-            let last_seen_at: String
+        struct PresenceParams: Encodable {
+            let p_is_online: Bool
         }
 
         do {
             try await supabase
-                .from("profiles")
-                .update(PresencePayload(is_online: isOnline, last_seen_at: ISO8601DateFormatter().string(from: Date())))
-                .eq("id", value: userId)
+                .rpc("set_user_presence", params: PresenceParams(p_is_online: isOnline))
                 .execute()
+
+            if currentProfile?.id == userId {
+                currentProfile?.isOnline = isOnline
+                currentProfile?.lastSeenAt = ISO8601DateFormatter().string(from: Date())
+            }
         } catch {
-            // Presence is helpful but should never block the app.
+            errorMessage = "Could not update online status. \(error.localizedDescription)"
         }
     }
 

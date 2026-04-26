@@ -92,6 +92,16 @@ add column if not exists is_online boolean not null default false;
 alter table public.profiles
 add column if not exists last_seen_at timestamptz;
 
+alter table public.profiles enable row level security;
+
+drop policy if exists "Users can update own profile" on public.profiles;
+create policy "Users can update own profile"
+on public.profiles
+for update
+to authenticated
+using (auth.uid() = id)
+with check (auth.uid() = id);
+
 create table if not exists public.dating_filters (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id) on delete cascade,
@@ -231,6 +241,21 @@ for select
 to authenticated
 using (auth.uid() = user_one_id or auth.uid() = user_two_id);
 
+drop policy if exists "Matched users can read each other profiles" on public.profiles;
+create policy "Matched users can read each other profiles"
+on public.profiles
+for select
+to authenticated
+using (
+  auth.uid() = id
+  or exists (
+    select 1
+    from public.matches
+    where (matches.user_one_id = auth.uid() and matches.user_two_id = profiles.id)
+       or (matches.user_two_id = auth.uid() and matches.user_one_id = profiles.id)
+  )
+);
+
 -- Chat support for matched users.
 create table if not exists public.messages (
   id uuid primary key default gen_random_uuid(),
@@ -253,6 +278,27 @@ create index if not exists messages_match_created_at_idx
 on public.messages (match_id, created_at);
 
 alter table public.messages enable row level security;
+
+create or replace function public.set_user_presence(p_is_online boolean)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if auth.uid() is null then
+    raise exception 'Not authenticated';
+  end if;
+
+  update public.profiles
+  set
+    is_online = p_is_online,
+    last_seen_at = now()
+  where id = auth.uid();
+end;
+$$;
+
+grant execute on function public.set_user_presence(boolean) to authenticated;
 
 drop policy if exists "Matched users can read messages" on public.messages;
 create policy "Matched users can read messages"
@@ -304,6 +350,67 @@ with check (
       and (auth.uid() = matches.user_one_id or auth.uid() = matches.user_two_id)
   )
 );
+
+create or replace function public.mark_match_messages_delivered(p_match_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if auth.uid() is null then
+    raise exception 'Not authenticated';
+  end if;
+
+  if not exists (
+    select 1
+    from public.matches
+    where id = p_match_id
+      and (user_one_id = auth.uid() or user_two_id = auth.uid())
+  ) then
+    raise exception 'Not allowed';
+  end if;
+
+  update public.messages
+  set delivered_at = coalesce(delivered_at, now())
+  where match_id = p_match_id
+    and sender_id <> auth.uid();
+end;
+$$;
+
+grant execute on function public.mark_match_messages_delivered(uuid) to authenticated;
+
+create or replace function public.mark_match_messages_read(p_match_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if auth.uid() is null then
+    raise exception 'Not authenticated';
+  end if;
+
+  if not exists (
+    select 1
+    from public.matches
+    where id = p_match_id
+      and (user_one_id = auth.uid() or user_two_id = auth.uid())
+  ) then
+    raise exception 'Not allowed';
+  end if;
+
+  update public.messages
+  set
+    delivered_at = coalesce(delivered_at, now()),
+    read_at = coalesce(read_at, now()),
+    is_read = true
+  where match_id = p_match_id
+    and sender_id <> auth.uid();
+end;
+$$;
+
+grant execute on function public.mark_match_messages_read(uuid) to authenticated;
 
 create table if not exists public.user_blocks (
   id uuid primary key default gen_random_uuid(),

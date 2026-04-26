@@ -31,7 +31,8 @@ final class ChatThreadViewModel: ObservableObject {
 
         do {
             messages = try await fetchMessages(matchId: match.id)
-            await markMessagesRead(matchId: match.id, userId: userId)
+            await markMessagesRead(matchId: match.id)
+            messages = try await fetchMessages(matchId: match.id)
         } catch {
             errorMessage = "Could not load messages. \(error.localizedDescription)"
         }
@@ -46,9 +47,8 @@ final class ChatThreadViewModel: ObservableObject {
             let latestMessages = try await fetchMessages(matchId: match.id)
             guard latestMessages != messages else { return }
 
-            messages = latestMessages
-            await markMessagesDelivered(matchId: match.id, userId: userId)
-            await markMessagesRead(matchId: match.id, userId: userId)
+            await markMessagesRead(matchId: match.id)
+            messages = try await fetchMessages(matchId: match.id)
         } catch {
             if messages.isEmpty {
                 errorMessage = "Could not refresh messages. \(error.localizedDescription)"
@@ -168,40 +168,17 @@ final class ChatThreadViewModel: ObservableObject {
         }
     }
 
-    private func markMessagesRead(matchId: UUID, userId: UUID) async {
-        struct ReadPayload: Encodable {
-            let is_read: Bool
-            let delivered_at: String
-            let read_at: String
-        }
-
-        do {
-            let now = ISO8601DateFormatter().string(from: Date())
-            try await supabase
-                .from("messages")
-                .update(ReadPayload(is_read: true, delivered_at: now, read_at: now))
-                .eq("match_id", value: matchId)
-                .neq("sender_id", value: userId)
-                .execute()
-        } catch {
-            errorMessage = "Messages loaded, but could not mark them as read."
-        }
-    }
-
-    private func markMessagesDelivered(matchId: UUID, userId: UUID) async {
-        struct DeliveryPayload: Encodable {
-            let delivered_at: String
+    private func markMessagesRead(matchId: UUID) async {
+        struct ReceiptParams: Encodable {
+            let p_match_id: UUID
         }
 
         do {
             try await supabase
-                .from("messages")
-                .update(DeliveryPayload(delivered_at: ISO8601DateFormatter().string(from: Date())))
-                .eq("match_id", value: matchId)
-                .neq("sender_id", value: userId)
+                .rpc("mark_match_messages_read", params: ReceiptParams(p_match_id: matchId))
                 .execute()
         } catch {
-            // Delivery receipts are best-effort.
+            errorMessage = "Messages loaded, but could not mark them as read. \(error.localizedDescription)"
         }
     }
 
