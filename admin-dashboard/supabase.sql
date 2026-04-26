@@ -59,21 +59,18 @@ drop policy if exists "Users can create own verification submission" on public.v
 create policy "Users can create own verification submission"
 on public.verification_submissions
 for insert
-to authenticated
 with check (auth.uid() = user_id);
 
 drop policy if exists "Users can read own verification submission" on public.verification_submissions;
 create policy "Users can read own verification submission"
 on public.verification_submissions
 for select
-to authenticated
 using (auth.uid() = user_id);
 
 drop policy if exists "Users can resubmit own verification submission" on public.verification_submissions;
 create policy "Users can resubmit own verification submission"
 on public.verification_submissions
 for update
-to authenticated
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);
 
@@ -98,7 +95,6 @@ drop policy if exists "Users can update own profile" on public.profiles;
 create policy "Users can update own profile"
 on public.profiles
 for update
-to authenticated
 using (auth.uid() = id)
 with check (auth.uid() = id);
 
@@ -180,21 +176,18 @@ drop policy if exists "Users can read own dating filters" on public.dating_filte
 create policy "Users can read own dating filters"
 on public.dating_filters
 for select
-to authenticated
 using (auth.uid() = user_id);
 
 drop policy if exists "Users can create own dating filters" on public.dating_filters;
 create policy "Users can create own dating filters"
 on public.dating_filters
 for insert
-to authenticated
 with check (auth.uid() = user_id);
 
 drop policy if exists "Users can update own dating filters" on public.dating_filters;
 create policy "Users can update own dating filters"
 on public.dating_filters
 for update
-to authenticated
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);
 
@@ -213,14 +206,12 @@ drop policy if exists "Users can create own profile actions" on public.profile_a
 create policy "Users can create own profile actions"
 on public.profile_actions
 for insert
-to authenticated
 with check (auth.uid() = actor_user_id);
 
 drop policy if exists "Users can read own profile actions" on public.profile_actions;
 create policy "Users can read own profile actions"
 on public.profile_actions
 for select
-to authenticated
 using (auth.uid() = actor_user_id);
 
 create table if not exists public.matches (
@@ -238,14 +229,12 @@ drop policy if exists "Users can read their matches" on public.matches;
 create policy "Users can read their matches"
 on public.matches
 for select
-to authenticated
 using (auth.uid() = user_one_id or auth.uid() = user_two_id);
 
 drop policy if exists "Matched users can read each other profiles" on public.profiles;
 create policy "Matched users can read each other profiles"
 on public.profiles
 for select
-to authenticated
 using (
   auth.uid() = id
   or exists (
@@ -304,7 +293,6 @@ drop policy if exists "Matched users can read messages" on public.messages;
 create policy "Matched users can read messages"
 on public.messages
 for select
-to authenticated
 using (
   exists (
     select 1
@@ -318,7 +306,6 @@ drop policy if exists "Matched users can send messages" on public.messages;
 create policy "Matched users can send messages"
 on public.messages
 for insert
-to authenticated
 with check (
   auth.uid() = sender_id
   and exists (
@@ -333,7 +320,6 @@ drop policy if exists "Matched users can mark messages read" on public.messages;
 create policy "Matched users can mark messages read"
 on public.messages
 for update
-to authenticated
 using (
   exists (
     select 1
@@ -429,21 +415,18 @@ drop policy if exists "Users can create own blocks" on public.user_blocks;
 create policy "Users can create own blocks"
 on public.user_blocks
 for insert
-to authenticated
 with check (auth.uid() = blocker_user_id);
 
 drop policy if exists "Users can read own blocks" on public.user_blocks;
 create policy "Users can read own blocks"
 on public.user_blocks
 for select
-to authenticated
 using (auth.uid() = blocker_user_id);
 
 drop policy if exists "Users can update own blocks" on public.user_blocks;
 create policy "Users can update own blocks"
 on public.user_blocks
 for update
-to authenticated
 using (auth.uid() = blocker_user_id)
 with check (auth.uid() = blocker_user_id);
 
@@ -463,14 +446,12 @@ drop policy if exists "Users can create own reports" on public.user_reports;
 create policy "Users can create own reports"
 on public.user_reports
 for insert
-to authenticated
 with check (auth.uid() = reporter_user_id);
 
 drop policy if exists "Users can read own reports" on public.user_reports;
 create policy "Users can read own reports"
 on public.user_reports
 for select
-to authenticated
 using (auth.uid() = reporter_user_id);
 
 create or replace function public.create_match_on_mutual_like()
