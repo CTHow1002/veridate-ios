@@ -10,7 +10,6 @@ final class ProfileSetupViewModel: ObservableObject {
     @Published var fullName = ""
     @Published var dateOfBirth = Calendar.current.date(byAdding: .year, value: -25, to: Date()) ?? Date()
     @Published var gender: GenderType = .male
-    @Published var bio = ""
     @Published var jobTitle = ""
     @Published var companyName = ""
     @Published var educationLevel = "Degree"
@@ -46,7 +45,6 @@ final class ProfileSetupViewModel: ObservableObject {
             let gender: String
             let latitude: Double?
             let longitude: Double?
-            let bio: String
             let job_title: String
             let company_name: String
             let education_level: String
@@ -61,7 +59,6 @@ final class ProfileSetupViewModel: ObservableObject {
             gender: gender.rawValue,
             latitude: coordinate?.latitude,
             longitude: coordinate?.longitude,
-            bio: bio.trimmingCharacters(in: .whitespacesAndNewlines),
             job_title: jobTitle.trimmingCharacters(in: .whitespacesAndNewlines),
             company_name: companyName.trimmingCharacters(in: .whitespacesAndNewlines),
             education_level: educationLevel.trimmingCharacters(in: .whitespacesAndNewlines),

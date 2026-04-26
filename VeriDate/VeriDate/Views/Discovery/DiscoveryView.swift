@@ -22,8 +22,10 @@ struct DiscoveryView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
 
-                            Text(profile.bio ?? "")
-                                .font(.body)
+                            if let bio = profile.bio, !bio.isEmpty {
+                                Text(bio)
+                                    .font(.body)
+                            }
 
                             HStack {
                                 Button("Pass") {

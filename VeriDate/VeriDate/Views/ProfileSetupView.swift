@@ -59,7 +59,6 @@ struct ProfileSetupView: View {
                             Text(goal.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
                         }
                     }
-                    TextField("Bio", text: $vm.bio, axis: .vertical)
                 }
 
                 Section {
