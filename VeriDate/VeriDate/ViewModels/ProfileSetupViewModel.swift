@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CoreLocation
 import Supabase
 
 @MainActor
@@ -9,7 +10,6 @@ final class ProfileSetupViewModel: ObservableObject {
     @Published var fullName = ""
     @Published var dateOfBirth = Calendar.current.date(byAdding: .year, value: -25, to: Date()) ?? Date()
     @Published var gender: GenderType = .male
-    @Published var city = ""
     @Published var bio = ""
     @Published var jobTitle = ""
     @Published var companyName = ""
@@ -29,7 +29,7 @@ final class ProfileSetupViewModel: ObservableObject {
         return formatter
     }()
 
-    func save(userId: UUID) async -> Bool {
+    func save(userId: UUID, coordinate: CLLocationCoordinate2D?) async -> Bool {
         errorMessage = nil
 
         guard !fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
@@ -44,7 +44,8 @@ final class ProfileSetupViewModel: ObservableObject {
             let full_name: String
             let date_of_birth: String?
             let gender: String
-            let city: String
+            let latitude: Double?
+            let longitude: Double?
             let bio: String
             let job_title: String
             let company_name: String
@@ -58,7 +59,8 @@ final class ProfileSetupViewModel: ObservableObject {
             full_name: fullName.trimmingCharacters(in: .whitespacesAndNewlines),
             date_of_birth: Self.birthDateFormatter.string(from: dateOfBirth),
             gender: gender.rawValue,
-            city: city.trimmingCharacters(in: .whitespacesAndNewlines),
+            latitude: coordinate?.latitude,
+            longitude: coordinate?.longitude,
             bio: bio.trimmingCharacters(in: .whitespacesAndNewlines),
             job_title: jobTitle.trimmingCharacters(in: .whitespacesAndNewlines),
             company_name: companyName.trimmingCharacters(in: .whitespacesAndNewlines),

@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileSetupView: View {
     @EnvironmentObject var session: SessionViewModel
     @StateObject private var vm = ProfileSetupViewModel()
+    @StateObject private var locationManager = LocationManager()
 
     var body: some View {
         NavigationStack {
@@ -20,11 +21,24 @@ struct ProfileSetupView: View {
                             Text(gender.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
                         }
                     }
-                    TextField("City", text: $vm.city)
                     Picker("Height", selection: $vm.heightCm) {
                         ForEach(120...220, id: \.self) { height in
                             Text("\(height) cm").tag(height)
                         }
+                    }
+                }
+
+                Section("Location") {
+                    Label(locationManager.statusMessage, systemImage: locationManager.hasLocation ? "location.fill" : "location")
+
+                    Button(locationManager.hasLocation ? "Refresh Location" : "Use Current Location") {
+                        locationManager.requestLocation()
+                    }
+
+                    if let error = locationManager.errorMessage {
+                        Text(error)
+                            .font(.footnote)
+                            .foregroundStyle(.red)
                     }
                 }
 
@@ -52,7 +66,7 @@ struct ProfileSetupView: View {
                     Button {
                         Task {
                             guard let userId = session.currentUserId else { return }
-                            let saved = await vm.save(userId: userId)
+                            let saved = await vm.save(userId: userId, coordinate: locationManager.coordinate)
                             if saved {
                                 await session.loadProfile()
                             }
@@ -72,6 +86,9 @@ struct ProfileSetupView: View {
                 }
             }
             .navigationTitle("Create Profile")
+            .task {
+                locationManager.requestLocation()
+            }
         }
     }
 }

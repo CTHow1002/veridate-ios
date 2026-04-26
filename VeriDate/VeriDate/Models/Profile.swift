@@ -29,6 +29,8 @@ struct Profile: Identifiable, Codable, Hashable {
     var gender: GenderType?
     var city: String?
     var country: String?
+    var latitude: Double?
+    var longitude: Double?
     var bio: String?
     var jobTitle: String?
     var companyName: String?
@@ -55,6 +57,8 @@ struct Profile: Identifiable, Codable, Hashable {
         case gender
         case city
         case country
+        case latitude
+        case longitude
         case bio
         case jobTitle = "job_title"
         case companyName = "company_name"
@@ -74,6 +78,8 @@ struct Profile: Identifiable, Codable, Hashable {
         gender: GenderType? = nil,
         city: String? = nil,
         country: String? = nil,
+        latitude: Double? = nil,
+        longitude: Double? = nil,
         bio: String? = nil,
         jobTitle: String? = nil,
         companyName: String? = nil,
@@ -91,6 +97,8 @@ struct Profile: Identifiable, Codable, Hashable {
         self.gender = gender
         self.city = city
         self.country = country
+        self.latitude = latitude
+        self.longitude = longitude
         self.bio = bio
         self.jobTitle = jobTitle
         self.companyName = companyName
@@ -112,6 +120,8 @@ struct Profile: Identifiable, Codable, Hashable {
         gender = try container.decodeIfPresent(GenderType.self, forKey: .gender)
         city = try container.decodeIfPresent(String.self, forKey: .city)
         country = try container.decodeIfPresent(String.self, forKey: .country)
+        latitude = try container.decodeIfPresent(Double.self, forKey: .latitude)
+        longitude = try container.decodeIfPresent(Double.self, forKey: .longitude)
         bio = try container.decodeIfPresent(String.self, forKey: .bio)
         jobTitle = try container.decodeIfPresent(String.self, forKey: .jobTitle)
         companyName = try container.decodeIfPresent(String.self, forKey: .companyName)

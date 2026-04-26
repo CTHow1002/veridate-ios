@@ -9,7 +9,7 @@ struct ProfileView: View {
                 if let profile = session.currentProfile {
                     Section("Profile") {
                         Text(profile.fullName ?? "No name")
-                        Text(profile.city ?? "No city")
+                        Text(profile.latitude == nil || profile.longitude == nil ? "No location" : "Location added")
                         Text(profile.verificationStatus.rawValue.capitalized)
                     }
                 }

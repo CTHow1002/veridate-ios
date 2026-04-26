@@ -272,6 +272,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "VeriDate uses your camera to record a short verification video for admin review.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "VeriDate uses your location to show nearby matches within your selected distance.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VeriDate uses your microphone while recording your verification video.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -306,6 +307,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "VeriDate uses your camera to record a short verification video for admin review.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "VeriDate uses your location to show nearby matches within your selected distance.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VeriDate uses your microphone while recording your verification video.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

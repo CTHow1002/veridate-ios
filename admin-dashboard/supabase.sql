@@ -79,6 +79,131 @@ with check (auth.uid() = user_id);
 
 -- Admin review uses the service_role key on the backend, which bypasses RLS.
 
+-- Distance-based matching support for the iPhone app.
+alter table public.profiles
+add column if not exists latitude double precision;
+
+alter table public.profiles
+add column if not exists longitude double precision;
+
+create table if not exists public.dating_filters (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  preferred_gender text,
+  min_age integer,
+  max_age integer,
+  min_height_cm integer,
+  education_level text,
+  relationship_goal text,
+  verified_only boolean not null default false,
+  max_distance_km integer not null default 50,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.dating_filters
+add column if not exists max_distance_km integer not null default 50;
+
+alter table public.dating_filters
+alter column max_distance_km set default 50;
+
+create unique index if not exists dating_filters_user_id_key
+on public.dating_filters (user_id);
+
+alter table public.dating_filters enable row level security;
+
+drop policy if exists "Users can read own dating filters" on public.dating_filters;
+create policy "Users can read own dating filters"
+on public.dating_filters
+for select
+to authenticated
+using (auth.uid() = user_id);
+
+drop policy if exists "Users can create own dating filters" on public.dating_filters;
+create policy "Users can create own dating filters"
+on public.dating_filters
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+drop policy if exists "Users can update own dating filters" on public.dating_filters;
+create policy "Users can update own dating filters"
+on public.dating_filters
+for update
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create or replace function public.get_discovery_profiles(requesting_user_id uuid)
+returns setof public.profiles
+language sql
+security definer
+set search_path = public
+as $$
+  with requester as (
+    select latitude, longitude
+    from public.profiles
+    where id = requesting_user_id
+  ),
+  filter as (
+    select
+      preferred_gender,
+      min_age,
+      max_age,
+      min_height_cm,
+      education_level,
+      relationship_goal,
+      verified_only,
+      max_distance_km
+    from public.dating_filters
+    where user_id = requesting_user_id
+  ),
+  candidates as (
+    select
+      p as profile,
+      (
+        6371 * 2 * asin(
+          least(
+            1,
+            sqrt(
+              power(sin(radians((p.latitude - requester.latitude) / 2)), 2)
+              + cos(radians(requester.latitude))
+              * cos(radians(p.latitude))
+              * power(sin(radians((p.longitude - requester.longitude) / 2)), 2)
+            )
+          )
+        )
+      ) as distance_km
+    from public.profiles p
+    cross join requester
+    left join filter on true
+    where p.id <> requesting_user_id
+      and requester.latitude is not null
+      and requester.longitude is not null
+      and p.latitude is not null
+      and p.longitude is not null
+      and p.full_name is not null
+      and not exists (
+        select 1
+        from public.profile_actions pa
+        where pa.actor_user_id = requesting_user_id
+          and pa.target_user_id = p.id
+      )
+      and (filter.preferred_gender is null or p.gender = filter.preferred_gender)
+      and (filter.min_age is null or p.age >= filter.min_age)
+      and (filter.max_age is null or p.age <= filter.max_age)
+      and (filter.min_height_cm is null or p.height_cm >= filter.min_height_cm)
+      and (filter.education_level is null or p.education_level = filter.education_level)
+      and (filter.relationship_goal is null or p.relationship_goal = filter.relationship_goal)
+      and (coalesce(filter.verified_only, false) = false or p.verification_status = 'verified')
+  )
+  select (candidates.profile).*
+  from candidates
+  left join filter on true
+  where candidates.distance_km <= coalesce(filter.max_distance_km, 50)
+  order by candidates.distance_km asc;
+$$;
+
 create table if not exists public.admin_users (
   id uuid primary key default gen_random_uuid(),
   username text not null unique,
