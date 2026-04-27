@@ -578,17 +578,27 @@ add column if not exists created_at timestamptz not null default now();
 
 alter table public.reports enable row level security;
 
+grant select, insert on public.reports to authenticated;
+
 drop policy if exists "Users can create own reports" on public.reports;
 create policy "Users can create own reports"
 on public.reports
 for insert
-with check (auth.uid() = reporter_user_id);
+to authenticated
+with check (
+  auth.uid() is not null
+  and auth.uid() = reporter_user_id
+  and reporter_user_id <> reported_user_id
+);
 
 drop policy if exists "Users can read own reports" on public.reports;
 create policy "Users can read own reports"
 on public.reports
 for select
-using (auth.uid() = reporter_user_id);
+to authenticated
+using (
+  auth.uid() = reporter_user_id
+);
 
 create or replace function public.create_match_on_mutual_like()
 returns trigger
