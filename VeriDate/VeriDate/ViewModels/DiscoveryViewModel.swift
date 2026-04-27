@@ -41,7 +41,7 @@ final class DiscoveryViewModel: ObservableObject {
                 .execute()
                 .value
 
-            profiles = response
+            profiles = response.filter { !$0.isBanned }
         } catch {
             errorMessage = "Could not load discovery profiles. \(error.localizedDescription)"
         }
@@ -164,6 +164,10 @@ final class DiscoveryViewModel: ObservableObject {
         } catch {
             errorMessage = "Could not save your \(action). \(error.localizedDescription)"
         }
+    }
+
+    func removeProfile(id: UUID) {
+        profiles.removeAll { $0.id == id }
     }
 
     private func trimmedOrNil(_ value: String) -> String? {

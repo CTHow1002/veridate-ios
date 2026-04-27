@@ -3,9 +3,8 @@ import SwiftUI
 struct ChatThreadView: View {
     @EnvironmentObject var session: SessionViewModel
     @StateObject private var vm = ChatThreadViewModel()
+    @StateObject private var safetyVM = SafetyViewModel()
     @State private var messageText = ""
-    @State private var reportReason = ""
-    @State private var blockReason = ""
     @State private var isShowingReportAlert = false
     @State private var isShowingBlockAlert = false
 
@@ -25,14 +24,12 @@ struct ChatThreadView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Button(role: .destructive) {
-                        blockReason = ""
                         isShowingBlockAlert = true
                     } label: {
                         Label("Block", systemImage: "hand.raised")
                     }
 
                     Button(role: .destructive) {
-                        reportReason = ""
                         isShowingReportAlert = true
                     } label: {
                         Label("Report", systemImage: "exclamationmark.bubble")
@@ -42,19 +39,17 @@ struct ChatThreadView: View {
                 }
             }
         }
-        .alert("Report User", isPresented: $isShowingReportAlert) {
-            TextField("Reason", text: $reportReason)
-            Button("Cancel", role: .cancel) {}
-            Button("Submit", role: .destructive) {
-                Task {
-                    await reportUser()
-                }
+        .sheet(isPresented: $isShowingReportAlert) {
+            if let userId = session.currentUserId {
+                SafetyReportSheet(
+                    reporterUserId: userId,
+                    reportedUserId: row.otherUserId(for: userId),
+                    matchId: row.match.id,
+                    reportedName: (vm.otherProfile ?? row.profile).fullName ?? "User"
+                )
             }
-        } message: {
-            Text("Tell us briefly what happened.")
         }
         .alert("Block User", isPresented: $isShowingBlockAlert) {
-            TextField("Optional reason", text: $blockReason)
             Button("Cancel", role: .cancel) {}
             Button("Block", role: .destructive) {
                 Task {
@@ -62,7 +57,7 @@ struct ChatThreadView: View {
                 }
             }
         } message: {
-            Text("This saves a block record for admin review and future safety controls.")
+            Text("This hides the match and stops messaging both ways.")
         }
         .alert("Notice", isPresented: actionAlertBinding) {
             Button("OK") {
@@ -126,6 +121,13 @@ struct ChatThreadView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
 
+            if vm.isBlocked {
+                Text("Messaging is unavailable because one of you blocked the other.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
             HStack(spacing: 10) {
                 TextField("Message", text: $messageText, axis: .vertical)
                     .textFieldStyle(.roundedBorder)
@@ -143,7 +145,7 @@ struct ChatThreadView: View {
                     }
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || vm.isSending)
+                .disabled(messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || vm.isSending || vm.isBlocked)
             }
         }
         .padding()
@@ -198,22 +200,18 @@ struct ChatThreadView: View {
 
     private func blockUser() async {
         guard let userId = session.currentUserId else { return }
-        await vm.blockUser(
-            match: row.match,
+        let didBlock = await safetyVM.blockUser(
+            blockerUserId: userId,
             blockedUserId: row.otherUserId(for: userId),
-            userId: userId,
-            reason: blockReason
+            matchId: row.match.id
         )
-    }
 
-    private func reportUser() async {
-        guard let userId = session.currentUserId else { return }
-        await vm.reportUser(
-            match: row.match,
-            reportedUserId: row.otherUserId(for: userId),
-            userId: userId,
-            reason: reportReason
-        )
+        if didBlock {
+            vm.isBlocked = true
+            vm.actionMessage = safetyVM.successMessage
+        } else {
+            vm.errorMessage = safetyVM.errorMessage
+        }
     }
 }
 

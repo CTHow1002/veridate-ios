@@ -7,6 +7,7 @@ export type Profile = {
   education_level?: string | null;
   school_name?: string | null;
   verification_status?: string | null;
+  is_banned?: boolean | null;
 };
 
 export type SignedFile = {
@@ -30,4 +31,22 @@ export type PendingSubmission = {
     jobProof: SignedFile | null;
     educationProof: SignedFile | null;
   };
+};
+
+export type ReportStatus = "open" | "dismissed" | "warned" | "banned";
+
+export type SafetyReport = {
+  id: string;
+  reporterUserId: string;
+  reportedUserId: string;
+  matchId: string | null;
+  reason: string;
+  details: string | null;
+  status: ReportStatus;
+  moderationNotes: string | null;
+  actionTaken: string | null;
+  reviewedAt: string | null;
+  createdAt: string | null;
+  reporter: Profile;
+  reportedUser: Profile;
 };

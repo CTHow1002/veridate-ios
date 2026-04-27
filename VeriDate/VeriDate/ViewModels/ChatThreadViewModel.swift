@@ -8,6 +8,7 @@ final class ChatThreadViewModel: ObservableObject {
     @Published var otherProfile: Profile?
     @Published var isLoading = false
     @Published var isSending = false
+    @Published var isBlocked = false
     @Published var errorMessage: String?
     @Published var actionMessage: String?
 
@@ -38,6 +39,7 @@ final class ChatThreadViewModel: ObservableObject {
 
         do {
             otherProfile = try await fetchProfile(userId: match.otherUserId(for: userId)) ?? otherProfile
+            isBlocked = try await hasBlockBetween(match: match)
             messages = try await fetchMessages(matchId: match.id)
             await markMessagesRead(matchId: match.id)
             messages = try await fetchMessages(matchId: match.id)
@@ -53,6 +55,7 @@ final class ChatThreadViewModel: ObservableObject {
 
         do {
             otherProfile = try await fetchProfile(userId: match.otherUserId(for: userId)) ?? otherProfile
+            isBlocked = try await hasBlockBetween(match: match)
             let latestMessages = try await fetchMessages(matchId: match.id)
             guard latestMessages != messages else { return }
 
@@ -80,6 +83,17 @@ final class ChatThreadViewModel: ObservableObject {
 
         guard !trimmedBody.isEmpty else {
             errorMessage = "Type a message before sending."
+            return false
+        }
+
+        do {
+            if try await hasBlockBetween(match: match) {
+                isBlocked = true
+                errorMessage = "Messaging is unavailable because one of you blocked the other."
+                return false
+            }
+        } catch {
+            errorMessage = "Could not check message safety. \(error.localizedDescription)"
             return false
         }
 
@@ -129,7 +143,7 @@ final class ChatThreadViewModel: ObservableObject {
 
         do {
             try await supabase
-                .from("user_blocks")
+                .from("blocks")
                 .upsert(
                     BlockPayload(
                         blocker_user_id: userId,
@@ -141,6 +155,7 @@ final class ChatThreadViewModel: ObservableObject {
                 )
                 .execute()
 
+            isBlocked = true
             actionMessage = "User blocked."
         } catch {
             errorMessage = "Could not block this user. \(error.localizedDescription)"
@@ -167,7 +182,7 @@ final class ChatThreadViewModel: ObservableObject {
 
         do {
             try await supabase
-                .from("user_reports")
+                .from("reports")
                 .insert(ReportPayload(reporter_user_id: userId, reported_user_id: reportedUserId, match_id: match.id, reason: reason))
                 .execute()
 
@@ -211,6 +226,24 @@ final class ChatThreadViewModel: ObservableObject {
             .value
 
         return profiles.first
+    }
+
+    private func hasBlockBetween(match: Match) async throws -> Bool {
+        struct BlockRow: Decodable {
+            let id: UUID
+        }
+
+        let blocks: [BlockRow] = try await supabase
+            .from("blocks")
+            .select("id")
+            .or(
+                "and(blocker_user_id.eq.\(match.userOneId.uuidString),blocked_user_id.eq.\(match.userTwoId.uuidString)),and(blocker_user_id.eq.\(match.userTwoId.uuidString),blocked_user_id.eq.\(match.userOneId.uuidString))"
+            )
+            .limit(1)
+            .execute()
+            .value
+
+        return !blocks.isEmpty
     }
 
     private func clean(_ value: String?) -> String? {

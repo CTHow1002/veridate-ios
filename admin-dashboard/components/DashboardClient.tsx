@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { PendingSubmission } from "@/lib/types";
 
@@ -58,9 +59,14 @@ export default function DashboardClient() {
           <p className="eyebrow">VeriDate Admin</p>
           <h1>Verification Review</h1>
         </div>
-        <button className="secondary-button" onClick={logout}>
-          Sign Out
-        </button>
+        <div className="topbar-actions">
+          <Link className="nav-link" href="/dashboard/reports">
+            Reports
+          </Link>
+          <button className="secondary-button" onClick={logout}>
+            Sign Out
+          </button>
+        </div>
       </header>
 
       <main className="dashboard">

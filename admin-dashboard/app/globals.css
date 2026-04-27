@@ -151,6 +151,29 @@ textarea {
   font-size: 26px;
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-link {
+  min-height: 40px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  padding: 0 16px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  background: #f0f3f4;
+}
+
 .dashboard {
   width: min(1180px, calc(100% - 32px));
   margin: 28px auto 56px;
@@ -212,6 +235,10 @@ textarea {
   border-radius: 50%;
   margin-top: 9px;
   background: #f59e0b;
+}
+
+.danger-dot {
+  background: var(--danger);
 }
 
 .identity-block h3 {
@@ -316,6 +343,23 @@ dd {
   gap: 10px;
 }
 
+.report-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(180px, 1fr);
+}
+
+.report-details {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.report-details dd {
+  white-space: pre-wrap;
+}
+
+.report-actions {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .form-error {
   min-height: 18px;
   margin: 0;
@@ -335,12 +379,19 @@ dd {
     align-items: stretch;
   }
 
+  .topbar-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
   .submission-card {
     display: grid;
   }
 
   .profile-grid,
-  .file-grid {
+  .file-grid,
+  .report-grid,
+  .report-actions {
     grid-template-columns: 1fr;
   }
 }

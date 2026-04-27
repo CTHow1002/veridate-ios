@@ -41,6 +41,7 @@ struct Profile: Identifiable, Codable, Hashable {
     var profilePhotoURL: String?
     var isOnline: Bool
     var lastSeenAt: String?
+    var isBanned: Bool
     var verificationStatus: VerificationStatus
 
     var hasCompletedBasicProfile: Bool {
@@ -71,6 +72,7 @@ struct Profile: Identifiable, Codable, Hashable {
         case profilePhotoURL = "profile_photo_url"
         case isOnline = "is_online"
         case lastSeenAt = "last_seen_at"
+        case isBanned = "is_banned"
         case verificationStatus = "verification_status"
     }
 
@@ -94,6 +96,7 @@ struct Profile: Identifiable, Codable, Hashable {
         profilePhotoURL: String? = nil,
         isOnline: Bool = false,
         lastSeenAt: String? = nil,
+        isBanned: Bool = false,
         verificationStatus: VerificationStatus = .unsubmitted
     ) {
         self.id = id
@@ -115,6 +118,7 @@ struct Profile: Identifiable, Codable, Hashable {
         self.profilePhotoURL = profilePhotoURL
         self.isOnline = isOnline
         self.lastSeenAt = lastSeenAt
+        self.isBanned = isBanned
         self.verificationStatus = verificationStatus
     }
 
@@ -140,6 +144,7 @@ struct Profile: Identifiable, Codable, Hashable {
         profilePhotoURL = try container.decodeIfPresent(String.self, forKey: .profilePhotoURL)
         isOnline = try container.decodeIfPresent(Bool.self, forKey: .isOnline) ?? false
         lastSeenAt = try container.decodeIfPresent(String.self, forKey: .lastSeenAt)
+        isBanned = try container.decodeIfPresent(Bool.self, forKey: .isBanned) ?? false
         verificationStatus = try container.decodeIfPresent(VerificationStatus.self, forKey: .verificationStatus) ?? .unsubmitted
     }
 }

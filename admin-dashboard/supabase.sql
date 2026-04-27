@@ -89,6 +89,9 @@ add column if not exists is_online boolean not null default false;
 alter table public.profiles
 add column if not exists last_seen_at timestamptz;
 
+alter table public.profiles
+add column if not exists is_banned boolean not null default false;
+
 alter table public.profiles enable row level security;
 
 drop policy if exists "Users can update own profile" on public.profiles;
@@ -289,6 +292,17 @@ $$;
 
 grant execute on function public.set_user_presence(boolean) to authenticated;
 
+create table if not exists public.blocks (
+  id uuid primary key default gen_random_uuid(),
+  blocker_user_id uuid not null references public.profiles(id) on delete cascade,
+  blocked_user_id uuid not null references public.profiles(id) on delete cascade,
+  match_id uuid references public.matches(id) on delete set null,
+  reason text,
+  created_at timestamptz not null default now(),
+  check (blocker_user_id <> blocked_user_id),
+  unique (blocker_user_id, blocked_user_id)
+);
+
 drop policy if exists "Matched users can read messages" on public.messages;
 create policy "Matched users can read messages"
 on public.messages
@@ -313,6 +327,15 @@ with check (
     from public.matches
     where matches.id = messages.match_id
       and (auth.uid() = matches.user_one_id or auth.uid() = matches.user_two_id)
+  )
+  and not exists (
+    select 1
+    from public.blocks b
+    join public.matches m on m.id = messages.match_id
+    where (
+      (b.blocker_user_id = m.user_one_id and b.blocked_user_id = m.user_two_id)
+      or (b.blocker_user_id = m.user_two_id and b.blocked_user_id = m.user_one_id)
+    )
   )
 );
 
@@ -430,6 +453,38 @@ for update
 using (auth.uid() = blocker_user_id)
 with check (auth.uid() = blocker_user_id);
 
+create table if not exists public.blocks (
+  id uuid primary key default gen_random_uuid(),
+  blocker_user_id uuid not null references public.profiles(id) on delete cascade,
+  blocked_user_id uuid not null references public.profiles(id) on delete cascade,
+  match_id uuid references public.matches(id) on delete set null,
+  reason text,
+  created_at timestamptz not null default now(),
+  check (blocker_user_id <> blocked_user_id),
+  unique (blocker_user_id, blocked_user_id)
+);
+
+alter table public.blocks enable row level security;
+
+drop policy if exists "Users can create own blocks" on public.blocks;
+create policy "Users can create own blocks"
+on public.blocks
+for insert
+with check (auth.uid() = blocker_user_id);
+
+drop policy if exists "Users can read own blocks" on public.blocks;
+create policy "Users can read own blocks"
+on public.blocks
+for select
+using (auth.uid() = blocker_user_id or auth.uid() = blocked_user_id);
+
+drop policy if exists "Users can update own blocks" on public.blocks;
+create policy "Users can update own blocks"
+on public.blocks
+for update
+using (auth.uid() = blocker_user_id)
+with check (auth.uid() = blocker_user_id);
+
 create table if not exists public.user_reports (
   id uuid primary key default gen_random_uuid(),
   reporter_user_id uuid not null references public.profiles(id) on delete cascade,
@@ -451,6 +506,50 @@ with check (auth.uid() = reporter_user_id);
 drop policy if exists "Users can read own reports" on public.user_reports;
 create policy "Users can read own reports"
 on public.user_reports
+for select
+using (auth.uid() = reporter_user_id);
+
+create table if not exists public.reports (
+  id uuid primary key default gen_random_uuid(),
+  reporter_user_id uuid not null references public.profiles(id) on delete cascade,
+  reported_user_id uuid not null references public.profiles(id) on delete cascade,
+  match_id uuid references public.matches(id) on delete set null,
+  reason text not null,
+  details text,
+  status text not null default 'open' check (status in ('open', 'dismissed', 'warned', 'banned')),
+  moderation_notes text,
+  action_taken text,
+  reviewed_at timestamptz,
+  created_at timestamptz not null default now(),
+  check (reporter_user_id <> reported_user_id)
+);
+
+alter table public.reports
+add column if not exists details text;
+
+alter table public.reports
+add column if not exists status text not null default 'open';
+
+alter table public.reports
+add column if not exists moderation_notes text;
+
+alter table public.reports
+add column if not exists action_taken text;
+
+alter table public.reports
+add column if not exists reviewed_at timestamptz;
+
+alter table public.reports enable row level security;
+
+drop policy if exists "Users can create own reports" on public.reports;
+create policy "Users can create own reports"
+on public.reports
+for insert
+with check (auth.uid() = reporter_user_id);
+
+drop policy if exists "Users can read own reports" on public.reports;
+create policy "Users can read own reports"
+on public.reports
 for select
 using (auth.uid() = reporter_user_id);
 
@@ -546,12 +645,19 @@ as $$
     left join filter on true
     where p.id <> requesting_user_id
       and p.full_name is not null
+      and coalesce(p.is_banned, false) = false
       and p.verification_status = 'verified'
       and not exists (
         select 1
         from public.profile_actions pa
         where pa.actor_user_id = requesting_user_id
           and pa.target_user_id = p.id
+      )
+      and not exists (
+        select 1
+        from public.blocks b
+        where (b.blocker_user_id = requesting_user_id and b.blocked_user_id = p.id)
+           or (b.blocked_user_id = requesting_user_id and b.blocker_user_id = p.id)
       )
       and (filter.preferred_gender is null or p.gender = filter.preferred_gender)
       and (filter.min_age is null or p.age >= filter.min_age)

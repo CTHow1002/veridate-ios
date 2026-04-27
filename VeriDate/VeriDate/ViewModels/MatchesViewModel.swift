@@ -50,7 +50,15 @@ final class MatchesViewModel: ObservableObject {
             var loaded: [MatchRow] = []
             for match in rows {
                 let otherUserId = match.userOneId == userId ? match.userTwoId : match.userOneId
+                if try await hasBlockBetween(match: match) {
+                    continue
+                }
+
                 if let profile = try await loadProfile(userId: otherUserId) {
+                    if profile.isBanned {
+                        continue
+                    }
+
                     var lastMessage = try await loadLastMessage(matchId: match.id)
                     if let message = lastMessage, message.senderId != userId {
                         await markMessagesDelivered(matchId: match.id)
@@ -90,6 +98,24 @@ final class MatchesViewModel: ObservableObject {
             .value
 
         return messages.first
+    }
+
+    private func hasBlockBetween(match: Match) async throws -> Bool {
+        struct BlockRow: Decodable {
+            let id: UUID
+        }
+
+        let blocks: [BlockRow] = try await supabase
+            .from("blocks")
+            .select("id")
+            .or(
+                "and(blocker_user_id.eq.\(match.userOneId.uuidString),blocked_user_id.eq.\(match.userTwoId.uuidString)),and(blocker_user_id.eq.\(match.userTwoId.uuidString),blocked_user_id.eq.\(match.userOneId.uuidString))"
+            )
+            .limit(1)
+            .execute()
+            .value
+
+        return !blocks.isEmpty
     }
 
     private func markMessagesDelivered(matchId: UUID) async {
