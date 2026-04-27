@@ -547,6 +547,18 @@ create table if not exists public.reports (
 );
 
 alter table public.reports
+add column if not exists reporter_user_id uuid references public.profiles(id) on delete cascade;
+
+alter table public.reports
+add column if not exists reported_user_id uuid references public.profiles(id) on delete cascade;
+
+alter table public.reports
+add column if not exists match_id uuid references public.matches(id) on delete set null;
+
+alter table public.reports
+add column if not exists reason text;
+
+alter table public.reports
 add column if not exists details text;
 
 alter table public.reports
@@ -560,6 +572,9 @@ add column if not exists action_taken text;
 
 alter table public.reports
 add column if not exists reviewed_at timestamptz;
+
+alter table public.reports
+add column if not exists created_at timestamptz not null default now();
 
 alter table public.reports enable row level security;
 
