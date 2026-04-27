@@ -5,12 +5,19 @@ import Supabase
 @MainActor
 final class ChatThreadViewModel: ObservableObject {
     @Published var messages: [Message] = []
+    @Published var otherProfile: Profile?
     @Published var isLoading = false
     @Published var isSending = false
     @Published var errorMessage: String?
     @Published var actionMessage: String?
 
     private let supabase = SupabaseManager.shared.client
+
+    func setInitialProfile(_ profile: Profile) {
+        if otherProfile == nil {
+            otherProfile = profile
+        }
+    }
 
     func loadMessages(match: Match, userId: UUID, currentProfile: Profile?) async {
         guard currentProfile?.verificationStatus == .verified else {
@@ -30,6 +37,7 @@ final class ChatThreadViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
+            otherProfile = try await fetchProfile(userId: match.otherUserId(for: userId)) ?? otherProfile
             messages = try await fetchMessages(matchId: match.id)
             await markMessagesRead(matchId: match.id)
             messages = try await fetchMessages(matchId: match.id)
@@ -44,6 +52,7 @@ final class ChatThreadViewModel: ObservableObject {
         }
 
         do {
+            otherProfile = try await fetchProfile(userId: match.otherUserId(for: userId)) ?? otherProfile
             let latestMessages = try await fetchMessages(matchId: match.id)
             guard latestMessages != messages else { return }
 
@@ -192,6 +201,18 @@ final class ChatThreadViewModel: ObservableObject {
             .value
     }
 
+    private func fetchProfile(userId: UUID) async throws -> Profile? {
+        let profiles: [Profile] = try await supabase
+            .from("profiles")
+            .select()
+            .eq("id", value: userId)
+            .limit(1)
+            .execute()
+            .value
+
+        return profiles.first
+    }
+
     private func clean(_ value: String?) -> String? {
         let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         return trimmed.isEmpty ? nil : trimmed
@@ -201,5 +222,9 @@ final class ChatThreadViewModel: ObservableObject {
 private extension Match {
     func includes(userId: UUID) -> Bool {
         userOneId == userId || userTwoId == userId
+    }
+
+    func otherUserId(for userId: UUID) -> UUID {
+        userOneId == userId ? userTwoId : userOneId
     }
 }

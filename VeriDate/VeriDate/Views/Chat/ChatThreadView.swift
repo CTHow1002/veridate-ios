@@ -16,25 +16,30 @@ struct ChatThreadView: View {
             content
             composer
         }
-        .navigationTitle(row.profile.fullName ?? "Chat")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            Menu {
-                Button(role: .destructive) {
-                    blockReason = ""
-                    isShowingBlockAlert = true
-                } label: {
-                    Label("Block", systemImage: "hand.raised")
-                }
+            ToolbarItem(placement: .principal) {
+                ChatHeader(profile: vm.otherProfile ?? row.profile)
+            }
 
-                Button(role: .destructive) {
-                    reportReason = ""
-                    isShowingReportAlert = true
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button(role: .destructive) {
+                        blockReason = ""
+                        isShowingBlockAlert = true
+                    } label: {
+                        Label("Block", systemImage: "hand.raised")
+                    }
+
+                    Button(role: .destructive) {
+                        reportReason = ""
+                        isShowingReportAlert = true
+                    } label: {
+                        Label("Report", systemImage: "exclamationmark.bubble")
+                    }
                 } label: {
-                    Label("Report", systemImage: "exclamationmark.bubble")
+                    Image(systemName: "ellipsis.circle")
                 }
-            } label: {
-                Image(systemName: "ellipsis.circle")
             }
         }
         .alert("Report User", isPresented: $isShowingReportAlert) {
@@ -67,6 +72,7 @@ struct ChatThreadView: View {
             Text(vm.actionMessage ?? "")
         }
         .task(id: row.id) {
+            vm.setInitialProfile(row.profile)
             await load()
             await keepChatSynced()
         }
@@ -162,7 +168,7 @@ struct ChatThreadView: View {
 
     private func keepChatSynced() async {
         while !Task.isCancelled {
-            try? await Task.sleep(for: .seconds(2))
+            try? await Task.sleep(for: .milliseconds(800))
 
             guard !Task.isCancelled, let userId = session.currentUserId else {
                 return
@@ -208,6 +214,58 @@ struct ChatThreadView: View {
             userId: userId,
             reason: reportReason
         )
+    }
+}
+
+private struct ChatHeader: View {
+    let profile: Profile
+
+    var body: some View {
+        VStack(spacing: 2) {
+            HStack(spacing: 6) {
+                Text(profile.fullName ?? "Chat")
+                    .font(.headline)
+                    .lineLimit(1)
+
+                Circle()
+                    .fill(isRecentlyOnline ? .green : .secondary.opacity(0.45))
+                    .frame(width: 7, height: 7)
+            }
+
+            Text(presenceText)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    private var presenceText: String {
+        if isRecentlyOnline {
+            return "Online"
+        }
+
+        guard let lastSeenAt = profile.lastSeenAt, let date = parseDate(lastSeenAt) else {
+            return "Offline"
+        }
+
+        return "Last seen \(date.formatted(.relative(presentation: .named)))"
+    }
+
+    private var isRecentlyOnline: Bool {
+        guard profile.isOnline else { return false }
+        guard let lastSeenAt = profile.lastSeenAt, let date = parseDate(lastSeenAt) else {
+            return true
+        }
+
+        return Date().timeIntervalSince(date) < 90
+    }
+
+    private func parseDate(_ value: String) -> Date? {
+        let fractionalFormatter = ISO8601DateFormatter()
+        fractionalFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        return fractionalFormatter.date(from: value) ?? ISO8601DateFormatter().date(from: value)
     }
 }
 
