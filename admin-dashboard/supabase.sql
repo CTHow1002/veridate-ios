@@ -303,6 +303,24 @@ create table if not exists public.blocks (
   unique (blocker_user_id, blocked_user_id)
 );
 
+alter table public.blocks
+add column if not exists blocker_user_id uuid references public.profiles(id) on delete cascade;
+
+alter table public.blocks
+add column if not exists blocked_user_id uuid references public.profiles(id) on delete cascade;
+
+alter table public.blocks
+add column if not exists match_id uuid references public.matches(id) on delete set null;
+
+alter table public.blocks
+add column if not exists reason text;
+
+alter table public.blocks
+add column if not exists created_at timestamptz not null default now();
+
+create unique index if not exists blocks_blocker_blocked_unique_idx
+on public.blocks (blocker_user_id, blocked_user_id);
+
 drop policy if exists "Matched users can read messages" on public.messages;
 create policy "Matched users can read messages"
 on public.messages
