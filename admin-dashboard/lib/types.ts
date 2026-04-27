@@ -8,6 +8,12 @@ export type Profile = {
   school_name?: string | null;
   verification_status?: string | null;
   is_banned?: boolean | null;
+  ban_until?: string | null;
+  ban_message?: string | null;
+  ban_details?: string | null;
+  warning_message?: string | null;
+  warning_details?: string | null;
+  warned_at?: string | null;
 };
 
 export type SignedFile = {

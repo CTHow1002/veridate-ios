@@ -92,6 +92,24 @@ add column if not exists last_seen_at timestamptz;
 alter table public.profiles
 add column if not exists is_banned boolean not null default false;
 
+alter table public.profiles
+add column if not exists ban_until timestamptz;
+
+alter table public.profiles
+add column if not exists ban_message text;
+
+alter table public.profiles
+add column if not exists ban_details text;
+
+alter table public.profiles
+add column if not exists warning_message text;
+
+alter table public.profiles
+add column if not exists warning_details text;
+
+alter table public.profiles
+add column if not exists warned_at timestamptz;
+
 alter table public.profiles enable row level security;
 
 drop policy if exists "Users can update own profile" on public.profiles;
@@ -488,22 +506,31 @@ create table if not exists public.blocks (
 
 alter table public.blocks enable row level security;
 
+grant select, insert, update on public.blocks to authenticated;
+
 drop policy if exists "Users can create own blocks" on public.blocks;
 create policy "Users can create own blocks"
 on public.blocks
 for insert
-with check (auth.uid() = blocker_user_id);
+to authenticated
+with check (
+  auth.uid() is not null
+  and auth.uid() = blocker_user_id
+  and blocker_user_id <> blocked_user_id
+);
 
 drop policy if exists "Users can read own blocks" on public.blocks;
 create policy "Users can read own blocks"
 on public.blocks
 for select
+to authenticated
 using (auth.uid() = blocker_user_id or auth.uid() = blocked_user_id);
 
 drop policy if exists "Users can update own blocks" on public.blocks;
 create policy "Users can update own blocks"
 on public.blocks
 for update
+to authenticated
 using (auth.uid() = blocker_user_id)
 with check (auth.uid() = blocker_user_id);
 
@@ -754,7 +781,10 @@ as $$
     left join filter on true
     where p.id <> requesting_user_id
       and p.full_name is not null
-      and coalesce(p.is_banned, false) = false
+      and (
+        coalesce(p.is_banned, false) = false
+        or (p.ban_until is not null and p.ban_until <= now())
+      )
       and p.verification_status = 'verified'
       and not exists (
         select 1

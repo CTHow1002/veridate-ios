@@ -116,6 +116,14 @@ label {
   font-weight: 650;
 }
 
+.compact-label {
+  gap: 6px;
+}
+
+.compact-label input {
+  min-height: 40px;
+}
+
 input,
 textarea {
   width: 100%;

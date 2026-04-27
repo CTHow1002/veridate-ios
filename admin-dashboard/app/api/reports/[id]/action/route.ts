@@ -20,6 +20,7 @@ export async function POST(request: Request, context: RouteContext) {
   const body = await request.json().catch(() => ({}));
   const action = String(body.action || "") as ReportAction;
   const moderationNotes = String(body.moderationNotes || "").trim();
+  const banDays = Number(body.banDays || 0);
 
   if (!actions.has(action)) {
     return NextResponse.json({ error: "Choose a valid moderation action." }, { status: 400 });
@@ -27,7 +28,7 @@ export async function POST(request: Request, context: RouteContext) {
 
   try {
     const { id } = await context.params;
-    await moderateReport(id, action, moderationNotes);
+    await moderateReport(id, action, { moderationNotes, banDays });
     return NextResponse.json({ ok: true, action });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not review report.";

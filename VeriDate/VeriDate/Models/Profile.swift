@@ -42,7 +42,29 @@ struct Profile: Identifiable, Codable, Hashable {
     var isOnline: Bool
     var lastSeenAt: String?
     var isBanned: Bool
+    var banUntil: String?
+    var banMessage: String?
+    var banDetails: String?
+    var warningMessage: String?
+    var warningDetails: String?
+    var warnedAt: String?
     var verificationStatus: VerificationStatus
+
+    var isCurrentlyBanned: Bool {
+        guard isBanned else { return false }
+        guard let banUntil, let date = Self.parseDate(banUntil) else { return true }
+        return date > Date()
+    }
+
+    var banUntilDate: Date? {
+        guard let banUntil else { return nil }
+        return Self.parseDate(banUntil)
+    }
+
+    var hasActiveWarning: Bool {
+        guard let warningMessage else { return false }
+        return !warningMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
 
     var hasCompletedBasicProfile: Bool {
         guard let fullName, !fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
@@ -73,6 +95,12 @@ struct Profile: Identifiable, Codable, Hashable {
         case isOnline = "is_online"
         case lastSeenAt = "last_seen_at"
         case isBanned = "is_banned"
+        case banUntil = "ban_until"
+        case banMessage = "ban_message"
+        case banDetails = "ban_details"
+        case warningMessage = "warning_message"
+        case warningDetails = "warning_details"
+        case warnedAt = "warned_at"
         case verificationStatus = "verification_status"
     }
 
@@ -97,6 +125,12 @@ struct Profile: Identifiable, Codable, Hashable {
         isOnline: Bool = false,
         lastSeenAt: String? = nil,
         isBanned: Bool = false,
+        banUntil: String? = nil,
+        banMessage: String? = nil,
+        banDetails: String? = nil,
+        warningMessage: String? = nil,
+        warningDetails: String? = nil,
+        warnedAt: String? = nil,
         verificationStatus: VerificationStatus = .unsubmitted
     ) {
         self.id = id
@@ -119,6 +153,12 @@ struct Profile: Identifiable, Codable, Hashable {
         self.isOnline = isOnline
         self.lastSeenAt = lastSeenAt
         self.isBanned = isBanned
+        self.banUntil = banUntil
+        self.banMessage = banMessage
+        self.banDetails = banDetails
+        self.warningMessage = warningMessage
+        self.warningDetails = warningDetails
+        self.warnedAt = warnedAt
         self.verificationStatus = verificationStatus
     }
 
@@ -145,6 +185,18 @@ struct Profile: Identifiable, Codable, Hashable {
         isOnline = try container.decodeIfPresent(Bool.self, forKey: .isOnline) ?? false
         lastSeenAt = try container.decodeIfPresent(String.self, forKey: .lastSeenAt)
         isBanned = try container.decodeIfPresent(Bool.self, forKey: .isBanned) ?? false
+        banUntil = try container.decodeIfPresent(String.self, forKey: .banUntil)
+        banMessage = try container.decodeIfPresent(String.self, forKey: .banMessage)
+        banDetails = try container.decodeIfPresent(String.self, forKey: .banDetails)
+        warningMessage = try container.decodeIfPresent(String.self, forKey: .warningMessage)
+        warningDetails = try container.decodeIfPresent(String.self, forKey: .warningDetails)
+        warnedAt = try container.decodeIfPresent(String.self, forKey: .warnedAt)
         verificationStatus = try container.decodeIfPresent(VerificationStatus.self, forKey: .verificationStatus) ?? .unsubmitted
+    }
+
+    private static func parseDate(_ value: String) -> Date? {
+        let fractionalFormatter = ISO8601DateFormatter()
+        fractionalFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return fractionalFormatter.date(from: value) ?? ISO8601DateFormatter().date(from: value)
     }
 }

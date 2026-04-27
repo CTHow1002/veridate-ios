@@ -21,6 +21,11 @@ type ReportRow = {
 
 export type ReportAction = "dismiss" | "warn" | "ban";
 
+type ModerationInput = {
+  moderationNotes?: string;
+  banDays?: number | null;
+};
+
 export async function getOpenReports(): Promise<SafetyReport[]> {
   const reports = await supabaseRequest<ReportRow[]>(
     "/rest/v1/reports?status=eq.open&select=*&order=created_at.asc"
@@ -54,7 +59,7 @@ export async function getOpenReports(): Promise<SafetyReport[]> {
   );
 }
 
-export async function moderateReport(id: string, action: ReportAction, moderationNotes?: string) {
+export async function moderateReport(id: string, action: ReportAction, input: ModerationInput = {}) {
   const [report] = await supabaseRequest<ReportRow[]>(
     `/rest/v1/reports?id=eq.${encodeURIComponent(id)}&select=id,reported_user_id,status`
   );
@@ -69,17 +74,32 @@ export async function moderateReport(id: string, action: ReportAction, moderatio
 
   const status = statusForAction(action);
   const reviewedAt = new Date().toISOString();
+  const moderationNotes = cleanText(input.moderationNotes);
 
-  if (action === "ban") {
+  if (action === "warn") {
+    await supabaseRequest(`/rest/v1/profiles?id=eq.${encodeURIComponent(report.reported_user_id)}`, {
+      method: "PATCH",
+      body: {
+        warning_message: moderationNotes || "You received a warning from VeriDate moderation.",
+        warning_details: moderationNotes,
+        warned_at: reviewedAt,
+      },
+    });
+  } else if (action === "ban") {
+    const banUntil = banUntilFromDays(input.banDays);
+
     await supabaseRequest(`/rest/v1/profiles?id=eq.${encodeURIComponent(report.reported_user_id)}`, {
       method: "PATCH",
       body: {
         is_banned: true,
+        ban_until: banUntil,
+        ban_message: moderationNotes || "Your VeriDate account has been temporarily restricted.",
+        ban_details: moderationNotes,
       },
     });
 
-    const [profile] = await supabaseRequest<Pick<Profile, "is_banned">[]>(
-      `/rest/v1/profiles?id=eq.${encodeURIComponent(report.reported_user_id)}&select=is_banned&limit=1`
+    const [profile] = await supabaseRequest<Pick<Profile, "is_banned" | "ban_until">[]>(
+      `/rest/v1/profiles?id=eq.${encodeURIComponent(report.reported_user_id)}&select=is_banned,ban_until&limit=1`
     );
 
     if (profile?.is_banned !== true) {
@@ -102,7 +122,7 @@ async function fetchProfilesById(userIds: string[]) {
   if (userIds.length === 0) return new Map<string, Profile>();
 
   const profiles = await supabaseRequest<Profile[]>(
-    `/rest/v1/profiles?id=in.(${userIds.join(",")})&select=id,full_name,date_of_birth,job_title,company_name,education_level,school_name,verification_status,is_banned`
+    `/rest/v1/profiles?id=in.(${userIds.join(",")})&select=id,full_name,date_of_birth,job_title,company_name,education_level,school_name,verification_status,is_banned,ban_until,ban_message,ban_details,warning_message,warning_details,warned_at`
   );
 
   return new Map(profiles.map((profile) => [profile.id, profile]));
@@ -112,6 +132,20 @@ function statusForAction(action: ReportAction): ReportStatus {
   if (action === "dismiss") return "dismissed";
   if (action === "warn") return "warned";
   return "banned";
+}
+
+function cleanText(value?: string) {
+  const cleaned = String(value || "").trim();
+  return cleaned || null;
+}
+
+function banUntilFromDays(days?: number | null) {
+  const numericDays = Number(days || 0);
+  if (!Number.isFinite(numericDays) || numericDays <= 0) return null;
+
+  const date = new Date();
+  date.setUTCDate(date.getUTCDate() + Math.round(numericDays));
+  return date.toISOString();
 }
 
 async function signedStorageLink(path: string | null): Promise<SignedFile | null> {

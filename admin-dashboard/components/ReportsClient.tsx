@@ -103,6 +103,7 @@ function ReportCard({
   onReviewed: () => Promise<void>;
 }) {
   const [moderationNotes, setModerationNotes] = useState("");
+  const [banDays, setBanDays] = useState(7);
   const [error, setError] = useState("");
   const [isReviewing, setIsReviewing] = useState(false);
 
@@ -114,7 +115,7 @@ function ReportCard({
       const response = await fetch(`/api/reports/${report.id}/action`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, moderationNotes }),
+        body: JSON.stringify({ action, moderationNotes, banDays }),
       });
       const result = (await response.json()) as { error?: string };
 
@@ -179,8 +180,18 @@ function ReportCard({
         <textarea
           value={moderationNotes}
           onChange={(event) => setModerationNotes(event.target.value)}
-          placeholder="Moderation notes"
+          placeholder="Warning/ban message and moderation notes"
         />
+        <label className="compact-label">
+          Ban duration in days
+          <input
+            type="number"
+            min="1"
+            max="365"
+            value={banDays}
+            onChange={(event) => setBanDays(Number(event.target.value))}
+          />
+        </label>
         <div className="action-row report-actions">
           <button className="secondary-button" disabled={isReviewing} onClick={() => review("dismiss")}>
             Dismiss
