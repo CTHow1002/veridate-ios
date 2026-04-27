@@ -310,9 +310,9 @@ for select
 using (
   exists (
     select 1
-    from public.matches
-    where matches.id = messages.match_id
-      and (auth.uid() = matches.user_one_id or auth.uid() = matches.user_two_id)
+    from public.matches m
+    where m.id = messages.match_id
+      and auth.uid() in (m.user_one_id, m.user_two_id)
   )
 );
 
@@ -324,17 +324,21 @@ with check (
   auth.uid() = sender_id
   and exists (
     select 1
-    from public.matches
-    where matches.id = messages.match_id
-      and (auth.uid() = matches.user_one_id or auth.uid() = matches.user_two_id)
+    from public.matches m
+    where m.id = messages.match_id
+      and auth.uid() in (m.user_one_id, m.user_two_id)
   )
   and not exists (
     select 1
     from public.blocks b
-    join public.matches m on m.id = messages.match_id
-    where (
-      (b.blocker_user_id = m.user_one_id and b.blocked_user_id = m.user_two_id)
-      or (b.blocker_user_id = m.user_two_id and b.blocked_user_id = m.user_one_id)
+    where exists (
+      select 1
+      from public.matches m
+      where m.id = messages.match_id
+        and (
+          (b.blocker_user_id = m.user_one_id and b.blocked_user_id = m.user_two_id)
+          or (b.blocker_user_id = m.user_two_id and b.blocked_user_id = m.user_one_id)
+        )
     )
   )
 );
@@ -346,17 +350,17 @@ for update
 using (
   exists (
     select 1
-    from public.matches
-    where matches.id = messages.match_id
-      and (auth.uid() = matches.user_one_id or auth.uid() = matches.user_two_id)
+    from public.matches m
+    where m.id = messages.match_id
+      and auth.uid() in (m.user_one_id, m.user_two_id)
   )
 )
 with check (
   exists (
     select 1
-    from public.matches
-    where matches.id = messages.match_id
-      and (auth.uid() = matches.user_one_id or auth.uid() = matches.user_two_id)
+    from public.matches m
+    where m.id = messages.match_id
+      and auth.uid() in (m.user_one_id, m.user_two_id)
   )
 );
 
