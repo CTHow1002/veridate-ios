@@ -1,7 +1,8 @@
 import "server-only";
 
+import { getSupabaseConfig } from "@/lib/config";
 import { supabaseRequest } from "@/lib/supabase-admin";
-import type { Profile, ReportStatus, SafetyReport } from "@/lib/types";
+import type { Profile, ReportStatus, SafetyReport, SignedFile } from "@/lib/types";
 
 type ReportRow = {
   id: string;
@@ -10,6 +11,7 @@ type ReportRow = {
   match_id?: string | null;
   reason: string;
   details?: string | null;
+  proof_file_path?: string | null;
   status?: ReportStatus | null;
   moderation_notes?: string | null;
   action_taken?: string | null;
@@ -32,21 +34,24 @@ export async function getOpenReports(): Promise<SafetyReport[]> {
   ];
   const profilesById = await fetchProfilesById(userIds);
 
-  return reports.map((report) => ({
-    id: report.id,
-    reporterUserId: report.reporter_user_id,
-    reportedUserId: report.reported_user_id,
-    matchId: report.match_id || null,
-    reason: report.reason,
-    details: report.details || null,
-    status: report.status || "open",
-    moderationNotes: report.moderation_notes || null,
-    actionTaken: report.action_taken || null,
-    reviewedAt: report.reviewed_at || null,
-    createdAt: report.created_at || null,
-    reporter: profilesById.get(report.reporter_user_id) || ({ id: report.reporter_user_id } satisfies Profile),
-    reportedUser: profilesById.get(report.reported_user_id) || ({ id: report.reported_user_id } satisfies Profile),
-  }));
+  return Promise.all(
+    reports.map(async (report) => ({
+      id: report.id,
+      reporterUserId: report.reporter_user_id,
+      reportedUserId: report.reported_user_id,
+      matchId: report.match_id || null,
+      reason: report.reason,
+      details: report.details || null,
+      proofFile: await signedStorageLink(report.proof_file_path || null),
+      status: report.status || "open",
+      moderationNotes: report.moderation_notes || null,
+      actionTaken: report.action_taken || null,
+      reviewedAt: report.reviewed_at || null,
+      createdAt: report.created_at || null,
+      reporter: profilesById.get(report.reporter_user_id) || ({ id: report.reporter_user_id } satisfies Profile),
+      reportedUser: profilesById.get(report.reported_user_id) || ({ id: report.reported_user_id } satisfies Profile),
+    }))
+  );
 }
 
 export async function moderateReport(id: string, action: ReportAction, moderationNotes?: string) {
@@ -107,4 +112,50 @@ function statusForAction(action: ReportAction): ReportStatus {
   if (action === "dismiss") return "dismissed";
   if (action === "warn") return "warned";
   return "banned";
+}
+
+async function signedStorageLink(path: string | null): Promise<SignedFile | null> {
+  if (!path) return null;
+  if (/^https?:\/\//i.test(path)) return { path, url: path };
+
+  const objectPath = normalizeStoragePath(path);
+  const safePath = objectPath
+    .split("/")
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+
+  const response = await supabaseRequest<{ signedURL: string }>(
+    `/storage/v1/object/sign/verification-documents/${safePath}`,
+    {
+      method: "POST",
+      body: { expiresIn: 600 },
+    }
+  );
+
+  return {
+    path: objectPath,
+    url: storageObjectUrl(response.signedURL),
+  };
+}
+
+function normalizeStoragePath(path: string) {
+  return path
+    .replace(/^\/+/, "")
+    .replace(/^storage\/v1\/object\/(?:public\/|sign\/)?verification-documents\//, "")
+    .replace(/^object\/(?:public\/|sign\/)?verification-documents\//, "")
+    .replace(/^verification-documents\//, "");
+}
+
+function storageObjectUrl(signedURL: string) {
+  const supabaseUrl = getSupabaseConfig().supabaseUrl.replace(/\/$/, "");
+
+  if (/^https?:\/\//i.test(signedURL)) {
+    return signedURL;
+  }
+
+  if (signedURL.startsWith("/storage/v1/")) {
+    return `${supabaseUrl}${signedURL}`;
+  }
+
+  return `${supabaseUrl}/storage/v1${signedURL.startsWith("/") ? "" : "/"}${signedURL}`;
 }

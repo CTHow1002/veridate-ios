@@ -562,6 +562,9 @@ alter table public.reports
 add column if not exists details text;
 
 alter table public.reports
+add column if not exists proof_file_path text;
+
+alter table public.reports
 add column if not exists status text not null default 'open';
 
 alter table public.reports
@@ -575,6 +578,38 @@ add column if not exists reviewed_at timestamptz;
 
 alter table public.reports
 add column if not exists created_at timestamptz not null default now();
+
+create or replace function public.sync_report_legacy_columns()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+declare
+  row_data jsonb;
+begin
+  row_data := to_jsonb(new);
+
+  if row_data ? 'reporter_id'
+     and row_data->>'reporter_id' is null
+     and row_data ? 'reporter_user_id' then
+    row_data := jsonb_set(row_data, '{reporter_id}', row_data->'reporter_user_id');
+  end if;
+
+  if row_data ? 'reported_id'
+     and row_data->>'reported_id' is null
+     and row_data ? 'reported_user_id' then
+    row_data := jsonb_set(row_data, '{reported_id}', row_data->'reported_user_id');
+  end if;
+
+  return jsonb_populate_record(new, row_data);
+end;
+$$;
+
+drop trigger if exists sync_report_legacy_columns_trigger on public.reports;
+create trigger sync_report_legacy_columns_trigger
+before insert or update on public.reports
+for each row
+execute function public.sync_report_legacy_columns();
 
 alter table public.reports enable row level security;
 
@@ -598,6 +633,33 @@ for select
 to authenticated
 using (
   auth.uid() = reporter_user_id
+);
+
+drop policy if exists "Users can upload report proof" on storage.objects;
+create policy "Users can upload report proof"
+on storage.objects
+for insert
+to authenticated
+with check (
+  bucket_id = 'verification-documents'
+  and (storage.foldername(name))[1] = 'reports'
+  and (storage.foldername(name))[2] = auth.uid()::text
+);
+
+drop policy if exists "Users can update own report proof" on storage.objects;
+create policy "Users can update own report proof"
+on storage.objects
+for update
+to authenticated
+using (
+  bucket_id = 'verification-documents'
+  and (storage.foldername(name))[1] = 'reports'
+  and (storage.foldername(name))[2] = auth.uid()::text
+)
+with check (
+  bucket_id = 'verification-documents'
+  and (storage.foldername(name))[1] = 'reports'
+  and (storage.foldername(name))[2] = auth.uid()::text
 );
 
 create or replace function public.create_match_on_mutual_like()

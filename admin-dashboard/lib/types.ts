@@ -42,6 +42,7 @@ export type SafetyReport = {
   matchId: string | null;
   reason: string;
   details: string | null;
+  proofFile: SignedFile | null;
   status: ReportStatus;
   moderationNotes: string | null;
   actionTaken: string | null;

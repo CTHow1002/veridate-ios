@@ -160,6 +160,19 @@ function ReportCard({
           <dt>Details</dt>
           <dd>{report.details || "No extra details provided."}</dd>
         </div>
+
+        <div className="report-details">
+          <dt>Proof</dt>
+          <dd>
+            {report.proofFile ? (
+              <a href={report.proofFile.url} title={report.proofFile.path} target="_blank" rel="noreferrer">
+                Open proof
+              </a>
+            ) : (
+              "No proof attached."
+            )}
+          </dd>
+        </div>
       </div>
 
       <div className="review-panel">
