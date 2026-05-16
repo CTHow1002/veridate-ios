@@ -192,26 +192,12 @@ function ReportCard({
           onChange={(event) => setModerationNotes(event.target.value)}
           placeholder="Warning/ban message and moderation notes"
         />
-        <label className="compact-label">
-          Warning duration in days
-          <input
-            type="number"
-            min="1"
-            max="365"
-            value={warningDays}
-            onChange={(event) => setWarningDays(Number(event.target.value))}
-          />
-        </label>
-        <label className="compact-label">
-          Ban duration in days
-          <input
-            type="number"
-            min="1"
-            max="365"
-            value={banDays}
-            onChange={(event) => setBanDays(Number(event.target.value))}
-          />
-        </label>
+        <DurationControls
+          warningDays={warningDays}
+          banDays={banDays}
+          onWarningDaysChange={setWarningDays}
+          onBanDaysChange={setBanDays}
+        />
         <div className="action-row report-actions">
           <button className="secondary-button" disabled={isReviewing} onClick={() => review("dismiss")}>
             Dismiss
@@ -226,6 +212,45 @@ function ReportCard({
         <p className="form-error">{error}</p>
       </div>
     </article>
+  );
+}
+
+function DurationControls({
+  warningDays,
+  banDays,
+  onWarningDaysChange,
+  onBanDaysChange,
+}: {
+  warningDays: number;
+  banDays: number;
+  onWarningDaysChange: (value: number) => void;
+  onBanDaysChange: (value: number) => void;
+}) {
+  return (
+    <div className="duration-grid">
+      <label className="duration-field warning-duration">
+        <span>Warning notice duration</span>
+        <small>Show warning every app open for this many days</small>
+        <input
+          type="number"
+          min="1"
+          max="365"
+          value={warningDays}
+          onChange={(event) => onWarningDaysChange(Number(event.target.value))}
+        />
+      </label>
+      <label className="duration-field">
+        <span>Ban duration</span>
+        <small>Restrict account access for this many days</small>
+        <input
+          type="number"
+          min="1"
+          max="365"
+          value={banDays}
+          onChange={(event) => onBanDaysChange(Number(event.target.value))}
+        />
+      </label>
+    </div>
   );
 }
 

@@ -124,6 +124,42 @@ label {
   min-height: 40px;
 }
 
+.duration-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.duration-field {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfc;
+}
+
+.duration-field span {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.duration-field small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.duration-field input {
+  margin-top: 2px;
+}
+
+.warning-duration {
+  border-color: #f5c56b;
+  background: #fffaf0;
+}
+
 input,
 textarea {
   width: 100%;
@@ -467,6 +503,7 @@ dd {
   .report-grid,
   .report-actions,
   .moderation-grid,
+  .duration-grid,
   .deletion-grid {
     grid-template-columns: 1fr;
   }
