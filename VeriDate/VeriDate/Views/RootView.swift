@@ -1,20 +1,28 @@
 import SwiftUI
+import UIKit
 
 struct RootView: View {
     @EnvironmentObject var session: SessionViewModel
     @State private var acknowledgedWarningKey: String?
+    @State private var isRevisitingProfileSetup = false
 
     var body: some View {
         Group {
             if session.isCheckingSession {
-                ProgressView("Checking session...")
+                ProgressView("root_checking_session")
             } else if session.isAuthenticated {
                 if let profile = session.currentProfile {
-                    if profile.isCurrentlyBanned {
+                    if profile.isDeactivated {
+                        AccountDeletionPendingView(profile: profile)
+                    } else if profile.isCurrentlyBanned {
                         BannedAccountView(profile: profile)
                     } else if shouldShowWarning(for: profile) {
                         WarningAccountView(profile: profile) {
                             acknowledgedWarningKey = warningKey(for: profile)
+                        }
+                    } else if isRevisitingProfileSetup {
+                        ProfileSetupView(startsAtLastStep: true) {
+                            isRevisitingProfileSetup = false
                         }
                     } else {
                         switch profile.verificationStatus {
@@ -24,16 +32,20 @@ struct RootView: View {
                             VerificationPendingView()
                         case .unsubmitted:
                             if profile.hasCompletedBasicProfile {
-                                VerificationUploadView()
+                                VerificationUploadView {
+                                    isRevisitingProfileSetup = true
+                                }
                             } else {
                                 ProfileSetupView()
                             }
                         case .rejected:
-                            VerificationUploadView()
+                            VerificationUploadView {
+                                isRevisitingProfileSetup = true
+                            }
                         }
                     }
                 } else if session.isLoadingProfile {
-                    ProgressView("Loading profile...")
+                    ProgressView("root_loading_profile")
                 } else {
                     NavigationStack {
                         VStack(spacing: 16) {
@@ -41,16 +53,16 @@ struct RootView: View {
                                 .font(.system(size: 44))
                                 .foregroundStyle(.orange)
 
-                            Text("Profile did not load")
+                            Text("root_profile_load_failed_title")
                                 .font(.title3)
                                 .fontWeight(.semibold)
 
-                            Text(session.errorMessage ?? "Try again or sign out and sign back in.")
+                            Text(session.errorMessage ?? AppLanguageManager.localized("root_profile_load_failed_message"))
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.center)
 
-                            Button("Try Again") {
+                            Button("common_try_again") {
                                 Task {
                                     await session.createEmptyProfileIfNeeded()
                                     await session.loadProfile()
@@ -58,7 +70,7 @@ struct RootView: View {
                             }
                             .buttonStyle(.borderedProminent)
 
-                            Button("Sign Out") {
+                            Button("common_sign_out") {
                                 Task { await session.signOut() }
                             }
                             .foregroundStyle(.red)
@@ -77,7 +89,91 @@ struct RootView: View {
     }
 
     private func warningKey(for profile: Profile) -> String {
-        "\(profile.warnedAt ?? "")-\(profile.warningMessage ?? "")"
+        "\(profile.warnedAt ?? "")-\(profile.warningUntil ?? "")-\(profile.warningMessage ?? "")"
+    }
+}
+
+private struct AccountDeletionPendingView: View {
+    @EnvironmentObject var session: SessionViewModel
+    let profile: Profile
+    @State private var isCanceling = false
+    @State private var message: String?
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 16) {
+                Image(systemName: "trash.circle.fill")
+                    .font(.system(size: 52))
+                    .foregroundStyle(.red)
+
+                Text("account_deletion_scheduled_title")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+
+                Text("account_deletion_scheduled_message")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+
+                if let scheduledDate {
+                    Text(String.localizedStringWithFormat(
+                        AppLanguageManager.localized("account_deletion_scheduled_for_format"),
+                        scheduledDate.formatted(date: .abbreviated, time: .shortened)
+                    ))
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .background(Color(.secondarySystemBackground), in: Capsule())
+                }
+
+                if let message {
+                    Text(message)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+
+                Button {
+                    Task { await cancelDeletion() }
+                } label: {
+                    if isCanceling {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Text("account_deletion_cancel_button")
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(isCanceling)
+
+                Button("common_sign_out") {
+                    Task { await session.signOut() }
+                }
+                .foregroundStyle(.red)
+            }
+            .padding(24)
+        }
+    }
+
+    private var scheduledDate: Date? {
+        guard let value = profile.accountDeletionScheduledAt else { return nil }
+
+        let fractionalFormatter = ISO8601DateFormatter()
+        fractionalFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return fractionalFormatter.date(from: value) ?? ISO8601DateFormatter().date(from: value)
+    }
+
+    private func cancelDeletion() async {
+        isCanceling = true
+        defer { isCanceling = false }
+
+        if await session.cancelAccountDeletion() {
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+        } else {
+            message = session.errorMessage ?? AppLanguageManager.localized("account_deletion_cancel_failed_message")
+        }
     }
 }
 
@@ -92,17 +188,20 @@ private struct BannedAccountView: View {
                     .font(.system(size: 44))
                     .foregroundStyle(.red)
 
-                Text("Account Restricted")
+                Text("account_restricted_title")
                     .font(.title3)
                     .fontWeight(.semibold)
 
-                Text(profile.banMessage ?? "This account can no longer access VeriDate.")
+                Text(profile.banMessage ?? AppLanguageManager.localized("account_restricted_message"))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
 
                 if let banUntil = profile.banUntilDate {
-                    Text("Restricted until \(banUntil.formatted(date: .abbreviated, time: .shortened))")
+                    Text(String.localizedStringWithFormat(
+                        AppLanguageManager.localized("account_restricted_until_format"),
+                        banUntil.formatted(date: .abbreviated, time: .shortened)
+                    ))
                         .font(.footnote)
                         .fontWeight(.semibold)
                 }
@@ -114,7 +213,7 @@ private struct BannedAccountView: View {
                         .multilineTextAlignment(.center)
                 }
 
-                Button("Sign Out") {
+                Button("common_sign_out") {
                     Task { await session.signOut() }
                 }
                 .buttonStyle(.borderedProminent)
@@ -135,23 +234,34 @@ private struct WarningAccountView: View {
                     .font(.system(size: 44))
                     .foregroundStyle(.orange)
 
-                Text("Account Warning")
+                Text(AppLanguageManager.localized("account_warning_title"))
                     .font(.title3)
                     .fontWeight(.semibold)
 
-                Text(profile.warningMessage ?? "Please review VeriDate safety rules before continuing.")
+                Text(profile.warningMessage ?? AppLanguageManager.localized("account_warning_message"))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
 
-                if let details = profile.warningDetails, !details.isEmpty {
+                if let details = profile.warningDetails,
+                   !details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                   details != profile.warningMessage {
                     Text(details)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                 }
 
-                Button("I Understand") {
+                if let warningUntil = profile.warningUntilDate {
+                    Text(String.localizedStringWithFormat(
+                        AppLanguageManager.localized("account_warning_until_format"),
+                        warningUntil.formatted(date: .abbreviated, time: .shortened)
+                    ))
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+
+                Button("common_i_understand") {
                     onContinue()
                 }
                 .buttonStyle(.borderedProminent)

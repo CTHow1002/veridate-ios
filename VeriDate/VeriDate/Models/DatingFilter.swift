@@ -12,6 +12,21 @@ struct DatingFilter: Codable {
     var maxHeightCm: Int?
     var educationLevel: String?
     var relationshipGoal: RelationshipIntention?
+    var preferredGenders: String?
+    var maritalStatuses: String?
+    var races: String?
+    var religions: String?
+    var educationLevels: String?
+    var relationshipGoals: String?
+    var smokingOptions: String?
+    var drinkingOptions: String?
+    var exerciseOptions: String?
+    var petOptions: String?
+    var communicationStyles: String?
+    var loveLanguages: String?
+    var mbtis: String?
+    var languageOptions: String?
+    var familyPlansOptions: String?
     var verifiedOnly: Bool
 
     enum CodingKeys: String, CodingKey {
@@ -26,6 +41,21 @@ struct DatingFilter: Codable {
         case maxHeightCm = "max_height_cm"
         case educationLevel = "education_level"
         case relationshipGoal = "relationship_goal"
+        case preferredGenders = "preferred_genders"
+        case maritalStatuses = "marital_statuses"
+        case races
+        case religions
+        case educationLevels = "education_levels"
+        case relationshipGoals = "relationship_goals"
+        case smokingOptions = "smoking_options"
+        case drinkingOptions = "drinking_options"
+        case exerciseOptions = "exercise_options"
+        case petOptions = "pet_options"
+        case communicationStyles = "communication_styles"
+        case loveLanguages = "love_languages"
+        case mbtis
+        case languageOptions = "language_options"
+        case familyPlansOptions = "family_plans_options"
         case verifiedOnly = "verified_only"
     }
 }

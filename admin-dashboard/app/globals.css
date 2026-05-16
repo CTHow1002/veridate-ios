@@ -368,6 +368,72 @@ dd {
   grid-template-columns: repeat(3, 1fr);
 }
 
+.deletion-card {
+  grid-template-columns: 1fr;
+}
+
+.deletion-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  border-radius: 999px;
+  padding: 0 10px;
+  background: #eef2f4;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.status-pending,
+.status-processing {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.status-completed {
+  background: #e9f8f2;
+  color: var(--accent);
+}
+
+.status-banned {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.status-warned {
+  background: #fff7e6;
+  color: #9a5b00;
+}
+
+.identity-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.moderation-card {
+  grid-template-columns: minmax(0, 1fr) 300px;
+}
+
+.moderation-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.moderation-details {
+  display: grid;
+  gap: 12px;
+}
+
+.moderation-actions {
+  grid-template-columns: 1fr;
+}
+
 .form-error {
   min-height: 18px;
   margin: 0;
@@ -399,7 +465,9 @@ dd {
   .profile-grid,
   .file-grid,
   .report-grid,
-  .report-actions {
+  .report-actions,
+  .moderation-grid,
+  .deletion-grid {
     grid-template-columns: 1fr;
   }
 }

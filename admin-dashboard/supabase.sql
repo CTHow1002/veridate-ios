@@ -110,6 +110,171 @@ add column if not exists warning_details text;
 alter table public.profiles
 add column if not exists warned_at timestamptz;
 
+alter table public.profiles
+add column if not exists warning_until timestamptz;
+
+alter table public.profiles
+add column if not exists is_deactivated boolean not null default false;
+
+alter table public.profiles
+add column if not exists is_discoverable boolean not null default true;
+
+alter table public.profiles
+add column if not exists account_deletion_requested_at timestamptz;
+
+alter table public.profiles
+add column if not exists account_deletion_scheduled_at timestamptz;
+
+alter table public.profiles
+add column if not exists hometown text;
+
+alter table public.profiles
+add column if not exists currently_living text;
+
+alter table public.profiles
+add column if not exists bio text;
+
+alter table public.profiles
+add column if not exists full_name text;
+
+alter table public.profiles
+add column if not exists date_of_birth date;
+
+alter table public.profiles
+add column if not exists gender text;
+
+alter table public.profiles
+add column if not exists city text;
+
+alter table public.profiles
+add column if not exists job_title text;
+
+alter table public.profiles
+add column if not exists company_name text;
+
+alter table public.profiles
+add column if not exists education_level text;
+
+alter table public.profiles
+add column if not exists school_name text;
+
+alter table public.profiles
+add column if not exists height_cm integer;
+
+alter table public.profiles
+add column if not exists relationship_goal text;
+
+alter table public.profiles
+add column if not exists profile_photo_url text;
+
+alter table public.profiles
+add column if not exists updated_at timestamptz not null default now();
+
+create table if not exists public.profile_change_requests (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  request_type text not null check (request_type in ('legal_name', 'work', 'education')),
+  current_full_name text,
+  requested_full_name text,
+  current_job_title text,
+  requested_job_title text,
+  current_company_name text,
+  requested_company_name text,
+  current_education_level text,
+  requested_education_level text,
+  current_school_name text,
+  requested_school_name text,
+  message text,
+  attachment_file_path text,
+  attachment_file_name text,
+  attachment_content_type text,
+  attachment_source text check (attachment_source in ('photos', 'camera', 'files') or attachment_source is null),
+  status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
+  admin_notes text,
+  reviewed_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.profile_change_requests
+add column if not exists attachment_file_path text;
+
+alter table public.profile_change_requests
+add column if not exists attachment_file_name text;
+
+alter table public.profile_change_requests
+add column if not exists attachment_content_type text;
+
+alter table public.profile_change_requests
+add column if not exists attachment_source text;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'profile_change_requests_attachment_source_check'
+  ) then
+    alter table public.profile_change_requests
+    add constraint profile_change_requests_attachment_source_check
+    check (attachment_source in ('photos', 'camera', 'files') or attachment_source is null);
+  end if;
+end $$;
+
+alter table public.profile_change_requests enable row level security;
+
+grant select, insert on public.profile_change_requests to authenticated;
+
+drop policy if exists "Users can create own profile change requests" on public.profile_change_requests;
+create policy "Users can create own profile change requests"
+on public.profile_change_requests
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+drop policy if exists "Users can read own profile change requests" on public.profile_change_requests;
+create policy "Users can read own profile change requests"
+on public.profile_change_requests
+for select
+to authenticated
+using (auth.uid() = user_id);
+
+create or replace function public.touch_profile_updated_at()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if new.full_name is distinct from old.full_name
+    or new.date_of_birth is distinct from old.date_of_birth
+    or new.gender is distinct from old.gender
+    or new.city is distinct from old.city
+    or new.hometown is distinct from old.hometown
+    or new.currently_living is distinct from old.currently_living
+    or new.bio is distinct from old.bio
+    or new.job_title is distinct from old.job_title
+    or new.company_name is distinct from old.company_name
+    or new.education_level is distinct from old.education_level
+    or new.school_name is distinct from old.school_name
+    or new.height_cm is distinct from old.height_cm
+    or new.relationship_goal is distinct from old.relationship_goal
+    or new.profile_photo_url is distinct from old.profile_photo_url
+  then
+    new.updated_at = now();
+  else
+    new.updated_at = old.updated_at;
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists profiles_touch_updated_at on public.profiles;
+create trigger profiles_touch_updated_at
+before update on public.profiles
+for each row
+execute function public.touch_profile_updated_at();
+
 alter table public.profiles enable row level security;
 
 drop policy if exists "Users can update own profile" on public.profiles;
@@ -118,6 +283,204 @@ on public.profiles
 for update
 using (auth.uid() = id)
 with check (auth.uid() = id);
+
+-- Account deletion queue. iOS inserts here; Vercel Cron processes it with the service role key.
+create table if not exists public.account_deletion_requests (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  status text not null default 'pending' check (status in ('pending', 'processing', 'completed', 'failed', 'canceled')),
+  reason text,
+  requested_at timestamptz not null default now(),
+  scheduled_delete_at timestamptz not null default (now() + interval '24 hours'),
+  processed_at timestamptz,
+  canceled_at timestamptz,
+  error_message text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.account_deletion_requests
+add column if not exists status text not null default 'pending';
+
+alter table public.account_deletion_requests
+add column if not exists reason text;
+
+alter table public.account_deletion_requests
+add column if not exists requested_at timestamptz not null default now();
+
+alter table public.account_deletion_requests
+add column if not exists scheduled_delete_at timestamptz not null default (now() + interval '24 hours');
+
+alter table public.account_deletion_requests
+add column if not exists processed_at timestamptz;
+
+alter table public.account_deletion_requests
+add column if not exists canceled_at timestamptz;
+
+alter table public.account_deletion_requests
+add column if not exists error_message text;
+
+alter table public.account_deletion_requests
+add column if not exists created_at timestamptz not null default now();
+
+alter table public.account_deletion_requests
+add column if not exists updated_at timestamptz not null default now();
+
+do $$
+declare
+  constraint_name text;
+begin
+  for constraint_name in
+    select c.conname
+    from pg_constraint c
+    join pg_class t on t.oid = c.conrelid
+    join pg_namespace n on n.oid = t.relnamespace
+    join pg_class referenced_table on referenced_table.oid = c.confrelid
+    join pg_namespace referenced_schema on referenced_schema.oid = referenced_table.relnamespace
+    where n.nspname = 'public'
+      and t.relname = 'account_deletion_requests'
+      and referenced_schema.nspname = 'public'
+      and referenced_table.relname = 'profiles'
+      and c.contype = 'f'
+  loop
+    execute format('alter table public.account_deletion_requests drop constraint %I', constraint_name);
+  end loop;
+end $$;
+
+create unique index if not exists account_deletion_requests_one_active_per_user
+on public.account_deletion_requests (user_id)
+where status in ('pending', 'processing');
+
+create or replace function public.touch_account_deletion_request_updated_at()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists account_deletion_requests_touch_updated_at on public.account_deletion_requests;
+create trigger account_deletion_requests_touch_updated_at
+before update on public.account_deletion_requests
+for each row
+execute function public.touch_account_deletion_request_updated_at();
+
+alter table public.account_deletion_requests enable row level security;
+
+grant select, insert, update on public.account_deletion_requests to authenticated;
+
+drop policy if exists "Users can create own account deletion request" on public.account_deletion_requests;
+create policy "Users can create own account deletion request"
+on public.account_deletion_requests
+for insert
+with check (
+  auth.uid() = user_id
+  and status = 'pending'
+  and scheduled_delete_at >= now() + interval '23 hours'
+);
+
+drop policy if exists "Users can read own account deletion requests" on public.account_deletion_requests;
+create policy "Users can read own account deletion requests"
+on public.account_deletion_requests
+for select
+using (auth.uid() = user_id);
+
+drop policy if exists "Users can cancel own pending account deletion request" on public.account_deletion_requests;
+create policy "Users can cancel own pending account deletion request"
+on public.account_deletion_requests
+for update
+using (auth.uid() = user_id and status = 'pending')
+with check (auth.uid() = user_id and status = 'canceled');
+
+create table if not exists public.profile_prompts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  prompt text not null,
+  answer text not null,
+  display_order int not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.profile_prompts enable row level security;
+
+create or replace function public.touch_profile_prompts_updated_at()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists profile_prompts_touch_updated_at on public.profile_prompts;
+create trigger profile_prompts_touch_updated_at
+before update on public.profile_prompts
+for each row
+execute function public.touch_profile_prompts_updated_at();
+
+drop policy if exists "Users can read own profile prompts" on public.profile_prompts;
+create policy "Users can read own profile prompts"
+on public.profile_prompts
+for select
+using (auth.uid() = user_id);
+
+drop policy if exists "Users can create own profile prompts" on public.profile_prompts;
+create policy "Users can create own profile prompts"
+on public.profile_prompts
+for insert
+with check (auth.uid() = user_id);
+
+drop policy if exists "Users can update own profile prompts" on public.profile_prompts;
+create policy "Users can update own profile prompts"
+on public.profile_prompts
+for update
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+drop policy if exists "Users can delete own profile prompts" on public.profile_prompts;
+create policy "Users can delete own profile prompts"
+on public.profile_prompts
+for delete
+using (auth.uid() = user_id);
+
+create index if not exists profile_prompts_user_order_idx
+on public.profile_prompts (user_id, display_order);
+
+create table if not exists public.profile_interests (
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  interest text not null,
+  created_at timestamptz not null default now(),
+  primary key (user_id, interest)
+);
+
+alter table public.profile_interests enable row level security;
+
+drop policy if exists "Users can read own profile interests" on public.profile_interests;
+create policy "Users can read own profile interests"
+on public.profile_interests
+for select
+using (auth.uid() = user_id);
+
+drop policy if exists "Users can create own profile interests" on public.profile_interests;
+create policy "Users can create own profile interests"
+on public.profile_interests
+for insert
+with check (auth.uid() = user_id);
+
+drop policy if exists "Users can delete own profile interests" on public.profile_interests;
+create policy "Users can delete own profile interests"
+on public.profile_interests
+for delete
+using (auth.uid() = user_id);
+
+create index if not exists profile_interests_user_idx
+on public.profile_interests (user_id);
 
 create table if not exists public.dating_filters (
   id uuid primary key default gen_random_uuid(),
@@ -223,6 +586,41 @@ create table if not exists public.profile_actions (
 
 alter table public.profile_actions enable row level security;
 
+alter table public.profile_actions
+add column if not exists pass_resurface_after timestamptz;
+
+alter table public.profile_actions
+add column if not exists resurfaced_count integer not null default 0;
+
+create or replace function public.prepare_profile_action()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if new.action = 'pass' then
+    new.pass_resurface_after = now() + ((30 + floor(random() * 31))::int * interval '1 day');
+
+    if tg_op = 'UPDATE' then
+      new.resurfaced_count = coalesce(old.resurfaced_count, 0) + 1;
+    else
+      new.resurfaced_count = coalesce(new.resurfaced_count, 0);
+    end if;
+  else
+    new.pass_resurface_after = null;
+    new.resurfaced_count = 0;
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists profile_actions_prepare on public.profile_actions;
+create trigger profile_actions_prepare
+before insert or update of action, created_at on public.profile_actions
+for each row
+execute function public.prepare_profile_action();
+
 drop policy if exists "Users can create own profile actions" on public.profile_actions;
 create policy "Users can create own profile actions"
 on public.profile_actions
@@ -233,7 +631,20 @@ drop policy if exists "Users can read own profile actions" on public.profile_act
 create policy "Users can read own profile actions"
 on public.profile_actions
 for select
+using (auth.uid() = actor_user_id or auth.uid() = target_user_id);
+
+drop policy if exists "Users can delete own profile actions" on public.profile_actions;
+create policy "Users can delete own profile actions"
+on public.profile_actions
+for delete
 using (auth.uid() = actor_user_id);
+
+drop policy if exists "Users can update own profile actions" on public.profile_actions;
+create policy "Users can update own profile actions"
+on public.profile_actions
+for update
+using (auth.uid() = actor_user_id)
+with check (auth.uid() = actor_user_id);
 
 create table if not exists public.matches (
   id uuid primary key default gen_random_uuid(),
@@ -262,7 +673,21 @@ using (
     select 1
     from public.matches
     where (matches.user_one_id = auth.uid() and matches.user_two_id = profiles.id)
-       or (matches.user_two_id = auth.uid() and matches.user_one_id = profiles.id)
+      or (matches.user_two_id = auth.uid() and matches.user_one_id = profiles.id)
+  )
+);
+
+drop policy if exists "Users can read profiles that liked them" on public.profiles;
+create policy "Users can read profiles that liked them"
+on public.profiles
+for select
+using (
+  exists (
+    select 1
+    from public.profile_actions pa
+    where pa.actor_user_id = profiles.id
+      and pa.target_user_id = auth.uid()
+      and pa.action = 'like'
   )
 );
 
@@ -275,6 +700,14 @@ create table if not exists public.messages (
   is_read boolean not null default false,
   delivered_at timestamptz,
   read_at timestamptz,
+  attachment_file_path text,
+  attachment_file_name text,
+  attachment_content_type text,
+  attachment_kind text check (attachment_kind in ('image', 'file') or attachment_kind is null),
+  attachment_group_id uuid,
+  reply_to_message_id uuid references public.messages(id) on delete set null,
+  edited_at timestamptz,
+  deleted_at timestamptz,
   created_at timestamptz not null default now()
 );
 
@@ -284,10 +717,90 @@ add column if not exists delivered_at timestamptz;
 alter table public.messages
 add column if not exists read_at timestamptz;
 
+alter table public.messages
+add column if not exists attachment_file_path text;
+
+alter table public.messages
+add column if not exists attachment_file_name text;
+
+alter table public.messages
+add column if not exists attachment_content_type text;
+
+alter table public.messages
+add column if not exists attachment_kind text;
+
+alter table public.messages
+add column if not exists attachment_group_id uuid;
+
+alter table public.messages
+add column if not exists reply_to_message_id uuid references public.messages(id) on delete set null;
+
+alter table public.messages
+add column if not exists edited_at timestamptz;
+
+alter table public.messages
+add column if not exists deleted_at timestamptz;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'messages_attachment_kind_check'
+  ) then
+    alter table public.messages
+    add constraint messages_attachment_kind_check
+    check (attachment_kind in ('image', 'file') or attachment_kind is null);
+  end if;
+end $$;
+
 create index if not exists messages_match_created_at_idx
 on public.messages (match_id, created_at);
 
+create table if not exists public.message_reactions (
+  id uuid primary key default gen_random_uuid(),
+  message_id uuid not null references public.messages(id) on delete cascade,
+  match_id uuid not null references public.matches(id) on delete cascade,
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  emoji text not null check (char_length(emoji) between 1 and 16),
+  created_at timestamptz not null default now(),
+  unique (message_id, user_id)
+);
+
+create index if not exists message_reactions_match_idx
+on public.message_reactions (match_id);
+
+create index if not exists message_reactions_message_idx
+on public.message_reactions (message_id);
+
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('chat-attachments', 'chat-attachments', false, 10485760)
+on conflict (id) do update
+set public = false,
+    file_size_limit = 10485760;
+
+drop policy if exists "Matched users can upload chat attachments" on storage.objects;
+create policy "Matched users can upload chat attachments"
+on storage.objects
+for insert
+to authenticated
+with check (
+  bucket_id = 'chat-attachments'
+);
+
+drop policy if exists "Matched users can read chat attachments" on storage.objects;
+create policy "Matched users can read chat attachments"
+on storage.objects
+for select
+to authenticated
+using (
+  bucket_id = 'chat-attachments'
+);
+
 alter table public.messages enable row level security;
+alter table public.message_reactions enable row level security;
+
+grant select, insert, update, delete on public.message_reactions to authenticated;
 
 create or replace function public.set_user_presence(p_is_online boolean)
 returns void
@@ -328,6 +841,12 @@ alter table public.blocks
 add column if not exists blocked_user_id uuid references public.profiles(id) on delete cascade;
 
 alter table public.blocks
+add column if not exists blocker_id uuid references public.profiles(id) on delete cascade;
+
+alter table public.blocks
+add column if not exists blocked_id uuid references public.profiles(id) on delete cascade;
+
+alter table public.blocks
 add column if not exists match_id uuid references public.matches(id) on delete set null;
 
 alter table public.blocks
@@ -338,6 +857,40 @@ add column if not exists created_at timestamptz not null default now();
 
 create unique index if not exists blocks_blocker_blocked_unique_idx
 on public.blocks (blocker_user_id, blocked_user_id);
+
+create unique index if not exists blocks_legacy_blocker_blocked_unique_idx
+on public.blocks (blocker_id, blocked_id);
+
+update public.blocks
+set
+  blocker_user_id = coalesce(blocker_user_id, blocker_id),
+  blocked_user_id = coalesce(blocked_user_id, blocked_id),
+  blocker_id = coalesce(blocker_id, blocker_user_id),
+  blocked_id = coalesce(blocked_id, blocked_user_id)
+where blocker_user_id is null
+   or blocked_user_id is null
+   or blocker_id is null
+   or blocked_id is null;
+
+create or replace function public.sync_block_user_columns()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  new.blocker_user_id := coalesce(new.blocker_user_id, new.blocker_id);
+  new.blocked_user_id := coalesce(new.blocked_user_id, new.blocked_id);
+  new.blocker_id := coalesce(new.blocker_id, new.blocker_user_id);
+  new.blocked_id := coalesce(new.blocked_id, new.blocked_user_id);
+  return new;
+end;
+$$;
+
+drop trigger if exists sync_block_user_columns_before_write on public.blocks;
+create trigger sync_block_user_columns_before_write
+before insert or update on public.blocks
+for each row
+execute function public.sync_block_user_columns();
 
 drop policy if exists "Matched users can read messages" on public.messages;
 create policy "Matched users can read messages"
@@ -400,6 +953,49 @@ with check (
   )
 );
 
+drop policy if exists "Matched users can read reactions" on public.message_reactions;
+create policy "Matched users can read reactions"
+on public.message_reactions
+for select
+using (
+  exists (
+    select 1
+    from public.matches m
+    where m.id = message_reactions.match_id
+      and auth.uid() in (m.user_one_id, m.user_two_id)
+  )
+);
+
+drop policy if exists "Matched users can react" on public.message_reactions;
+create policy "Matched users can react"
+on public.message_reactions
+for insert
+with check (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.matches m
+    join public.messages msg on msg.match_id = m.id
+    where m.id = message_reactions.match_id
+      and msg.id = message_reactions.message_id
+      and msg.match_id = message_reactions.match_id
+      and auth.uid() in (m.user_one_id, m.user_two_id)
+  )
+);
+
+drop policy if exists "Users can update their own reactions" on public.message_reactions;
+create policy "Users can update their own reactions"
+on public.message_reactions
+for update
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+drop policy if exists "Users can delete their own reactions" on public.message_reactions;
+create policy "Users can delete their own reactions"
+on public.message_reactions
+for delete
+using (auth.uid() = user_id);
+
 create or replace function public.mark_match_messages_delivered(p_match_id uuid)
 returns void
 language plpgsql
@@ -461,6 +1057,107 @@ $$;
 
 grant execute on function public.mark_match_messages_read(uuid) to authenticated;
 
+create table if not exists public.chat_typing (
+  match_id uuid not null references public.matches(id) on delete cascade,
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  is_typing boolean not null default false,
+  updated_at timestamptz not null default now(),
+  primary key (match_id, user_id)
+);
+
+alter table public.chat_typing enable row level security;
+
+grant select, insert, update on public.chat_typing to authenticated;
+
+drop policy if exists "Matched users can read typing status" on public.chat_typing;
+create policy "Matched users can read typing status"
+on public.chat_typing
+for select
+to authenticated
+using (
+  exists (
+    select 1
+    from public.matches m
+    where m.id = chat_typing.match_id
+      and auth.uid() in (m.user_one_id, m.user_two_id)
+  )
+);
+
+drop policy if exists "Matched users can create own typing status" on public.chat_typing;
+create policy "Matched users can create own typing status"
+on public.chat_typing
+for insert
+to authenticated
+with check (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.matches m
+    where m.id = chat_typing.match_id
+      and auth.uid() in (m.user_one_id, m.user_two_id)
+  )
+);
+
+drop policy if exists "Matched users can update own typing status" on public.chat_typing;
+create policy "Matched users can update own typing status"
+on public.chat_typing
+for update
+to authenticated
+using (auth.uid() = user_id)
+with check (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.matches m
+    where m.id = chat_typing.match_id
+      and auth.uid() in (m.user_one_id, m.user_two_id)
+  )
+);
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'messages'
+  ) then
+    alter publication supabase_realtime add table public.messages;
+  end if;
+
+  if not exists (
+    select 1
+    from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'profiles'
+  ) then
+    alter publication supabase_realtime add table public.profiles;
+  end if;
+
+  if not exists (
+    select 1
+    from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'chat_typing'
+  ) then
+    alter publication supabase_realtime add table public.chat_typing;
+  end if;
+
+  if not exists (
+    select 1
+    from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'message_reactions'
+  ) then
+    alter publication supabase_realtime add table public.message_reactions;
+  end if;
+end;
+$$;
+
 create table if not exists public.user_blocks (
   id uuid primary key default gen_random_uuid(),
   blocker_user_id uuid not null references public.profiles(id) on delete cascade,
@@ -473,6 +1170,11 @@ create table if not exists public.user_blocks (
 );
 
 alter table public.user_blocks enable row level security;
+
+grant select, insert, update, delete on public.user_blocks to authenticated;
+
+create unique index if not exists user_blocks_blocker_blocked_unique_idx
+on public.user_blocks (blocker_user_id, blocked_user_id);
 
 drop policy if exists "Users can create own blocks" on public.user_blocks;
 create policy "Users can create own blocks"
@@ -493,6 +1195,12 @@ for update
 using (auth.uid() = blocker_user_id)
 with check (auth.uid() = blocker_user_id);
 
+drop policy if exists "Users can delete own blocks" on public.user_blocks;
+create policy "Users can delete own blocks"
+on public.user_blocks
+for delete
+using (auth.uid() = blocker_user_id);
+
 create table if not exists public.blocks (
   id uuid primary key default gen_random_uuid(),
   blocker_user_id uuid not null references public.profiles(id) on delete cascade,
@@ -506,7 +1214,7 @@ create table if not exists public.blocks (
 
 alter table public.blocks enable row level security;
 
-grant select, insert, update on public.blocks to authenticated;
+grant select, insert, update, delete on public.blocks to authenticated;
 
 drop policy if exists "Users can create own blocks" on public.blocks;
 create policy "Users can create own blocks"
@@ -515,8 +1223,8 @@ for insert
 to authenticated
 with check (
   auth.uid() is not null
-  and auth.uid() = blocker_user_id
-  and blocker_user_id <> blocked_user_id
+  and auth.uid() = coalesce(blocker_user_id, blocker_id)
+  and coalesce(blocker_user_id, blocker_id) <> coalesce(blocked_user_id, blocked_id)
 );
 
 drop policy if exists "Users can read own blocks" on public.blocks;
@@ -524,15 +1232,57 @@ create policy "Users can read own blocks"
 on public.blocks
 for select
 to authenticated
-using (auth.uid() = blocker_user_id or auth.uid() = blocked_user_id);
+using (
+  auth.uid() = coalesce(blocker_user_id, blocker_id)
+  or auth.uid() = coalesce(blocked_user_id, blocked_id)
+);
 
 drop policy if exists "Users can update own blocks" on public.blocks;
 create policy "Users can update own blocks"
 on public.blocks
 for update
 to authenticated
-using (auth.uid() = blocker_user_id)
-with check (auth.uid() = blocker_user_id);
+using (auth.uid() = coalesce(blocker_user_id, blocker_id))
+with check (auth.uid() = coalesce(blocker_user_id, blocker_id));
+
+drop policy if exists "Users can delete own blocks" on public.blocks;
+create policy "Users can delete own blocks"
+on public.blocks
+for delete
+to authenticated
+using (auth.uid() = coalesce(blocker_user_id, blocker_id));
+
+create or replace function public.unblock_user_everywhere(p_blocked_user_id uuid)
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  deleted_count integer := 0;
+  affected_count integer := 0;
+begin
+  if auth.uid() is null then
+    raise exception 'Not authenticated';
+  end if;
+
+  delete from public.blocks
+  where coalesce(blocker_user_id, blocker_id) = auth.uid()
+    and coalesce(blocked_user_id, blocked_id) = p_blocked_user_id;
+  get diagnostics affected_count = row_count;
+  deleted_count := deleted_count + affected_count;
+
+  delete from public.user_blocks
+  where blocker_user_id = auth.uid()
+    and blocked_user_id = p_blocked_user_id;
+  get diagnostics affected_count = row_count;
+  deleted_count := deleted_count + affected_count;
+
+  return deleted_count;
+end;
+$$;
+
+grant execute on function public.unblock_user_everywhere(uuid) to authenticated;
 
 create table if not exists public.user_reports (
   id uuid primary key default gen_random_uuid(),
@@ -740,7 +1490,10 @@ security definer
 set search_path = public
 as $$
   with requester as (
-    select latitude, longitude
+    select
+      latitude,
+      longitude,
+      relationship_goal
     from public.profiles
     where id = requesting_user_id
   ),
@@ -763,6 +1516,94 @@ as $$
   candidates as (
     select
       p as profile,
+      age_calc.candidate_age,
+      viewer_action.action as viewer_action,
+      viewer_action.pass_resurface_after,
+      coalesce(viewer_action.resurfaced_count, 0) as resurfaced_count,
+      (
+        viewer_action.action = 'pass'
+        and coalesce(p.updated_at, now()) > viewer_action.created_at
+      ) as updated_since_pass,
+      (
+        case
+          when requester.relationship_goal is not null
+            and p.relationship_goal = requester.relationship_goal
+          then 3
+          else 0
+        end
+        +
+        case
+          when filter.education_level is null
+            or filter.education_level = ''
+          then 0
+          when (
+            case lower(coalesce(p.education_level, ''))
+              when 'primary' then 0
+              when 'primary school' then 0
+              when 'secondary' then 1
+              when 'secondary school' then 1
+              when 'high school' then 1
+              when 'spm' then 1
+              when 'diploma' then 2
+              when 'advanced diploma' then 2
+              when 'degree' then 3
+              when 'bachelor' then 3
+              when 'bachelor''s degree' then 3
+              when 'bachelors degree' then 3
+              when 'master' then 4
+              when 'master''s degree' then 4
+              when 'phd' then 5
+              when 'doctorate' then 5
+              else -1
+            end
+          ) >= (
+            case lower(filter.education_level)
+              when 'primary' then 0
+              when 'primary school' then 0
+              when 'secondary' then 1
+              when 'secondary school' then 1
+              when 'high school' then 1
+              when 'spm' then 1
+              when 'diploma' then 2
+              when 'advanced diploma' then 2
+              when 'degree' then 3
+              when 'bachelor' then 3
+              when 'bachelor''s degree' then 3
+              when 'bachelors degree' then 3
+              when 'master' then 4
+              when 'master''s degree' then 4
+              when 'phd' then 5
+              when 'doctorate' then 5
+              else 999
+            end
+          )
+          then 2
+          else 0
+        end
+        +
+        case
+          when filter.preferred_gender is not null
+            and p.gender = filter.preferred_gender
+          then 2
+          else 0
+        end
+        +
+        case
+          when p.height_cm is not null
+            and p.height_cm >= coalesce(filter.min_height_cm, p.height_cm)
+            and p.height_cm <= coalesce(filter.max_height_cm, p.height_cm)
+          then 1
+          else 0
+        end
+        +
+        case
+          when age_calc.candidate_age is not null
+            and age_calc.candidate_age >= coalesce(filter.min_age, age_calc.candidate_age)
+            and age_calc.candidate_age <= coalesce(filter.max_age, age_calc.candidate_age)
+          then 1
+          else 0
+        end
+      ) as compatibility_score,
       (
         6371 * 2 * asin(
           least(
@@ -778,29 +1619,48 @@ as $$
       ) as distance_km
     from public.profiles p
     cross join requester
+    cross join lateral (
+      select coalesce(
+        date_part('year', age(current_date, nullif(p.date_of_birth::text, '')::date))::int,
+        p.age
+      ) as candidate_age
+    ) age_calc
     left join filter on true
+    left join public.profile_actions viewer_action
+      on viewer_action.actor_user_id = requesting_user_id
+     and viewer_action.target_user_id = p.id
     where p.id <> requesting_user_id
       and p.full_name is not null
+      and coalesce(p.is_deactivated, false) = false
+      and coalesce(p.is_discoverable, true) = true
       and (
         coalesce(p.is_banned, false) = false
         or (p.ban_until is not null and p.ban_until <= now())
       )
       and p.verification_status = 'verified'
-      and not exists (
-        select 1
-        from public.profile_actions pa
-        where pa.actor_user_id = requesting_user_id
-          and pa.target_user_id = p.id
+      and (
+        viewer_action.actor_user_id is null
+        or (
+          viewer_action.action = 'pass'
+          and coalesce(viewer_action.pass_resurface_after, viewer_action.created_at + interval '60 days') <= now()
+        )
       )
+      and viewer_action.action is distinct from 'like'
       and not exists (
         select 1
         from public.blocks b
         where (b.blocker_user_id = requesting_user_id and b.blocked_user_id = p.id)
            or (b.blocked_user_id = requesting_user_id and b.blocker_user_id = p.id)
       )
+      and not exists (
+        select 1
+        from public.user_blocks ub
+        where (ub.blocker_user_id = requesting_user_id and ub.blocked_user_id = p.id)
+           or (ub.blocked_user_id = requesting_user_id and ub.blocker_user_id = p.id)
+      )
       and (filter.preferred_gender is null or p.gender = filter.preferred_gender)
-      and (filter.min_age is null or p.age >= filter.min_age)
-      and (filter.max_age is null or p.age <= filter.max_age)
+      and (filter.min_age is null or age_calc.candidate_age >= filter.min_age)
+      and (filter.max_age is null or age_calc.candidate_age <= filter.max_age)
       and (
         filter.preferred_city is null
         or filter.preferred_city = ''
@@ -808,7 +1668,51 @@ as $$
       )
       and (filter.min_height_cm is null or p.height_cm >= filter.min_height_cm)
       and (filter.max_height_cm is null or p.height_cm <= filter.max_height_cm)
-      and (filter.education_level is null or p.education_level = filter.education_level)
+      and (
+        filter.education_level is null
+        or filter.education_level = ''
+        or (
+          case lower(coalesce(p.education_level, ''))
+            when 'primary' then 0
+            when 'primary school' then 0
+            when 'secondary' then 1
+            when 'secondary school' then 1
+            when 'high school' then 1
+            when 'spm' then 1
+            when 'diploma' then 2
+            when 'advanced diploma' then 2
+            when 'degree' then 3
+            when 'bachelor' then 3
+            when 'bachelor''s degree' then 3
+            when 'bachelors degree' then 3
+            when 'master' then 4
+            when 'master''s degree' then 4
+            when 'phd' then 5
+            when 'doctorate' then 5
+            else -1
+          end
+        ) >= (
+          case lower(filter.education_level)
+            when 'primary' then 0
+            when 'primary school' then 0
+            when 'secondary' then 1
+            when 'secondary school' then 1
+            when 'high school' then 1
+            when 'spm' then 1
+            when 'diploma' then 2
+            when 'advanced diploma' then 2
+            when 'degree' then 3
+            when 'bachelor' then 3
+            when 'bachelor''s degree' then 3
+            when 'bachelors degree' then 3
+            when 'master' then 4
+            when 'master''s degree' then 4
+            when 'phd' then 5
+            when 'doctorate' then 5
+            else 999
+          end
+        )
+      )
       and (filter.relationship_goal is null or p.relationship_goal = filter.relationship_goal)
       and (coalesce(filter.verified_only, false) = false or p.verification_status = 'verified')
   )
@@ -823,8 +1727,15 @@ as $$
       candidates.distance_km >= coalesce(filter.min_distance_km, 0)
       and candidates.distance_km <= coalesce(filter.max_distance_km, 100)
     )
-  )
-  order by candidates.distance_km asc nulls last;
+      )
+  order by
+    case when candidates.viewer_action = 'pass' then 1 else 0 end asc,
+    case when candidates.updated_since_pass then 0 else 1 end asc,
+    coalesce((candidates.profile).is_online, false) desc,
+    (candidates.profile).last_seen_at desc nulls last,
+    candidates.compatibility_score desc,
+    candidates.resurfaced_count asc,
+    candidates.distance_km asc nulls last;
 $$;
 
 create table if not exists public.admin_users (

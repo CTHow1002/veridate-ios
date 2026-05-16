@@ -65,6 +65,15 @@ export default function ReportsClient() {
           <Link className="nav-link" href="/dashboard">
             Verification
           </Link>
+          <Link className="nav-link" href="/dashboard/moderation">
+            Moderation
+          </Link>
+          <Link className="nav-link" href="/dashboard/profile-changes">
+            Profile Changes
+          </Link>
+          <Link className="nav-link" href="/dashboard/deletions">
+            Deletions
+          </Link>
           <button className="secondary-button" onClick={logout}>
             Sign Out
           </button>
@@ -103,6 +112,7 @@ function ReportCard({
   onReviewed: () => Promise<void>;
 }) {
   const [moderationNotes, setModerationNotes] = useState("");
+  const [warningDays, setWarningDays] = useState(7);
   const [banDays, setBanDays] = useState(7);
   const [error, setError] = useState("");
   const [isReviewing, setIsReviewing] = useState(false);
@@ -115,7 +125,7 @@ function ReportCard({
       const response = await fetch(`/api/reports/${report.id}/action`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, moderationNotes, banDays }),
+        body: JSON.stringify({ action, moderationNotes, warningDays, banDays }),
       });
       const result = (await response.json()) as { error?: string };
 
@@ -182,6 +192,16 @@ function ReportCard({
           onChange={(event) => setModerationNotes(event.target.value)}
           placeholder="Warning/ban message and moderation notes"
         />
+        <label className="compact-label">
+          Warning duration in days
+          <input
+            type="number"
+            min="1"
+            max="365"
+            value={warningDays}
+            onChange={(event) => setWarningDays(Number(event.target.value))}
+          />
+        </label>
         <label className="compact-label">
           Ban duration in days
           <input

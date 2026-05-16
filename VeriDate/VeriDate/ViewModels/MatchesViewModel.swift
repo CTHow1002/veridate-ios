@@ -28,7 +28,7 @@ final class MatchesViewModel: ObservableObject {
     func loadMatches(userId: UUID, currentProfile: Profile?) async {
         guard currentProfile?.verificationStatus == .verified else {
             matches = []
-            errorMessage = "Only verified users can view matches."
+            errorMessage = AppLanguageManager.localized("matches.error.verificationRequired")
             return
         }
 
@@ -71,7 +71,10 @@ final class MatchesViewModel: ObservableObject {
             matches = loaded
             hasLoadedOnce = true
         } catch {
-            errorMessage = "Could not load matches. \(error.localizedDescription)"
+            errorMessage = String.localizedStringWithFormat(
+                AppLanguageManager.localized("matches.error.loadFailedFormat"),
+                error.localizedDescription
+            )
         }
     }
 
@@ -115,7 +118,35 @@ final class MatchesViewModel: ObservableObject {
             .execute()
             .value
 
-        return !blocks.isEmpty
+        if !blocks.isEmpty {
+            return true
+        }
+
+        let oldBlocks: [BlockRow] = (try? await supabase
+            .from("blocks")
+            .select("id")
+            .or(
+                "and(blocker_id.eq.\(match.userOneId.uuidString),blocked_id.eq.\(match.userTwoId.uuidString)),and(blocker_id.eq.\(match.userTwoId.uuidString),blocked_id.eq.\(match.userOneId.uuidString))"
+            )
+            .limit(1)
+            .execute()
+            .value) ?? []
+
+        if !oldBlocks.isEmpty {
+            return true
+        }
+
+        let legacyBlocks: [BlockRow] = (try? await supabase
+            .from("user_blocks")
+            .select("id")
+            .or(
+                "and(blocker_user_id.eq.\(match.userOneId.uuidString),blocked_user_id.eq.\(match.userTwoId.uuidString)),and(blocker_user_id.eq.\(match.userTwoId.uuidString),blocked_user_id.eq.\(match.userOneId.uuidString))"
+            )
+            .limit(1)
+            .execute()
+            .value) ?? []
+
+        return !legacyBlocks.isEmpty
     }
 
     private func markMessagesDelivered(matchId: UUID) async {
@@ -128,7 +159,10 @@ final class MatchesViewModel: ObservableObject {
                 .rpc("mark_match_messages_delivered", params: ReceiptParams(p_match_id: matchId))
                 .execute()
         } catch {
-            errorMessage = "Could not update message delivery status. \(error.localizedDescription)"
+            errorMessage = String.localizedStringWithFormat(
+                AppLanguageManager.localized("matches.error.deliveryStatusUpdateFailedFormat"),
+                error.localizedDescription
+            )
         }
     }
 }

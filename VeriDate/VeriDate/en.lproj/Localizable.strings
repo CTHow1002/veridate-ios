@@ -1,0 +1,1554 @@
+"welcome_title" = "Welcome to VeriDate";
+"welcome_subtitle" = "Real conversations. Real connections.";
+"root_checking_session" = "Checking session...";
+"root_loading_profile" = "Loading profile...";
+"root_profile_load_failed_title" = "Profile did not load";
+"root_profile_load_failed_message" = "Try again or sign out and sign back in.";
+
+"common_try_again" = "Try Again";
+"common_sign_out" = "Sign Out";
+"common_i_understand" = "I Understand";
+
+"account_deletion_scheduled_title" = "Account Deletion Scheduled";
+"account_deletion_scheduled_message" = "Your profile is hidden while your deletion request is pending. You can cancel before the scheduled deletion time.";
+"account_deletion_scheduled_for_format" = "Scheduled for %@";
+"account_deletion_cancel_button" = "Cancel Deletion";
+"account_deletion_cancel_failed_message" = "Could not cancel account deletion.";
+
+"account_restricted_title" = "Account Restricted";
+"account_restricted_message" = "This account can no longer access VeriDate.";
+"account_restricted_until_format" = "Restricted until %@";
+
+"account_warning_title" = "Account Warning";
+"account_warning_message" = "Please review VeriDate safety rules before continuing.";
+"account_warning_until_format" = "Warning active until %@";
+"auth_header_subtitle" = "Login with your phone number, Apple ID, or Google. We will verify your phone before profile setup.";
+
+"auth_login_with_title" = "Login with";
+
+"auth_phone_login_subtitle" = "Continue with phone OTP";
+"auth_apple_login_subtitle" = "Apple login placeholder, then phone OTP";
+"auth_google_login_subtitle" = "Google login placeholder, then phone OTP";
+
+"auth_first_time_note" = "First-time users will have an account created automatically after phone verification.";
+
+"common_back" = "Back";
+
+"auth_verify_phone_title" = "Verify your phone";
+
+"auth_phone_number_placeholder" = "Phone number";
+"auth_otp_code_placeholder" = "OTP code";
+
+"auth_demo_otp_note" = "Demo OTP: 123456";
+
+"auth_verify_continue_button" = "Verify & Continue";
+
+"auth_phone_otp_subtitle" = "Enter your phone number. For now, use demo OTP 123456 while SMS is not connected.";
+
+"auth_apple_otp_subtitle" = "Apple ID login is mocked for now. Verify your phone next so the final flow is ready.";
+
+"auth_google_otp_subtitle" = "Google login is mocked for now. Verify your phone next so the final flow is ready.";
+
+"auth_social_placeholder_message_format" = "%@ is a placeholder for now. Continue with phone OTP.";
+
+"auth_enter_phone_error" = "Enter your phone number.";
+
+"auth_invalid_demo_otp_error" = "Invalid demo OTP. Use 123456 for now.";
+
+"auth_phone_method_title" = "Phone number";
+"auth_apple_method_title" = "Apple ID";
+"auth_google_method_title" = "Google";
+"profile_setup_navigation_title" = "Create Profile";
+
+"profile_setup_search_hometown_title" = "Search Hometown";
+"profile_setup_search_current_city_title" = "Search Current City";
+
+"profile_setup_name_title" = "Let's start with your name";
+"profile_setup_name_subtitle" = "Tell us the name on your IC for verification, then choose the name people will see on VeriDate.";
+
+"profile_setup_full_name_placeholder" = "Full name as per IC";
+"profile_setup_display_name_placeholder" = "Display name";
+
+"profile_setup_name_hint" = "Your IC name stays for verification. Your display name can be friendlier, shorter, or simply what you prefer to be called.";
+
+"profile_setup_basics_title" = "A few basics";
+"profile_setup_basics_subtitle" = "This helps us show you the right people and keep the app age-appropriate.";
+
+"profile_setup_date_of_birth_label" = "Date of birth";
+"profile_setup_gender_label" = "Gender";
+"profile_setup_height_label" = "Height";
+
+"profile_setup_photos_title" = "Add your photos";
+"profile_setup_photos_subtitle" = "Choose the photos that feel most like you. The first photo becomes your main profile photo.";
+
+"profile_setup_photos_hint" = "Add up to 6 photos. The first selected photo becomes your primary photo.";
+
+"profile_setup_location_title" = "Where should people find you?";
+"profile_setup_location_subtitle" = "Add where you're from and where you live now so nearby matches have helpful context.";
+
+"profile_setup_hometown_label" = "Hometown";
+"profile_setup_currently_living_label" = "Currently Living";
+
+"profile_setup_search_hometown_button" = "Search hometown";
+"profile_setup_search_current_city_button" = "Search current city";
+
+"profile_setup_background_title" = "Background";
+"profile_setup_background_subtitle" = "Please enter these carefully. Work and education details may be checked during verification, and later changes may need review.";
+
+"profile_setup_student_toggle_title" = "I'm currently a student";
+"profile_setup_unemployed_toggle_title" = "I'm currently unemployed";
+
+"profile_setup_no_work_verification_note" = "Work verification will not be required.";
+
+"profile_setup_job_title_placeholder" = "Job title";
+"profile_setup_company_placeholder" = "Company";
+
+"profile_setup_education_level_label" = "Education level";
+"profile_setup_school_placeholder" = "School / University";
+
+"profile_setup_dating_intentions_title" = "Dating intentions";
+"profile_setup_dating_intentions_subtitle" = "A clear intention makes better matches. You can still update this later.";
+
+"profile_setup_looking_for_label" = "Looking for";
+"profile_setup_interested_in_label" = "Interested in";
+
+"profile_setup_more_details_title" = "More details";
+"profile_setup_more_details_subtitle" = "These are optional. Add what feels easy now, skip the rest, and come back anytime.";
+
+"profile_setup_marital_status_label" = "Marital status";
+"profile_setup_race_label" = "Race";
+"profile_setup_religion_label" = "Religion";
+"profile_setup_family_plans_label" = "Family plans";
+"profile_setup_smoking_label" = "Smoking?";
+"profile_setup_drinking_label" = "Drinking alcohol?";
+"profile_setup_exercise_label" = "Exercise?";
+"profile_setup_pets_label" = "Pets?";
+"profile_setup_communication_style_label" = "Communication style";
+"profile_setup_love_language_label" = "Love language";
+"profile_setup_mbti_label" = "MBTI";
+"profile_setup_languages_label" = "Languages";
+
+"profile_setup_error_enter_name" = "Enter your name before continuing.";
+"profile_setup_error_enter_display_name" = "Enter a display name before continuing.";
+"profile_setup_error_add_photo" = "Add at least 1 profile photo before continuing.";
+"profile_setup_error_add_current_city" = "Add where you currently live before continuing.";
+"profile_setup_error_enter_job_title" = "Enter your job title, or select student/unemployed.";
+"profile_setup_error_enter_company" = "Enter your company, or select student/unemployed.";
+"profile_setup_error_enter_school" = "Enter your school or university before continuing.";
+
+"profile_setup_step_name" = "Name";
+"profile_setup_step_basics" = "Basics";
+"profile_setup_step_photos" = "Photos";
+"profile_setup_step_location" = "Location";
+"profile_setup_step_background" = "Background";
+"profile_setup_step_intentions" = "Intentions";
+"profile_setup_step_details" = "Details";
+
+"profile_setup_progress_format" = "%d of %d";
+
+"common_continue" = "Continue";
+"common_save_continue" = "Save & Continue";
+"common_done" = "Done";
+"common_close" = "Close";
+"common_not_added" = "Not added";
+
+"profile_setup_photo_count_format" = "%d/%d photos";
+
+"profile_setup_primary_photo_label" = "Primary";
+"profile_setup_photo_slot_format" = "Photo %d";
+
+"profile_setup_choose_up_to_format" = "Choose up to %d.";
+
+"profile_setup_bio_label" = "Bio";
+
+"profile_setup_bio_placeholder" = "Share a little about your personality, weekends, or what you enjoy.";
+
+"profile_setup_bio_hint" = "Keep it simple and natural. You can improve it later from Edit Profile.";
+
+"marital_status_single" = "Single";
+"marital_status_divorced" = "Divorced";
+"marital_status_widowed" = "Widowed";
+"marital_status_separated" = "Separated";
+"marital_status_prefer_not_to_say" = "Prefer not to say";
+"discovery_verification_required_title" = "Verification Required";
+"discovery_verification_required_message" = "Complete verification to start discovering people nearby.";
+"discovery_navigation_title" = "Discover";
+"discovery_filters_button" = "Filters";
+"common_user" = "User";
+
+"safety_block_user_title" = "Block User?";
+"safety_block_user_message" = "This user will be removed from Discover and hidden from your matches.";
+"safety_block_button" = "Block";
+"safety_report_button" = "Report";
+"safety_alert_title" = "Safety";
+"common_cancel" = "Cancel";
+"common_ok" = "OK";
+
+"discovery_no_swipe_to_undo_message" = "There is no swipe to undo.";
+"discovery_undo_button" = "Undo";
+"discovery_undo_accessibility_label" = "Undo last swipe";
+"discovery_more_button" = "More";
+
+"discovery_loading_title" = "Finding verified profiles nearby";
+"discovery_loading_message" = "We’re preparing a calm, curated discovery experience for you.";
+"discovery_error_title" = "Couldn’t load Discover";
+"discovery_empty_title" = "No verified profiles yet";
+"discovery_empty_message" = "Try widening your distance, age range, or preferences to see more people nearby.";
+"discovery_adjust_filters_button" = "Adjust Filters";
+"interested_in_you_title" = "Interested In You";
+"interested_in_you_see_all_format" = "See all (%d)";
+"interested_in_you_checking_likes" = "Checking new likes...";
+
+"interested_empty_fresh_title" = "You’re getting discovered ✨";
+"interested_empty_fresh_message" = "Complete your profile and stay active to appear to more people nearby.";
+"interested_empty_day_old_title" = "People nearby are discovering your profile ✨";
+"interested_empty_three_days_title" = "Profiles with 4+ photos receive more engagement 👀";
+"interested_empty_three_days_message" = "Add a few clear photos when you’re ready.";
+
+"interested_mutual_like_label" = "Mutual Like";
+"common_nearby" = "Nearby";
+"common_someone" = "Someone";
+
+"interested_sheet_empty_title" = "No likes yet";
+"interested_sheet_empty_message" = "Keep swiping to get discovered.";
+
+"interested_paywall_title" = "Upgrade to see who likes you";
+"interested_paywall_message" = "VeriDate VIP will unlock profiles that already showed interest in you. Payments are not enabled yet.";
+"discovery_like_badge" = "LIKE";
+"discovery_pass_badge" = "PASS";
+"common_verified_user" = "Verified User";
+"common_not_provided" = "Not provided";
+
+"profile_gender_not_added" = "Gender not added";
+"profile_relationship_goal_not_added" = "Relationship goal not added";
+"profile_height_not_added" = "Height not added";
+"profile_age_not_added" = "Age not added";
+"profile_location_not_added" = "Location not added";
+
+"profile_distance_unavailable" = "Distance unavailable";
+"profile_distance_less_than_1km" = "Less than 1 km away";
+"profile_distance_km_away_format" = "%d km away";
+
+"profile_proximity_very_near" = "Very near";
+"profile_proximity_nearby_now" = "Nearby now";
+
+"profile_shared_both_like_format" = "Both like %@";
+"profile_shared_both_speak_format" = "Both speak %@";
+"profile_shared_both_format" = "Both %@";
+"profile_shared_both_colon_format" = "Both: %@";
+
+"compatibility_guide_subtitle" = "Profile compatibility guide";
+"compatibility_guide_message" = "This is a gentle guide based on profile signals and preferences. It is here to support your judgment, not replace it.";
+
+"profile_preview_title" = "Preview";
+"profile_detail_title" = "Profile";
+
+"profile_detail_location_label" = "Location";
+"profile_detail_work_label" = "Work";
+"profile_detail_education_label" = "Education";
+"profile_detail_height_label" = "Height";
+"profile_detail_marital_status_label" = "Marital Status";
+"profile_detail_relationship_goal_label" = "Relationship Goal";
+"profile_detail_bio_label" = "Bio";
+
+"profile_location_from_format" = "%@\nFrom %@";
+
+"discovery_pass_button" = "Pass";
+"discovery_like_button" = "Like";
+"safety_section_title" = "Safety";
+"filters_navigation_title" = "Filters";
+"filters_intro_title" = "Fine-tune Discover";
+"filters_intro_message" = "Filters help narrow your stack. Keep them flexible if you want more nearby verified profiles.";
+
+"filters_section_who_title" = "Who You Want To Meet";
+"filters_section_who_subtitle" = "Set the core preferences for Discover.";
+"filters_preferred_gender_title" = "Preferred gender";
+"filters_age_range_title" = "Age range";
+"filters_years_old_unit" = "years old";
+"filters_distance_range_title" = "Distance range";
+"filters_height_range_title" = "Height range";
+
+"filters_section_lifestyle_title" = "Lifestyle Fit";
+"filters_section_lifestyle_subtitle" = "Keep this light. Wider filters usually find better matches.";
+"filters_marital_status_title" = "Marital status";
+"filters_race_title" = "Race";
+"filters_religion_title" = "Religion";
+"filters_education_title" = "Education";
+"filters_relationship_goal_title" = "Relationship goal";
+
+"filters_section_daily_life_title" = "Daily Life";
+"filters_section_daily_life_subtitle" = "Choose multiple values when you are open to a few styles.";
+"filters_smoking_title" = "Smoking";
+"filters_drinking_title" = "Drinking";
+"filters_exercise_title" = "Exercise";
+"filters_pets_title" = "Pets";
+"filters_communication_title" = "Communication";
+"filters_love_language_title" = "Love language";
+"filters_mbti_title" = "MBTI";
+"filters_languages_title" = "Languages";
+"filters_family_plans_title" = "Family plans";
+
+"filters_section_trust_title" = "Trust";
+"filters_section_trust_subtitle" = "VeriDate discovery currently shows verified members only.";
+"filters_verified_only_title" = "Verified profiles only";
+"filters_verified_only_message" = "This is always on for the MVP.";
+
+"filters_reset_button" = "Reset filters";
+"common_save" = "Save";
+"common_any" = "Any";
+"filters_minimum_accessibility_label" = "Minimum";
+"filters_maximum_accessibility_label" = "Maximum";
+"chat_voice_playing" = "Playing";
+"chat_voice_message" = "Voice message";
+
+"chat_typing_format" = "Typing%@";
+"chat_default_title" = "Chat";
+"chat_presence_online" = "Online";
+"chat_presence_offline" = "Offline";
+"chat_presence_last_seen_format" = "Last seen %@";
+
+"chat_action_reply" = "Reply";
+"chat_action_react" = "React";
+"chat_action_copy" = "Copy";
+"chat_action_edit" = "Edit";
+"chat_action_delete" = "Delete";
+
+"chat_choose_reaction_title" = "Choose Reaction";
+"chat_reply_label" = "Reply";
+"chat_attach_title" = "Attach";
+"chat_attach_subtitle" = "Send photos, camera shots, or files.";
+"chat_attach_photos_title" = "Photos";
+"chat_attach_photos_subtitle" = "Select photos or videos";
+"chat_attach_camera_title" = "Camera";
+"chat_attach_camera_subtitle" = "Take a new photo";
+"chat_attach_files_title" = "Files";
+"chat_attach_files_subtitle" = "Browse documents";
+
+"chat_message_deleted" = "This message was deleted";
+"chat_video_message" = "Video";
+"chat_photo_message" = "Photo";
+"chat_attachment_message" = "Attachment";
+"chat_generic_message" = "Message";
+
+"chat_not_sent_retry" = "Not sent • Tap to retry";
+"chat_not_sent_retry_accessibility" = "Not sent. Tap to retry.";
+"chat_edited_time_format" = "Edited %@";
+
+"chat_loading_voice_message" = "Loading voice message";
+"chat_photo_unavailable" = "Photo unavailable";
+"chat_loading_photo" = "Loading photo";
+"chat_loading_video" = "Loading video";
+"chat_opening_file" = "Opening...";
+"chat_loading_file" = "Loading...";
+"chat_tap_to_preview" = "Tap to preview";
+
+"chat_could_not_load_attachment" = "Could not load attachment";
+"chat_could_not_preview_file" = "Could not preview file";
+"chat_could_not_load_photo" = "Could not load photo";
+"chat_could_not_load_photo_title" = "Could Not Load Photo";
+"chat_saved_to_photos" = "Saved to Photos";
+"chat_could_not_save_photo" = "Could not save photo";
+"chat_could_not_save_video" = "Could not save video";
+
+"chat_status_sending" = "Sending";
+"chat_status_sent" = "Sent";
+"chat_status_delivered" = "Delivered";
+"chat_status_read" = "Read";
+
+"chat_new_messages_separator" = "New Messages";
+"common_today" = "Today";
+"common_yesterday" = "Yesterday";
+"chat_block_user_title" = "Block User";
+"chat_block_user_message" = "This hides the match and stops messaging both ways.";
+"chat_delete_message_title" = "Delete Message?";
+"chat_delete_message_message" = "This will remove the message from this chat for both users.";
+"common_notice" = "Notice";
+
+"chat_verification_required_title" = "Verification Required";
+"chat_verification_required_message" = "Only verified users can message matches.";
+"chat_loading_messages" = "Loading messages...";
+"chat_could_not_load_chat_title" = "Could Not Load Chat";
+
+"chat_empty_title" = "Start your conversation";
+"chat_empty_message_format" = "Say something to %@";
+"chat_your_match" = "your match";
+"chat_new_messages_button_format" = "%d new messages ↓";
+"chat_new_message_button" = "New message ↓";
+
+"chat_messaging_unavailable_placeholder" = "Messaging unavailable";
+"chat_message_placeholder_format" = "Message %@…";
+"chat_message_copied" = "Message copied.";
+"chat_blocked_composer_message" = "Messaging is unavailable because one of you blocked the other.";
+
+"chat_replying_to_title" = "Replying";
+"chat_editing_message_title" = "Editing";
+
+"chat_camera_unavailable_message" = "Camera is not available on this device. Please use Photos or Files.";
+"chat_could_not_start_voice_recording_format" = "Could not start voice recording. %@";
+"chat_hold_longer_voice_message" = "Hold a little longer to record a voice message.";
+"chat_could_not_send_voice_message_format" = "Could not send voice message. %@";
+
+"chat_attachments_selected_format" = "%d selected";
+"common_clear" = "Clear";
+
+"chat_could_not_read_attachment" = "Could not read one of those attachments.";
+"chat_could_not_read_attachment_format" = "Could not read one of those attachments. %@";
+"chat_could_not_read_camera_photo" = "Could not read that camera photo.";
+"chat_could_not_import_file_format" = "Could not import that file. %@";
+"chat_could_not_read_named_file_format" = "Could not read %@. %@";
+
+"chat_microphone_permission_required" = "Microphone permission is required to record voice messages.";
+"chat_release_to_send_voice_accessibility" = "Release to send voice message";
+"chat_hold_to_record_accessibility" = "Hold to record voice message";
+"matches.title" = "Matches";
+"matches.verificationRequired.title" = "Verification Required";
+"matches.verificationRequired.description" = "Only verified users can view matches.";
+"matches.loading" = "Loading matches...";
+"matches.loadError.title" = "Could Not Load Matches";
+"matches.empty.title" = "No Matches Yet";
+"matches.empty.description" = "When someone likes you back, they will appear here.";
+"matches.verifiedUser" = "Verified User";
+"matches.startConversation" = "Start the conversation";
+"matches.presence.online" = "Online";
+"matches.presence.offline" = "Offline";
+"matches.presence.lastSeenFormat" = "Last seen %@";
+"matches.messageStatus.read" = "Read";
+"matches.messageStatus.delivered" = "Delivered";
+"matches.messageStatus.sent" = "Sent";
+"matches.error.verificationRequired" = "Only verified users can view matches.";
+"matches.error.loadFailedFormat" = "Could not load matches. %@";
+"matches.error.deliveryStatusUpdateFailedFormat" = "Could not update message delivery status. %@";
+"profile.settings.shareMessage" = "Try VeriDate, a strict-verification dating app.";
+"profile.settings.shareVeriDate" = "Share VeriDate";
+"profile.settings.deleteAccount" = "Delete Account";
+"profile.settings.signOut" = "Sign Out";
+"profile.settings.title" = "Settings";
+"common.close" = "Close";
+"profile.account.title" = "Account";
+"profile.account.section.account" = "Account";
+"profile.account.section.security" = "Security";
+"profile.account.section.accountControl" = "Account Control";
+"profile.account.deleteConfirm.title" = "Delete Account?";
+"profile.account.deleteConfirm.message" = "Your profile will be hidden immediately. Permanent deletion is processed securely after a short grace period.";
+"profile.account.requestDeletion" = "Request Deletion";
+"profile.account.deletionScheduled" = "Account deletion scheduled. Your profile is now hidden, and you can cancel before the scheduled deletion time.";
+"profile.account.deleteRequestFailed" = "Could not request account deletion.";
+"common.ok" = "OK";
+"common.notAvailable" = "Not available";
+"common.pleaseWait" = "Please wait...";
+"common.cancel" = "Cancel";
+"common.share" = "Share";
+
+"profile.account.email" = "Email";
+"profile.account.userId" = "User ID";
+"profile.account.verification" = "Verification";
+"profile.account.changePassword" = "Change Password";
+"profile.account.changePassword.subtitle" = "Update your login password";
+"profile.account.changeEmail" = "Change Email";
+"profile.account.changeEmail.subtitle" = "Move your account to another email";
+"profile.account.downloadMyData" = "Download My Data";
+"profile.account.downloadMyData.subtitle" = "Prepare a shareable JSON copy";
+"profile.account.deleteAccount.subtitle" = "Request permanent account deletion";
+"profile.account.yourAccount" = "Your account";
+"profile.account.header.subtitle" = "Manage login, security, and account control.";
+"profile.account.myData" = "My Data";
+"profile.account.dataExportFailedFormat" = "Could not prepare your data export. %@";
+"profile.settings.comingSoonFormat" = "%@ will be added soon.";
+
+"profile.verificationStatus.verified" = "Verified";
+"profile.verificationStatus.pendingReview" = "Pending review";
+"profile.verificationStatus.rejected" = "Rejected";
+"profile.verificationStatus.notSubmitted" = "Not submitted";
+
+"auth.error.signInAgain" = "Please sign in again.";
+"common.save" = "Save";
+
+"profile.account.password" = "Password";
+"profile.account.changePassword.newPassword" = "New password";
+"profile.account.changePassword.confirmPassword" = "Confirm password";
+"profile.account.changePassword.footer" = "Use at least 8 characters. If your Supabase Auth settings require reauthentication, sign out and use password reset instead.";
+"profile.account.changePassword.passwordMismatch" = "Passwords do not match.";
+"profile.account.changePassword.updateFailed" = "Could not update your password.";
+
+"profile.account.changeEmail.emailAddress" = "Email address";
+"profile.account.changeEmail.footer" = "You may need to confirm the new email address before the change is fully active.";
+"profile.account.changeEmail.updateFailed" = "Could not update your email.";
+"common.done" = "Done";
+
+"profile.preview.title" = "Preview My Profile";
+"profile.preview.subtitle" = "See how others view your profile";
+
+"profile.visibility.title" = "Visibility";
+"profile.visibility.discovery" = "Discovery";
+"profile.visibility.discoveryPriority" = "Discovery Priority";
+
+"profile.visibility.accountStatus" = "Account Status";
+"profile.visibility.active" = "Active";
+"profile.visibility.hidden" = "Hidden";
+
+"profile.visibility.visibleInDiscovery" = "Visible in Discovery";
+"profile.visibility.notVisible" = "Not visible";
+"profile.visibility.discoveryPaused" = "Discovery Paused";
+
+"profile.visibility.visibleDescription" = "Nearby verified members can discover your profile.";
+"profile.visibility.pausedDescription" = "Your profile is paused from Discovery.";
+"profile.visibility.visibleHeaderDescription" = "Verified members nearby can find your profile.";
+"profile.visibility.hiddenHeaderDescription" = "Your profile is hidden from new discovery results.";
+
+"profile.visibility.hiddenRestricted" = "Your profile is hidden while account restriction is active.";
+"profile.visibility.hiddenDeletionPending" = "Your profile is hidden while account deletion is pending.";
+
+"profile.visibility.settings" = "Visibility Settings";
+"profile.visibility.settings.subtitle" = "Control who can discover you";
+
+"profile.visibility.showInDiscovery" = "Show me in Discovery";
+"profile.visibility.showInDiscovery.subtitle" = "Turn this off to pause your profile from being shown to new people.";
+
+"profile.visibility.reduceResurfacing" = "Reduce recent pass resurfacing";
+"profile.visibility.reduceResurfacing.subtitle" = "Lower how often you appear again to people you recently passed.";
+
+"profile.visibility.footer" = "Turning off Discovery hides you from new discovery results. Existing matches can still chat unless blocked.";
+
+"profile.visibility.privacyNotice" = "Your IC full name and verification documents stay private. Visibility settings only affect your public dating profile.";
+
+"profile.visibility.updateFailed" = "Could not update visibility.";
+"profile.blocked.empty.title" = "No blocked accounts";
+"profile.blocked.empty.description" = "People you block from profiles or chats will appear here.";
+"profile.blocked.defaultUser" = "VeriDate user";
+"profile.blocked.unblock" = "Unblock";
+"profile.blocked.accountSubtitle" = "Blocked account";
+"profile.blocked.avatarFallbackName" = "User";
+"profile.dataStorage.title" = "Data & Storage";
+"profile.dataStorage.mediaUsage" = "Media Usage";
+"profile.dataStorage.storage" = "Storage";
+
+"profile.dataStorage.reducePhotoPreloading" = "Reduce photo preloading";
+"profile.dataStorage.reducePhotoPreloading.subtitle" = "Use less data by loading fewer photos ahead of time.";
+"profile.dataStorage.useCellularForMedia" = "Use cellular for media";
+"profile.dataStorage.useCellularForMedia.subtitle" = "Allow profile photos and attachments to load using mobile data.";
+"profile.dataStorage.autoDownloadReceivedMedia" = "Auto-download received media";
+"profile.dataStorage.autoDownloadReceivedMedia.subtitle" = "Save this preference for future media download controls.";
+
+"profile.dataStorage.clearCachedMedia" = "Clear cached media";
+"profile.dataStorage.clearCachedMedia.subtitle" = "Remove temporary profile-photo and signed-link cache.";
+"profile.dataStorage.exportMyData" = "Export my data";
+"profile.dataStorage.exportMyData.subtitle" = "Prepare a shareable JSON copy of your profile, photos, prompts, interests, and filters.";
+
+"profile.dataStorage.cacheFooter" = "Clearing cached media does not delete your uploaded photos or messages. It only removes temporary files and memory cache from this device.";
+"profile.dataStorage.header.subtitle" = "Manage media usage, cache, and your account data.";
+"profile.dataStorage.header.notice" = "Your uploaded profile photos, documents, and messages remain in Supabase unless you delete them from the app.";
+"profile.dataStorage.cacheCleared" = "Cached media cleared. Your uploaded photos and messages were not deleted.";
+"profile.contact.title" = "Contact Us";
+"profile.contact.headerMessage" = "Need help with your account, verification, safety, or a bug? Reach VeriDate support here.";
+
+"profile.contact.support" = "Support";
+"profile.contact.emailSupport" = "Email support";
+
+"profile.contact.verificationHelp" = "Verification help";
+"profile.contact.verificationHelp.subtitle" = "Questions about ID, work, or education review.";
+
+"profile.contact.safetyConcern" = "Safety concern";
+"profile.contact.safetyConcern.subtitle" = "For urgent user safety issues, include screenshots and details.";
+
+"profile.contact.accountReference" = "Account Reference";
+"profile.contact.accountEmail" = "Account email";
+
+"profile.contact.copySupportDetails" = "Copy support details";
+"profile.contact.copySupportDetails.subtitle" = "Copy your user ID and account email for support forms.";
+
+"profile.contact.footer" = "For immediate danger or emergencies, contact local emergency services first. VeriDate support is not an emergency response service.";
+
+"profile.contact.subject.supportRequest" = "VeriDate Support Request";
+"profile.contact.subject.verificationHelp" = "VeriDate Verification Help";
+"profile.contact.subject.safetyConcern" = "VeriDate Safety Concern";
+
+"profile.contact.mailOpenFailed" = "Could not open Mail. Support email copied instead.";
+"profile.contact.supportDetailsHeader" = "VeriDate support details";
+"profile.contact.supportDetailsCopied" = "Support details copied.";
+"profile.policies.title" = "Policies";
+"profile.policies.headerTitle" = "VeriDate Policies";
+"profile.policies.headerMessage" = "A simple overview of how VeriDate handles safety, privacy, verification, and community expectations.";
+
+"profile.policies.privacy.title" = "Privacy Policy";
+"profile.policies.privacy.p1" = "We collect account, profile, verification, safety, and app usage information needed to operate VeriDate.";
+"profile.policies.privacy.p2" = "Your full name as per IC and verification documents are used for verification and safety review. They should not be shown publicly to other users.";
+"profile.policies.privacy.p3" = "Profile details you choose to publish, such as display name, age, photos, interests, work, education, and dating preferences, may be visible to compatible users.";
+
+"profile.policies.verification.title" = "Verification Policy";
+"profile.policies.verification.p1" = "VeriDate may request identity, work, education, and liveness proof to reduce fake profiles and improve trust.";
+"profile.policies.verification.p2" = "Admins may approve, reject, or request more information if submitted documents are unclear, inconsistent, or unsafe.";
+"profile.policies.verification.p3" = "Changing important verified details later may require another review.";
+
+"profile.policies.safety.title" = "Safety & Moderation";
+"profile.policies.safety.p1" = "Users can report or block people who behave suspiciously, abusively, or unsafely.";
+"profile.policies.safety.p2" = "Admins may warn, temporarily restrict, or ban accounts that violate safety rules or misuse the platform.";
+"profile.policies.safety.p3" = "Reports may include optional proof attachments so moderators can review the situation more clearly.";
+
+"profile.policies.dataStorage.title" = "Data & Storage";
+"profile.policies.dataStorage.p1" = "Uploaded photos, chat attachments, reports, verification files, and profile details are stored through VeriDate's backend services.";
+"profile.policies.dataStorage.p2" = "You can request account deletion from Account settings. Your profile is hidden immediately while permanent deletion is processed securely.";
+"profile.policies.dataStorage.p3" = "Cached media on your device can be cleared from Data & Storage without deleting uploaded content.";
+
+"profile.policies.footer" = "These starter policies are provided inside the MVP for transparency. They should be reviewed and finalized legally before public App Store launch.";
+"profile.strength.title" = "Profile Strength";
+"profile.strength.completedFormat" = "%d of %d essentials completed";
+"profile.strength.looksStrong" = "Your profile looks strong";
+
+"profile.strength.suggestion.addProfilePhoto" = "Add a profile photo";
+"profile.strength.suggestion.addMorePhotos" = "Add more photos";
+"profile.strength.suggestion.completeBio" = "Complete your bio";
+"profile.strength.suggestion.addWorkTitle" = "Add your work title";
+"profile.strength.suggestion.addEducation" = "Add your education";
+"profile.strength.suggestion.addRelationshipGoal" = "Add your relationship goal";
+"profile.strength.suggestion.addLifestyleDetails" = "Add lifestyle details";
+"profile.strength.suggestion.addLocation" = "Add where you are based";
+"profile.strength.suggestion.verifyProfile" = "Verify your profile";
+"profile.strength.suggestion.answerPrompts" = "Answer profile prompts";
+
+"profile.verification.title" = "Verification";
+"profile.verification.identity" = "Verified Identity";
+"profile.verification.work" = "Verified Work";
+"profile.verification.education" = "Verified Education";
+"profile.verification.reviewNotice" = "Verified information changes require review approval.";
+"profile.verificationStatus.underReview" = "Under Review";
+"profile.verificationStatus.notCompleted" = "Not Completed";
+"profile.contact.supportDetails.userId" = "User ID";
+"profile.contact.supportDetails.accountEmail" = "Account email";
+"profile.contact.supportDetails.app" = "App";
+"profile.terms.title" = "Terms";
+"profile.terms.headerTitle" = "Terms of Service";
+"profile.terms.headerMessage" = "These starter terms explain the basic rules for using VeriDate safely and responsibly.";
+
+"profile.terms.eligibility.title" = "Eligibility";
+"profile.terms.eligibility.p1" = "You must be at least 18 years old to use VeriDate.";
+"profile.terms.eligibility.p2" = "You agree to provide accurate account, profile, and verification information.";
+"profile.terms.eligibility.p3" = "You are responsible for keeping your login details secure.";
+
+"profile.terms.profile.title" = "Your Profile";
+"profile.terms.profile.p1" = "You should not impersonate another person, upload misleading photos, or submit false verification documents.";
+"profile.terms.profile.p2" = "You are responsible for the photos, messages, attachments, and profile details you add to VeriDate.";
+"profile.terms.profile.p3" = "VeriDate may remove content or restrict accounts that appear fake, harmful, illegal, or unsafe.";
+
+"profile.terms.respectfulUse.title" = "Respectful Use";
+"profile.terms.respectfulUse.p1" = "Do not harass, threaten, scam, spam, or pressure other users.";
+"profile.terms.respectfulUse.p2" = "Do not share another person's private information without permission.";
+"profile.terms.respectfulUse.p3" = "Use report and block tools when you encounter behavior that violates safety expectations.";
+
+"profile.terms.messaging.title" = "Matches & Messaging";
+"profile.terms.messaging.p1" = "Messaging is available only between matched users unless VeriDate later introduces another approved flow.";
+"profile.terms.messaging.p2" = "Messages and attachments may be reviewed if reported for safety or policy reasons.";
+"profile.terms.messaging.p3" = "Blocking a user may hide the match and prevent further messaging.";
+
+"profile.terms.accountChanges.title" = "Account Changes";
+"profile.terms.accountChanges.p1" = "You can update many profile details in Edit Profile, but verified details may require review.";
+"profile.terms.accountChanges.p2" = "You can sign out, export available account data, or request deletion from Settings.";
+"profile.terms.accountChanges.p3" = "VeriDate may update these terms as the product grows, especially before public release.";
+
+"profile.terms.footer" = "This is an MVP-friendly terms draft, not a substitute for final legal terms. Review with a qualified professional before production launch.";
+"profile.empty.title" = "Profile not ready yet";
+"profile.empty.message" = "Complete your profile so nearby verified members can discover you.";
+"profile.edit.title" = "Edit Profile";
+"profile.me.title" = "Me";
+
+"profile.location.updating" = "Updating location...";
+"profile.location.notAvailable" = "Location not available";
+"profile.location.resolving" = "Resolving location...";
+"profile.location.added" = "Location added";
+
+"profile.maritalStatus.single" = "Single";
+"profile.maritalStatus.divorced" = "Divorced";
+"profile.maritalStatus.widowed" = "Widowed";
+"profile.maritalStatus.separated" = "Separated";
+"profile.maritalStatus.preferNotToSay" = "Prefer not to say";
+
+"profile.name.noName" = "No name";
+"profile.previewProfile.title" = "Profile Preview";
+
+"profile.settings.accountSecurity" = "Account & Security";
+"profile.notifications.settings" = "Notification Settings";
+"profile.privacy.settings" = "Privacy Settings";
+"profile.subscription.title" = "Subscription";
+"profile.subscription.vipPremiumFeatures" = "VIP and Premium features";
+
+"profile.settings.signOutConfirm.title" = "Sign Out?";
+"profile.settings.signOutConfirm.message" = "You can sign back in anytime with your VeriDate account.";
+"profile.account.fallbackInitial" = "V";
+"profile.notifications.section.inAppAlerts" = "In-App Alerts";
+"profile.notifications.messageBanners" = "Message banners";
+"profile.notifications.messageBanners.subtitle" = "Show a small banner while you are using VeriDate.";
+"profile.notifications.newMatches" = "New matches";
+"profile.notifications.newMatches.subtitle" = "Keep match alerts ready for the next match flow.";
+
+"profile.notifications.section.notificationTypes" = "Notification Types";
+"profile.notifications.messages" = "Messages";
+"profile.notifications.messages.subtitle" = "Notify you when a match sends a message.";
+"profile.notifications.accountVerification" = "Account and verification";
+"profile.notifications.accountVerification.subtitle" = "Important account, safety, and verification updates.";
+
+"profile.notifications.footer" = "Some notification types may need server-side push delivery before they can appear while the app is fully closed. Your in-app message banners are controlled here now.";
+"profile.notifications.systemNotifications" = "System Notifications";
+"profile.notifications.allowPush" = "Allow push notifications";
+"profile.notifications.allowPush.subtitle" = "Used for alerts outside VeriDate when iOS permission is allowed.";
+"profile.notifications.openIPhoneSettings" = "Open iPhone Settings";
+"profile.notifications.requesting" = "Requesting...";
+"profile.notifications.turnOnNotifications" = "Turn On Notifications";
+
+"profile.notifications.permission.allowed" = "iPhone notifications are allowed.";
+"profile.notifications.permission.blocked" = "Notifications are blocked in iPhone Settings.";
+"profile.notifications.permission.notDetermined" = "Choose whether VeriDate can send iPhone notifications.";
+"profile.notifications.permission.needsCheck" = "Notification permission needs to be checked.";
+
+"profile.notifications.blockedNotice" = "Notifications are blocked in iPhone Settings. Open Settings to allow VeriDate notifications.";
+"profile.notifications.notAllowedNotice" = "Notifications were not allowed. You can enable them later in iPhone Settings.";
+"profile.privacy.title" = "Privacy";
+"profile.privacy.chatPresence" = "Chat & Presence";
+"profile.privacy.showOnlineStatus" = "Show online status";
+"profile.privacy.showOnlineStatus.subtitle" = "Let matches see when you are currently online.";
+"profile.privacy.sendReadReceipts" = "Send read receipts";
+"profile.privacy.sendReadReceipts.subtitle" = "Let matches know when you have read their messages.";
+"profile.privacy.discoveryPrivacy" = "Discovery Privacy";
+"profile.privacy.showDistance" = "Show distance";
+"profile.privacy.showDistance.subtitle" = "Display approximate distance labels on your discovery profile.";
+"profile.privacy.footer" = "Online status, read receipts, distance visibility, reports, and blocks are active controls now.";
+"profile.privacy.controls" = "Privacy Controls";
+"profile.privacy.controls.subtitle" = "Choose what others can see while you use VeriDate.";
+"profile.privacy.privateDetailsNotice" = "Your verification-only private details, including full name as per IC, are never shown publicly.";
+
+"profile.blocked.loading" = "Loading blocked accounts...";
+"profile.blocked.section.blocked" = "Blocked";
+"profile.blocked.footer" = "Blocked accounts cannot message you and are hidden from your Discovery and Matches experience.";
+"profile.blocked.unblockConfirm.title" = "Unblock Account?";
+"profile.blocked.unblockConfirm.message" = "They may be able to appear in Discovery or message you again if you are matched.";
+"profile.blocked.header.title" = "Control who can contact you";
+"profile.blocked.header.subtitle" = "Review blocked accounts and unblock someone only when you feel comfortable.";
+"profile.blocked.loadFailedFormat" = "Could not load blocked accounts. %@";
+"profile.blocked.unblockSuccess" = "Account unblocked.";
+"profile.blocked.unblockStillBlocked" = "Could not unblock this account. The block is still saved.";
+"profile.blocked.unblockFailedFormat" = "Could not unblock this user. %@";
+
+"profile.safety.title" = "Safety";
+"profile.dataStorage.emptyExportFallback" = "{}";
+"profile.account.emptyExportFallback" = "{}";
+"common.toggle" = "Toggle";
+"editProfile.photos.primaryPhoto" = "Primary photo";
+"editProfile.photos.photoNumberFormat" = "Photo %d";
+"editProfile.photos.primary" = "Primary";
+"editProfile.photos.addPhotoToSlotFormat" = "Add photo to slot %d";
+"editProfile.photos.addPrimary" = "Add primary";
+"editProfile.photos.addPhoto" = "Add photo";
+"editProfile.photos.slotNumberFormat" = "Slot %d";
+
+"editProfile.photos.hint.firstPhotoTitle" = "Your first photo matters most";
+"editProfile.photos.hint.addAtLeastThreeTitle" = "Add at least 3 photos";
+"editProfile.photos.hint.strongSetTitle" = "Strong photo set";
+"editProfile.photos.hint.completeTitle" = "Photo section complete";
+
+"editProfile.photos.hint.firstPhotoMessage" = "Start with a clear, recent face photo. This becomes your first impression in Discover.";
+"editProfile.photos.hint.addAtLeastThreeMessage" = "A stronger profile usually includes your face, lifestyle, and one natural full-body or social photo.";
+"editProfile.photos.hint.strongSetMessage" = "Good balance. You can add more variety, but your profile already has enough visual context.";
+"editProfile.photos.hint.completeMessage" = "You have a complete photo set. Keep the first photo clear and trustworthy.";
+
+"editProfile.photos.empty.title" = "Start with one clear face photo";
+"editProfile.photos.empty.message" = "Add photos that show your face, lifestyle, and personality. Your first photo becomes your primary Discover photo.";
+"editProfile.location.title" = "Location";
+"editProfile.location.subtitle" = "Helps nearby members understand where you are based";
+"editProfile.location.hometown" = "Hometown";
+"editProfile.location.searchHometown" = "Search hometown";
+"editProfile.location.currentlyLiving" = "Currently Living";
+"editProfile.location.searchCurrentCity" = "Search current city";
+"editProfile.location.hint.complete" = "Current location added";
+"editProfile.location.hint.incomplete" = "Add where you currently live so nearby matches understand distance and context.";
+
+"editProfile.work.title" = "Work";
+"editProfile.work.subtitle" = "Professional context supports trust";
+"editProfile.work.jobTitle" = "Job title";
+"editProfile.work.jobTitle.reason" = "Work details are part of your verified profile.";
+"editProfile.work.company" = "Company";
+"editProfile.work.requestUpdate" = "Request work info update";
+"editProfile.work.updateRequest.unavailable" = "Verified work edit requests will be added in the next approval workflow.";
+"editProfile.work.hint.complete" = "Verified work details present";
+"editProfile.work.hint.incomplete" = "Work details will be editable only through a verification review request.";
+
+"editProfile.education.title" = "Education";
+"editProfile.education.subtitle" = "Adds another layer of compatibility and credibility";
+"editProfile.education.level" = "Education level";
+"editProfile.education.level.reason" = "Education level is part of your verified profile.";
+"editProfile.education.school" = "School / University";
+"editProfile.education.requestUpdate" = "Request education info update";
+"editProfile.education.updateRequest.unavailable" = "Verified education edit requests will be added in the next approval workflow.";
+"editProfile.education.hint.complete" = "Verified education details present";
+"editProfile.education.hint.incomplete" = "Education details will be editable only through a verification review request.";
+
+"editProfile.verified.changeRequest.reason" = "To change this later, submit an edit request for review.";
+
+"editProfile.prompts.title" = "Prompts";
+"editProfile.prompts.subtitle" = "Give people something meaningful to respond to";
+"editProfile.prompts.hint.allCompleted" = "All 3 prompts completed";
+"editProfile.prompts.hint.countCompletedFormat" = "%d prompts completed";
+"editProfile.prompts.hint.incomplete" = "Add at least 1 thoughtful prompt to give others an easy way to start a meaningful conversation.";
+
+"editProfile.interests.title" = "Lifestyle & interests";
+"editProfile.interests.subtitle" = "Small signals for better conversation starters";
+"editProfile.interests.hint.complete" = "Interest section complete";
+"editProfile.interests.hint.goodSelection" = "Good interest selection";
+"editProfile.interests.hint.incomplete" = "Choose at least 3 lifestyle signals so matches can spot natural conversation starters.";
+
+"editProfile.navigationTitle" = "Edit Profile";
+"editProfile.common.notProvided" = "Not provided";
+"editProfile.common.notApplicable" = "N/A";
+"editProfile.common.notAdded" = "Not added";
+
+"editProfile.photos.deleteAlert.title" = "Delete this photo?";
+"editProfile.photos.deleteAlert.message" = "This photo will be removed from your profile. You can upload another photo anytime.";
+
+"editProfile.basics.selectDateOfBirth" = "Select date of birth";
+"editProfile.error.displayNameRequired" = "Display name is required because it is the name other members will see.";
+"editProfile.multiSelect.maxSelectionFormat" = "Choose up to %d.";
+
+"editProfile.guidance.title" = "Build a stronger profile";
+"editProfile.guidance.message" = "Photos, prompts, and clear intentions help nearby verified members understand you better.";
+"editProfile.datingIntention.title" = "Dating intention";
+"editProfile.datingIntention.subtitle" = "Who you want to meet and what you are looking for";
+"editProfile.datingIntention.hint.complete" = "Dating preferences selected";
+"editProfile.datingIntention.hint.incomplete" = "Choose the relationship intention and gender interest that best reflect what you are looking for.";
+
+"common.saving" = "Saving...";
+"common.delete" = "Delete";
+"common.verified" = "Verified";
+"editProfile.lifestyle.title" = "Lifestyle & personality";
+"editProfile.lifestyle.subtitle" = "Daily habits and communication style";
+"editProfile.lifestyle.hint.complete" = "Lifestyle details added";
+"editProfile.lifestyle.hint.incomplete" = "Add a few lifestyle details so compatible people understand your daily rhythm.";
+
+"genderInterest.oppositeGender" = "Opposite gender";
+"genderInterest.men" = "Men";
+"genderInterest.women" = "Women";
+"genderInterest.everyone" = "Everyone";
+
+"maritalStatus.single" = "Single";
+"maritalStatus.divorced" = "Divorced";
+"maritalStatus.widowed" = "Widowed";
+"maritalStatus.separated" = "Separated";
+"maritalStatus.preferNotToSay" = "Prefer not to say";
+
+"citySelector.useCustomCityFormat" = "Use \"%@\"";
+"citySelector.addAsCustomCity" = "Add as custom city";
+"citySelector.searchPrompt" = "Search city";
+
+"editProfile.prompts.empty.message" = "Add up to 3 prompts to give people an easy way to start a conversation.";
+"editProfile.prompts.addPrompt" = "Add Prompt";
+"editProfile.prompts.removePrompt" = "Remove prompt";
+"editProfile.prompts.choosePrompt" = "Choose Prompt";
+"editProfile.prompts.promptLabel" = "Prompt";
+"editProfile.prompts.answerPlaceholder" = "Write a short answer";
+
+"editProfile.interests.chooseUpToFormat" = "Choose up to %d";
+"editProfile.interests.maxSelectionMessage" = "Choose up to 5 interests.";
+"profilePrompt.greenFlag" = "A green flag I look for is...";
+"profilePrompt.idealRelationship" = "My ideal relationship feels like...";
+"profilePrompt.sundayUsuallyMeans" = "Sunday usually means...";
+"profilePrompt.winMeOver" = "The way to win me over is...";
+"profilePrompt.misunderstood" = "One thing people misunderstand about me is...";
+"profilePrompt.happiestWhen" = "I am happiest when...";
+"profilePrompt.perfectWeekend" = "My perfect weekend includes...";
+"profilePrompt.smallThingIAppreciate" = "A small thing I appreciate is...";
+"profilePrompt.feelConnected" = "I feel most connected when...";
+"profilePrompt.togetherLoveTo" = "Together, I would love to...";
+"profilePrompt.supportMe" = "The best way to support me is...";
+"profilePrompt.valueILiveBy" = "A value I live by is...";
+"profilePrompt.makeTimeFor" = "I will always make time for...";
+"profilePrompt.simpleJoy" = "My simple joy is...";
+"profilePrompt.unforgettableDate" = "A date I would never forget is...";
+"profilePrompt.knowILikeSomeone" = "I know I like someone when...";
+
+"interest.category.foodDrinks" = "Food & drinks";
+"interest.category.activeLifestyle" = "Active lifestyle";
+"interest.category.creativeCulture" = "Creative & culture";
+"interest.category.homePersonality" = "Home & personality";
+"interest.category.funExploration" = "Fun & exploration";
+
+"interest.coffee" = "Coffee";
+"interest.cafeHopping" = "Cafe Hopping";
+"interest.foodie" = "Foodie";
+"interest.cooking" = "Cooking";
+"interest.baking" = "Baking";
+"interest.desserts" = "Desserts";
+"interest.tea" = "Tea";
+"interest.brunch" = "Brunch";
+"interest.gym" = "Gym";
+"interest.running" = "Running";
+"interest.hiking" = "Hiking";
+"interest.yoga" = "Yoga";
+"interest.cycling" = "Cycling";
+"interest.swimming" = "Swimming";
+"interest.badminton" = "Badminton";
+"interest.football" = "Football";
+"interest.dancing" = "Dancing";
+"interest.music" = "Music";
+"interest.movies" = "Movies";
+"interest.books" = "Books";
+"interest.art" = "Art";
+"interest.photography" = "Photography";
+"interest.concerts" = "Concerts";
+"interest.museums" = "Museums";
+"interest.karaoke" = "Karaoke";
+"interest.fashion" = "Fashion";
+"interest.pets" = "Pets";
+"interest.nightOwl" = "Night Owl";
+"interest.earlyBird" = "Early Bird";
+"interest.familyOriented" = "Family-Oriented";
+"interest.careerFocused" = "Career-Focused";
+"interest.skincare" = "Skincare";
+"interest.spirituality" = "Spirituality";
+"interest.volunteering" = "Volunteering";
+"interest.travel" = "Travel";
+"interest.nature" = "Nature";
+"interest.beach" = "Beach";
+"interest.roadTrips" = "Road Trips";
+"interest.gaming" = "Gaming";
+"interest.boardGames" = "Board Games";
+"interest.anime" = "Anime";
+"interest.tech" = "Tech";
+"interest.finance" = "Finance";
+"editProfile.photos.deletePhoto" = "Delete photo";
+"profile.contact.supportDetails.appValue" = "VeriDate iOS";
+"chat_download_photo" = "Download photo";
+"chat_download_video" = "Download video";
+"chat_download_file" = "Download file";
+"chat_attachment_default_file_name" = "attachment";
+"chat_error_generate_video_thumbnail" = "Could not generate video thumbnail.";
+"chat_error_read_image_data" = "Could not read image data.";
+"chat_error_photos_permission_required" = "Photos permission is required to save this attachment.";
+"chat_more_reactions" = "More reactions";
+"chat_clear_composer_mode" = "Clear mode";
+"chat_gallery_counter_format" = "%d / %d";
+"chat_react_with_emoji_format" = "React with %@";
+"chat_open_attachment_hint" = "Open attachment";
+"chat_reaction_summary_item_format" = "%@, %d";
+"chat_reaction_summary_format" = "Reactions: %@";
+"matches.row.accessibilityLabelFormat" = "%@, %@";
+"matches.avatar.accessibilityLabelFormat" = "%@'s profile photo";
+"gender.male" = "Male";
+"gender.female" = "Female";
+"gender.nonBinary" = "Non-binary";
+
+"relationshipGoal.seriousRelationship" = "Serious relationship";
+"relationshipGoal.lifePartner" = "Life partner";
+"relationshipGoal.marriage" = "Marriage";
+"relationshipGoal.longTerm" = "Long-term relationship";
+"relationshipGoal.shortTerm" = "Short-term dating";
+"relationshipGoal.friendship" = "Friendship";
+"relationshipGoal.friendshipFirst" = "Friendship first";
+"relationshipGoal.stillFiguringOut" = "Still figuring out";
+"relationshipGoal.notSure" = "Not sure";
+
+"lifestyle.daily" = "Daily";
+"lifestyle.often" = "Often";
+"lifestyle.sometimes" = "Sometimes";
+"lifestyle.rarely" = "Rarely";
+"lifestyle.never" = "Never";
+"interested_profile_accessibility_label_format" = "%@ liked you";
+
+"interested_locked_profile_accessibility_label" = "Someone liked you. Upgrade to view this profile.";
+"discovery_card_accessibility_label_format" = "%@, %@, %@, looking for %@";
+"profile_photo_accessibility_label" = "Profile photo";
+"interested_in_you_see_all_accessibility_label_format" = "See all %d people who liked you";
+"profile_height_cm_format" = "%d cm";
+"profile_name_age_format" = "%@, %d";
+"compatibility_score_accessibility_format" = "%@, %d percent compatibility";
+"profile_detail_row_accessibility_format" = "%@: %@";
+"profile_age_format" = "%d";
+"compatibility_score_percent_format" = "%d%%";
+"common_list_separator" = ", ";
+"discovery_error_verified_required" = "Only verified users can use Discover.";
+"discovery_error_load_profiles_format" = "Could not load discovery profiles. %@";
+"discovery_error_load_filters_format" = "Could not load filters. %@";
+"discovery_error_save_filters_format" = "Could not save filters. %@";
+"discovery_error_save_action_format" = "Could not save your %@. %@";
+"discovery_error_undo_swipe_format" = "Could not undo your last swipe. %@";
+
+"discovery_action_like" = "like";
+"discovery_action_pass" = "pass";
+
+"compatibility_reason_same_relationship_intention" = "Same relationship intention";
+"compatibility_reason_education_preference_fits" = "Education preference fits";
+"compatibility_reason_verified_profile" = "Verified profile";
+"compatibility_reason_nearby" = "Nearby";
+"compatibility_reason_comfortable_distance" = "Within comfortable distance";
+"compatibility_reason_complete_profile" = "Complete profile";
+"compatibility_reason_shared_interests" = "Shared interests";
+"compatibility_reason_shared_language" = "Shared language";
+"compatibility_reason_lifestyle_alignment" = "Lifestyle alignment";
+"compatibility_reason_matches_preferences" = "Matches your preferences";
+
+"compatibility_label_strong_match" = "Strong match";
+"compatibility_label_good_match" = "Good match";
+"compatibility_label_possible_match" = "Possible match";
+"compatibility_label_explore_slowly" = "Explore slowly";
+"filters_km_unit" = "km";
+"filters_cm_unit" = "cm";
+"filterOption.common.malay" = "Malay";
+"filterOption.common.other" = "Other";
+"filterOption.common.notSureYet" = "Not sure yet";
+"filterOption.common.notSure" = "Not sure";
+"filterOption.mbti.notSure" = "NOT SURE";
+
+"filterOption.race.chinese" = "Chinese";
+"filterOption.race.indian" = "Indian";
+"filterOption.race.iban" = "Iban";
+"filterOption.race.kadazan" = "Kadazan";
+"filterOption.race.mixed" = "Mixed";
+
+"filterOption.religion.islam" = "Islam";
+"filterOption.religion.buddhism" = "Buddhism";
+"filterOption.religion.christianity" = "Christianity";
+"filterOption.religion.hinduism" = "Hinduism";
+"filterOption.religion.taoism" = "Taoism";
+"filterOption.religion.atheist" = "Atheist";
+"filterOption.religion.agnostic" = "Agnostic";
+"filterOption.religion.spiritual" = "Spiritual";
+
+"filterOption.frequency.never" = "Never";
+"filterOption.frequency.socially" = "Socially";
+"filterOption.frequency.sometimes" = "Sometimes";
+"filterOption.frequency.often" = "Often";
+"filterOption.frequency.daily" = "Daily";
+"filterOption.frequency.rarely" = "Rarely";
+"filterOption.exercise.fewTimesAWeek" = "A few times a week";
+
+"filterOption.pet.dog" = "Dog";
+"filterOption.pet.cat" = "Cat";
+"filterOption.pet.fish" = "Fish";
+"filterOption.pet.bird" = "Bird";
+"filterOption.pet.rabbit" = "Rabbit";
+"filterOption.pet.hamster" = "Hamster";
+"filterOption.pet.reptile" = "Reptile";
+"filterOption.pet.havePets" = "Have pets";
+"filterOption.pet.wantPets" = "Want pets";
+"filterOption.pet.noPetButLoveThem" = "No pet but love them";
+"filterOption.pet.notPetPerson" = "Not a pet person";
+"filterOption.pet.allergic" = "Allergic to pets";
+"filters_range_value_format" = "%d - %d %@";
+"filters_selected_count_format" = "%d selected";
+"filters_option_selected" = "Selected";
+"filters_option_not_selected" = "Not selected";
+"filters_slider_value_format" = "%d %@";
+"filterOption.education.primarySchool" = "Primary School";
+"filterOption.education.secondarySchool" = "Secondary School";
+"filterOption.education.highSchool" = "High School";
+"filterOption.education.diploma" = "Diploma";
+"filterOption.education.degree" = "Degree";
+"filterOption.education.bachelorsDegree" = "Bachelor's Degree";
+"filterOption.education.master" = "Master";
+"filterOption.education.mastersDegree" = "Master's Degree";
+"filterOption.education.phd" = "PhD";
+"filterOption.education.doctorate" = "Doctorate";
+"filterOption.education.spm" = "SPM";
+"filterOption.education.stpm" = "STPM";
+"filterOption.education.aLevel" = "A-Level";
+"filterOption.education.foundation" = "Foundation";
+"filterOption.education.advancedDiploma" = "Advanced Diploma";
+"filterOption.education.professionalDegree" = "Professional Degree";
+"filterOption.communication.responsiveTexter" = "Responsive texter";
+"filterOption.communication.thoughtfulTexter" = "Thoughtful texter";
+"filterOption.communication.phoneCalls" = "Phone calls";
+"filterOption.communication.videoCalls" = "Video calls";
+"filterOption.communication.voiceMessages" = "Voice messages";
+"filterOption.communication.inPerson" = "In-person conversations";
+"filterOption.communication.plansAhead" = "Plans ahead";
+"filterOption.communication.spontaneousCheckIns" = "Spontaneous check-ins";
+"filterOption.communication.lowMaintenance" = "Low-maintenance communicator";
+
+"filterOption.loveLanguage.qualityTime" = "Quality time";
+"filterOption.loveLanguage.wordsOfAffirmation" = "Words of affirmation";
+"filterOption.loveLanguage.actsOfService" = "Acts of service";
+"filterOption.loveLanguage.physicalTouch" = "Physical touch";
+"filterOption.loveLanguage.receivingGifts" = "Receiving gifts";
+
+"filterOption.language.english" = "English";
+"filterOption.language.malay" = "Malay";
+"filterOption.language.mandarin" = "Mandarin";
+"filterOption.language.cantonese" = "Cantonese";
+"filterOption.language.tamil" = "Tamil";
+"filterOption.language.hokkien" = "Hokkien";
+"filterOption.language.hakka" = "Hakka";
+"filterOption.language.teochew" = "Teochew";
+"filterOption.language.japanese" = "Japanese";
+"filterOption.language.korean" = "Korean";
+"filterOption.language.arabic" = "Arabic";
+"filterOption.language.hindi" = "Hindi";
+"filterOption.language.indonesian" = "Indonesian";
+"filterOption.language.thai" = "Thai";
+
+"filterOption.familyPlans.wantChildren" = "Want children";
+"filterOption.familyPlans.openToChildren" = "Open to children";
+"filterOption.familyPlans.doNotWantChildren" = "Do not want children";
+"filterOption.familyPlans.haveChildren" = "Have children";
+"profile.card.currentlyLivingFormat" = "Currently living in %@";
+"profile.card.fromFormat" = "From %@";
+"profileSetup.navigationTitle" = "Create Profile";
+
+"profileSetup.name.title" = "Let's start with your name";
+"profileSetup.name.subtitle" = "Tell us the name on your IC for verification, then choose the name people will see on VeriDate.";
+"profileSetup.name.fullNamePlaceholder" = "Full name as per IC";
+"profileSetup.name.displayNamePlaceholder" = "Display name";
+"profileSetup.name.hint" = "Your IC name stays for verification. Your display name can be friendlier, shorter, or simply what you prefer to be called.";
+
+"profileSetup.basics.title" = "A few basics";
+"profileSetup.basics.subtitle" = "This helps us show you the right people and keep the app age-appropriate.";
+"profileSetup.basics.dateOfBirth" = "Date of birth";
+"profileSetup.basics.gender" = "Gender";
+"profileSetup.basics.height" = "Height";
+
+"profileSetup.photos.title" = "Add your photos";
+"profileSetup.photos.subtitle" = "Choose the photos that feel most like you. The first photo becomes your main profile photo.";
+"profileSetup.photos.hint" = "Add up to 6 photos. The first selected photo becomes your primary photo.";
+
+"profileSetup.location.title" = "Where should people find you?";
+"profileSetup.location.subtitle" = "Add where you're from and where you live now so nearby matches have helpful context.";
+"profileSetup.location.hometown" = "Hometown";
+"profileSetup.location.currentlyLiving" = "Currently Living";
+"profileSetup.location.searchHometown" = "Search hometown";
+"profileSetup.location.searchCurrentCity" = "Search current city";
+
+"profileSetup.background.title" = "Background";
+"profileSetup.background.subtitle" = "Please enter these carefully. Work and education details may be checked during verification, and later changes may need review.";
+"profileSetup.background.studentToggle" = "I'm currently a student";
+"profileSetup.background.unemployedToggle" = "I'm currently unemployed";
+"profileSetup.background.workVerificationNotRequired" = "Work verification will not be required.";
+"profileSetup.background.jobTitlePlaceholder" = "Job title";
+"profileSetup.background.companyPlaceholder" = "Company";
+"profileSetup.background.educationLevel" = "Education level";
+"profileSetup.background.schoolPlaceholder" = "School / University";
+
+"profileSetup.intentions.title" = "Dating intentions";
+"profileSetup.intentions.subtitle" = "A clear intention makes better matches. You can still update this later.";
+"profileSetup.intentions.lookingFor" = "Looking for";
+"profileSetup.intentions.interestedIn" = "Interested in";
+
+"profileSetup.moreDetails.title" = "More details";
+"profileSetup.moreDetails.subtitle" = "These are optional. Add what feels easy now, skip the rest, and come back anytime.";
+"profileSetup.moreDetails.maritalStatus" = "Marital status";
+"profileSetup.moreDetails.race" = "Race";
+"profileSetup.moreDetails.religion" = "Religion";
+"profileSetup.moreDetails.familyPlans" = "Family plans";
+"profileSetup.moreDetails.smoking" = "Smoking?";
+"profileSetup.moreDetails.drinking" = "Drinking alcohol?";
+"profileSetup.moreDetails.exercise" = "Exercise?";
+"profileSetup.moreDetails.pets" = "Pets?";
+"profileSetup.moreDetails.communicationStyle" = "Communication style";
+"profileSetup.moreDetails.loveLanguage" = "Love language";
+"profileSetup.moreDetails.mbti" = "MBTI";
+"profileSetup.moreDetails.languages" = "Languages";
+
+"profileSetup.error.fullNameRequired" = "Enter your name before continuing.";
+"profileSetup.error.displayNameRequired" = "Enter a display name before continuing.";
+"profileSetup.error.photoRequired" = "Add at least 1 profile photo before continuing.";
+"profileSetup.error.currentCityRequired" = "Add where you currently live before continuing.";
+"profileSetup.error.jobTitleRequired" = "Enter your job title, or select student/unemployed.";
+"profileSetup.error.companyRequired" = "Enter your company, or select student/unemployed.";
+"profileSetup.error.schoolRequired" = "Enter your school or university before continuing.";
+
+"profileSetup.footer.saveContinue" = "Save & Continue";
+"profileSetup.step.name" = "Name";
+"profileSetup.step.basics" = "Basics";
+"profileSetup.step.photos" = "Photos";
+"profileSetup.step.location" = "Location";
+"profileSetup.step.background" = "Background";
+"profileSetup.step.intentions" = "Intentions";
+"profileSetup.step.details" = "Details";
+
+"profileSetup.progress.format" = "%d of %d";
+
+"profileSetup.photos.countFormat" = "%d/%d photos";
+"profileSetup.photos.primary" = "Primary";
+"profileSetup.photos.slotFormat" = "Photo %d";
+
+"profileSetup.multiselect.limitFormat" = "Choose up to %d.";
+
+"profileSetup.bio.title" = "Bio";
+"profileSetup.bio.placeholder" = "Share a little about your personality, weekends, or what you enjoy.";
+"profileSetup.bio.hint" = "Keep it simple and natural. You can improve it later from Edit Profile.";
+"profileSetup.bio.countFormat" = "%d/%d";
+"profileSetup.multiselect.countFormat" = "%d/%d";
+"citySearch.empty.title" = "Search Malaysian cities";
+"citySearch.empty.description" = "Type a city, town, or area name.";
+"citySearch.searching" = "Searching MapKit...";
+"citySearch.noResults.title" = "No city found";
+"citySearch.noResults.description" = "Try a nearby town or district name.";
+"citySearch.searchPrompt" = "Search city in Malaysia";
+"citySearch.result.accessibilityLabelFormat" = "%@, %@";
+"verificationPending.navigationTitle" = "Verification";
+"verificationPending.hero.title" = "Verification in review";
+"verificationPending.hero.subtitle" = "Thanks for submitting your details. Our team is checking your video and documents so VeriDate stays safe and trusted.";
+"verificationPending.hero.reviewTime" = "Usually reviewed soon";
+"verificationPending.reviewChecklist.title" = "Review checklist";
+"verificationPending.step.video.title" = "Video liveness check";
+"verificationPending.step.video.subtitle" = "Confirming the short video was captured properly.";
+"verificationPending.step.document.title" = "IC and document review";
+"verificationPending.step.document.subtitle" = "Checking that the submitted documents match your profile.";
+"verificationPending.step.admin.title" = "Admin approval";
+"verificationPending.step.admin.subtitle" = "Final review before your profile enters Discovery.";
+"verificationPending.whileYouWait.title" = "While you wait";
+"verificationPending.tip.keepInstalled" = "Keep the app installed so your profile can update automatically after approval.";
+"verificationPending.tip.changes" = "If your submission needs changes, we will show the reason clearly on this screen.";
+"verificationPending.tip.approved" = "Once approved, you can start discovering verified members nearby.";
+"verificationPending.refresh.checking" = "Checking status...";
+"verificationPending.refresh.title" = "Refresh Status";
+"verificationPending.step.status.complete" = "Complete";
+"verificationPending.step.status.pending" = "Pending";
+"verificationUpload.feedback.title" = "Review feedback";
+"verificationUpload.feedback.loading" = "Loading feedback...";
+"verificationUpload.feedback.defaultRejected" = "Your verification was rejected. Please upload updated documents and submit again.";
+"verificationUpload.video.title" = "Video verification";
+"verificationUpload.video.record" = "Record short video";
+"verificationUpload.video.retake" = "Retake verification video";
+"verificationUpload.video.recordSubtitle" = "Open camera and record a short liveness clip.";
+"verificationUpload.video.captured" = "Video captured";
+"verificationUpload.documents.title" = "Documents";
+"verificationUpload.document.icPhoto" = "IC photo";
+"verificationUpload.document.jobProof" = "Job Proof";
+"verificationUpload.document.jobProofSkipped" = "Skipped because your work status does not require job verification.";
+"verificationUpload.document.educationProof" = "Education Proof";
+"verificationUpload.document.educationProofSkipped" = "Skipped for primary or high school education level.";
+"verificationUpload.error.cameraUnavailableVideo" = "Camera is not available on this device. Please test video verification on a real iPhone.";
+"verificationUpload.error.signInAgain" = "Please sign in again before submitting verification.";
+"verificationUpload.error.statusUpdateBlocked" = "Files uploaded, but Supabase blocked updating your verification status.";
+"verificationUpload.error.readVideoFormat" = "Could not read that verification video. %@";
+"verificationUpload.submit.title" = "Submit verification";
+"verificationUpload.submit.submitting" = "Submitting verification...";
+"verificationUpload.navigationTitle" = "Verify Account";
+"verificationUpload.editSetup" = "Edit setup";
+"verificationUpload.intro.title" = "Secure verification";
+"verificationUpload.intro.subtitle" = "You're almost done. Record a short video, capture your IC with the camera, then add the work or education proof that applies to you. We review these privately to keep VeriDate safer.";
+"verificationUpload.item.status.complete" = "Complete";
+"verificationUpload.item.status.incomplete" = "Incomplete";
+"verificationUpload.document.chooseSourceFormat" = "Choose %@";
+"verificationUpload.document.source.photos" = "Photos";
+"verificationUpload.document.source.camera" = "Camera";
+"verificationUpload.document.source.files" = "Files";
+"verificationUpload.document.cameraOnly" = "Camera only";
+"verificationUpload.document.chooseSources" = "Choose from Photos, Camera, or Files";
+"verificationUpload.error.cameraRequiredForIC" = "Camera is required for IC verification. Please use a real iPhone with camera access.";
+"verificationUpload.error.cameraUnavailableUsePhotosFiles" = "Camera is not available on this device. Please use Photos or Files.";
+"verificationUpload.error.readPhoto" = "Could not read that photo.";
+"verificationUpload.error.readCameraPhoto" = "Could not read that camera photo.";
+"verificationUpload.document.selectHint" = "Double tap to choose or capture this document.";
+"verificationUpload.document.disabledHint" = "This document is not required for your profile.";
+"verificationUpload.video.livenessPrompt" = "Record a short, clear video so we can confirm you are a real person.";
+"verificationUpload.error.noFileSelected" = "No file was selected.";
+"verificationUpload.error.readPhotoFormat" = "Could not read that photo. %@";
+"verificationUpload.error.importFileFormat" = "Could not import that file. %@";
+"session.auth.accountCreatedConfirmEmail" = "Account created. Please confirm your email, then sign in.";
+"session.auth.error.createAccount" = "Could not create your account.";
+"session.auth.error.signIn" = "Could not sign you in.";
+"session.auth.error.enterPhone" = "Enter your phone number before continuing.";
+"session.auth.error.demoRequiresEmailConfirmation" = "Demo account created, but Supabase requires email confirmation. For this rough flow, turn off email confirmation or enable real phone OTP later.";
+"session.auth.error.loginMethod" = "Could not continue with this login method.";
+"session.auth.error.signOut" = "Could not sign out.";
+"session.account.error.validEmail" = "Enter a valid email address.";
+"session.account.error.updateEmail" = "Could not update your email.";
+"session.account.error.passwordMin8" = "Password must be at least 8 characters.";
+"session.account.error.updatePassword" = "Could not update your password.";
+"session.profile.error.prepareProfile" = "Signed in, but could not prepare your profile.";
+"session.profile.error.loadProfile" = "Could not load your profile.";
+"session.auth.error.emailPasswordRequired" = "Enter both email and password.";
+"session.auth.error.passwordMin6" = "Password must be at least 6 characters.";
+"session.auth.error.invalidCredentials" = "Email or password is incorrect.";
+"session.auth.error.emailNotConfirmed" = "Please confirm your email before signing in.";
+"session.auth.error.emailAlreadyRegistered" = "This email already has an account. Try signing in.";
+"session.error.network" = "Network problem. Check your connection and try again.";
+"session.accountDeletion.error.signInAgainRequest" = "Please sign in again before requesting account deletion.";
+"session.accountDeletion.error.request" = "Could not request account deletion.";
+"session.accountDeletion.error.signInAgainCancel" = "Please sign in again before canceling account deletion.";
+"session.accountDeletion.error.cancel" = "Could not cancel account deletion.";
+"session.verification.error.signInAgainSubmit" = "Please sign in again before submitting verification.";
+"session.verification.error.submit" = "Uploaded your files, but could not submit verification.";
+"session.location.error.signInAgainUpdate" = "Please sign in again before updating your location.";
+"session.location.error.update" = "Could not update your location.";
+"session.visibility.error.signInAgainChange" = "Please sign in again before changing visibility.";
+"session.visibility.error.update" = "Could not update visibility.";
+"session.presence.error.updateFormat" = "Could not update online status. %@";
+"session.error.fallbackWithDetailFormat" = "%@ %@";
+"auth_verifying_button" = "Verifying...";
+"profileSetup.error.saveProfileFormat" = "Could not save your profile. %@";
+"verificationUpload.video.livenessPromptInstruction" = "Turn your head slightly left, then look back at the camera.";
+"verificationUpload.error.loadRejectionReasonFormat" = "Could not load rejection reason. %@";
+"verificationUpload.error.videoAndICRequired" = "Add your verification video and IC photo before submitting.";
+"verificationUpload.error.jobProofRequired" = "Add your job proof before submitting.";
+"verificationUpload.error.educationProofRequired" = "Add your education proof before submitting.";
+"verificationUpload.uploadLabel.selfieVideo" = "selfie verification video";
+"verificationUpload.uploadLabel.idDocument" = "ID document";
+"verificationUpload.uploadLabel.jobProof" = "job proof";
+"verificationUpload.uploadLabel.educationProof" = "education proof";
+"verificationUpload.error.missingDocumentFormat" = "Could not read the %@. Please choose a photo or file again.";
+"verificationUpload.error.blockedStepFormat" = "Supabase blocked the %@ upload at %@. %@";
+"verificationUpload.error.submissionRowFormat" = "Files uploaded, but Supabase blocked creating the verification submission row. %@";
+"photoUpload.uploading" = "Uploading...";
+"photoUpload.addPrimary" = "Add primary";
+"photoUpload.addPhoto" = "Add photo";
+"photoUpload.tapToChoose" = "Tap to choose";
+"photoUpload.slot.accessibilityLabelFormat" = "Photo slot %d";
+"photoUpload.error.readSelectedPhoto" = "Unable to read selected photo.";
+"photoUpload.error.uploadFailedFormat" = "Photo upload failed. %@";
+"chat_error_verified_users_only_message_matches" = "Only verified users can message matches.";
+"chat_error_message_after_match_only" = "You can only message someone after you have matched.";
+"chat_error_load_messages_format" = "Could not load messages. %@";
+"chat_error_refresh_messages_format" = "Could not refresh messages. %@";
+"chat_error_verified_users_only_send_messages" = "Only verified users can send messages.";
+"chat_error_type_message_before_sending" = "Type a message before sending.";
+"chat_error_messaging_unavailable_blocked" = "Messaging is unavailable because one of you blocked the other.";
+"chat_error_send_message_retry" = "Could not send message. Tap the failed message to retry.";
+"chat_error_still_could_not_send" = "Still could not send. Check your connection and try again.";
+"chat_error_verified_users_only_send_attachments" = "Only verified users can send attachments.";
+"chat_error_attachment_after_match_only" = "You can only send attachments after you have matched.";
+"chat_error_check_message_safety_format" = "Could not check message safety. %@";
+"chat_error_upload_attachment_format" = "Could not upload attachment file. %@";
+"chat_error_create_attachment_message_format" = "Attachment uploaded, but could not create chat message. %@";
+"chat_attachment_body_photo" = "Photo";
+"chat_attachment_body_video" = "Video";
+"chat_attachment_body_voice_message" = "Voice message";
+"chat_attachment_body_attachment" = "Attachment";
+"chat_error_block_matched_users_only" = "You can only block users you have matched with.";
+"chat_action_user_blocked" = "User blocked.";
+"chat_error_block_user_format" = "Could not block this user. %@";
+"chat_error_report_matched_users_only" = "You can only report users you have matched with.";
+"chat_error_report_reason_required" = "Add a short reason before reporting.";
+"chat_action_report_submitted" = "Report submitted.";
+"chat_error_submit_report_format" = "Could not submit report. %@";
+"safety.report.submitted" = "Report submitted. Thank you for helping keep VeriDate safe.";
+"safety.report.submitFailedFormat" = "Could not submit report. %@";
+"chat_error_mark_read_format" = "Could not mark messages as read. %@";
+"chat_error_edit_own_messages_only" = "You can only edit your own messages.";
+"chat_error_deleted_messages_cannot_be_edited" = "Deleted messages cannot be edited.";
+"chat_error_voice_messages_cannot_be_edited" = "Voice messages cannot be edited.";
+"chat_error_edited_message_empty" = "Edited message cannot be empty.";
+"chat_error_edit_message_format" = "Could not edit message. %@";
+"chat_error_delete_own_messages_only" = "You can only delete your own messages.";
+"chat_message_deleted_body" = "This message was deleted";
+"chat_error_delete_message_format" = "Could not delete message. %@";
+"chat_error_react_message_format" = "Could not react to message. %@";
+"chat_error_reactions_could_not_load" = "Messages loaded, but reactions could not load. Run the latest chat SQL if this is a new database.";
+"chat_no_active_recording_found" = "No active recording was found.";
+"location.status.ready" = "Location ready";
+"location.status.permissionNeeded" = "Location permission is needed for nearby matches.";
+"location.status.off" = "Location is off. Turn it on in Settings to see nearby matches.";
+"location.status.finding" = "Finding your location...";
+"location.status.unavailable" = "Location status is unavailable.";
+
+"location.error.allowAccessInSettings" = "Allow location access in Settings to use distance matching.";
+"location.error.checkPermission" = "Could not check location permission.";
+"location.error.getLocationFormat" = "Could not get your location. %@";
+"genderInterest.sameGender" = "Same gender";
+"profile.blocked.title" = "Blocked Accounts";
+"profile.notifications.title" = "Notifications";
+"profile.settings.termsOfService" = "Terms of Service";
+"safety.report.section.reason" = "Reason";
+"safety.report.section.details" = "Details";
+"safety.report.section.proof" = "Proof";
+"safety.report.details.placeholder" = "Optional details";
+"safety.report.attachScreenshot" = "Attach Screenshot";
+"safety.report.replaceScreenshot" = "Replace Screenshot";
+"safety.report.chooseFromFiles" = "Choose From Files";
+"safety.report.removeAttachment" = "Remove Attachment";
+"safety.report.navigationTitleFormat" = "Report %@";
+"safety.report.submitting" = "Submitting...";
+"safety.report.submit" = "Submit";
+"safety.report.error.readScreenshot" = "Could not read that screenshot.";
+"safety.report.reason.inappropriateBehavior" = "Inappropriate behavior";
+"safety.report.reason.harassment" = "Harassment";
+"safety.report.reason.fakeProfile" = "Fake profile";
+"safety.report.reason.scam" = "Scam or suspicious activity";
+"safety.report.reason.underage" = "Underage user";
+"safety.report.reason.other" = "Other";
+"mainTab.discover" = "Discover";
+"mainTab.matches" = "Matches";
+"mainTab.me" = "Me";
+"matchCelebration.title" = "It’s a Match!";
+"matchCelebration.subtitleFormat" = "You and %@ liked each other.";
+"matchCelebration.thisUser" = "this user";
+"matchCelebration.sendMessage" = "Send Message";
+"matchCelebration.keepDiscovering" = "Keep Discovering";
+"editProfile.photos.title" = "Photos";
+"editProfile.photos.subtitle" = "Your first impression";
+"editProfile.photos.guidanceTitle" = "Show your lifestyle";
+"editProfile.photos.guidanceMessage" = "Tap an empty slot to add a photo. Drag and drop photos to reorder.";
+"editProfile.basicIdentity.title" = "Basic identity";
+"editProfile.basicIdentity.subtitle" = "Core details shown on your profile";
+"editProfile.basicIdentity.legalNamePrivateReason" = "This is verified identity information and is not shown to other members.";
+"editProfile.basicIdentity.legalNameRequestComingSoon" = "Verified legal name edit requests will be added in the next approval workflow.";
+"editProfile.basicIdentity.requestLegalNameUpdate" = "Request legal name update";
+"editProfile.basicIdentity.displayNameComplete" = "Display name added";
+"editProfile.basicIdentity.displayNameIncomplete" = "Add the name you want other members to see. Your IC name stays private.";
+"editProfile.basicIdentity.bioComplete" = "Bio added";
+"editProfile.basicIdentity.bioIncomplete" = "Add a short bio so people can understand your personality beyond photos.";
+"profile.prompts.title" = "Prompts";
+"profile.interests.title" = "Interests";
+"profile.preview.previewingPublicProfile" = "Previewing your public profile";
+"profile.preview.lifestyleHighlights" = "Lifestyle Highlights";
+"profile.preview.lookingFor" = "Looking For";
+"profile.preview.sharedIntentions" = "Shared intentions help create better matches.";
+"profile.preview.about" = "About";
+"profile.preview.datingBasics" = "Dating Basics";
+"profile.preview.gender" = "Gender";
+"profile.preview.maritalStatus" = "Marital Status";
+"profile.preview.race" = "Race";
+"profile.preview.religion" = "Religion";
+"profile.preview.height" = "Height";
+"profile.preview.familyPlans" = "Family Plans";
+"profile.preview.lifestylePersonality" = "Lifestyle & Personality";
+"profile.preview.smoking" = "Smoking";
+"profile.preview.drinking" = "Drinking";
+"profile.preview.exercise" = "Exercise";
+"profile.preview.pets" = "Pets";
+"profile.preview.communication" = "Communication";
+"profile.preview.loveLanguage" = "Love Language";
+"profile.preview.horoscope" = "Horoscope";
+"profile.preview.mbti" = "MBTI";
+"profile.preview.languages" = "Languages";
+"profile.preview.background" = "Background";
+"profile.preview.work" = "Work";
+"profile.preview.education" = "Education";
+"profile.preview.hometown" = "Hometown";
+"profile.preview.currentlyLiving" = "Currently Living";
+"profile.preview.distanceFromYou" = "Distance from you";
+"profile.preview.prompts" = "Prompts";
+"profile.preview.lifestyleInterests" = "Lifestyle & Interests";
+"profile.preview.locationNotAdded" = "Location not added";
+"profile.preview.lessThanOneKmAway" = "Less than 1 km away";
+"profile.preview.kmAwayFormat" = "%d km away";
+"profile.preview.noName" = "No name";
+"profile.language.settings" = "Language";
+"language.title" = "App Language";
+"language.chooseLanguage" = "Choose Language";
+"language.currentFormat" = "Current language: %@";
+"language.note" = "Language changes apply immediately across VeriDate.";
+"language.english" = "English";
+"language.chineseSimplified" = "Chinese";
+"filterOption.common.student" = "Student";
+"filterOption.common.unemployed" = "Unemployed";
+"filterOption.zodiac.aries" = "Aries";
+"filterOption.zodiac.taurus" = "Taurus";
+"filterOption.zodiac.gemini" = "Gemini";
+"filterOption.zodiac.cancer" = "Cancer";
+"filterOption.zodiac.leo" = "Leo";
+"filterOption.zodiac.virgo" = "Virgo";
+"filterOption.zodiac.libra" = "Libra";
+"filterOption.zodiac.scorpio" = "Scorpio";
+"filterOption.zodiac.sagittarius" = "Sagittarius";
+"filterOption.zodiac.capricorn" = "Capricorn";
+"filterOption.zodiac.aquarius" = "Aquarius";
+"filterOption.zodiac.pisces" = "Pisces";
+"profile_card_primary_info_format" = "%@, %@";
+"profile_photo_placeholder_accessibility_label" = "Profile photo placeholder";
+"profile.verifiedBadge.accessibilityLabel" = "Verified profile";
+"editProfile.displayName.changeLimit" = "Display name can only be changed once every 30 days.";
+
+"editProfile.displayName.changeLimitWithDate" = "Display name can only be changed once every 30 days. You can change it again from %@.";
+
+"editProfile.displayName.changeHint" = "You can change your display name once every 30 days.";
+
+"editProfile.changeRequest.legalName.title" = "Request legal name update";
+"editProfile.changeRequest.legalName.message" = "Submit the corrected legal name for admin review. You may be asked for updated identity proof.";
+"editProfile.changeRequest.work.title" = "Request work details update";
+"editProfile.changeRequest.work.message" = "Submit your updated job title or company. Work details may need new proof before they appear on your verified profile.";
+"editProfile.changeRequest.education.title" = "Request education update";
+"editProfile.changeRequest.education.message" = "Submit your updated education details. Education changes may need new proof before approval.";
+"editProfile.changeRequest.currentValue" = "Current value";
+"editProfile.changeRequest.requestedValue" = "Requested value";
+"editProfile.changeRequest.currentName" = "Current name";
+"editProfile.changeRequest.updateName" = "Update name";
+"editProfile.changeRequest.currentJobDetails" = "Current job details";
+"editProfile.changeRequest.updateJobDetails" = "Update job details";
+"editProfile.changeRequest.currentEducationDetails" = "Current education details";
+"editProfile.changeRequest.updateEducationDetails" = "Update education details";
+"editProfile.changeRequest.attachment" = "Attachment";
+"editProfile.changeRequest.attachment.add" = "Attach proof";
+"editProfile.changeRequest.attachment.remove" = "Remove attachment";
+"editProfile.changeRequest.attachment.chooseSource" = "Choose attachment source";
+"editProfile.changeRequest.note" = "Note";
+"editProfile.changeRequest.notePlaceholder" = "Add context for the admin team";
+"editProfile.changeRequest.submit" = "Submit";
+"editProfile.changeRequest.noChange" = "Change at least one value before submitting.";
+"editProfile.changeRequest.submitted" = "Update request submitted for admin review.";
+"editProfile.changeRequest.submitFailedFormat" = "Could not submit update request. %@";
+
+"zodiac.aries" = "Aries";
+"zodiac.taurus" = "Taurus";
+"zodiac.gemini" = "Gemini";
+"zodiac.cancer" = "Cancer";
+"zodiac.leo" = "Leo";
+"zodiac.virgo" = "Virgo";
+"zodiac.libra" = "Libra";
+"zodiac.scorpio" = "Scorpio";
+"zodiac.sagittarius" = "Sagittarius";
+"zodiac.capricorn" = "Capricorn";
+"zodiac.aquarius" = "Aquarius";
+"zodiac.pisces" = "Pisces";
+"chat.compatibility.zodiac.title" = "Zodiac chemistry";
+"chat.compatibility.mbti.title" = "Personality dynamic";
+"chat.compatibility.tapToKnowMore" = "Tap to know more";
+
+"chat.compatibility.section.overview" = "Overview";
+"chat.compatibility.section.strengths" = "Strengths";
+"chat.compatibility.section.challenges" = "Potential challenges";
+"chat.compatibility.section.communication" = "Communication dynamic";
+"chat.compatibility.section.outlook" = "Relationship outlook";
+
+"chat.compatibility.zodiac.overview" = "This pairing can give a light sense of emotional rhythm, attraction style, and how both people may naturally express affection.";
+"chat.compatibility.zodiac.communication" = "Use this as a soft conversation starter. Ask what feels true for them instead of treating the match as a fixed rule.";
+"chat.compatibility.shared.outlook" = "A good connection still depends on maturity, timing, shared values, and consistent effort.";
+
+"chat.compatibility.mbti.overview" = "This personality pairing highlights how both people may process emotions, decisions, energy, and communication.";
+"chat.compatibility.mbti.communication" = "Try noticing whether your match prefers direct clarity, emotional context, quiet reflection, or spontaneous conversation.";
+"chat.compatibility.mbti.outlook" = "Personality type is only a guide. Real compatibility grows through communication, respect, and aligned relationship intentions.";
+
+"chat.compatibility.zodiac.summary.sameElement" = "A naturally familiar rhythm, with shared emotional language and easy mutual understanding.";
+"chat.compatibility.zodiac.summary.complementary" = "A balanced dynamic where both sides may bring different strengths into the connection.";
+"chat.compatibility.zodiac.summary.contrast" = "An interesting contrast that can create curiosity, attraction, and room to learn from each other.";
+
+"chat.compatibility.zodiac.strength.same.1" = "Similar emotional pace";
+"chat.compatibility.zodiac.strength.same.2" = "Natural understanding";
+"chat.compatibility.zodiac.strength.same.3" = "Comfortable shared energy";
+
+"chat.compatibility.zodiac.strength.complementary.1" = "Balanced personalities";
+"chat.compatibility.zodiac.strength.complementary.2" = "Different strengths";
+"chat.compatibility.zodiac.strength.complementary.3" = "Good potential for mutual growth";
+
+"chat.compatibility.zodiac.strength.contrast.1" = "Fresh perspective";
+"chat.compatibility.zodiac.strength.contrast.2" = "Curious attraction";
+"chat.compatibility.zodiac.strength.contrast.3" = "Opportunity to learn each other’s style";
+
+"chat.compatibility.zodiac.challenge.same.1" = "May mirror each other’s blind spots";
+"chat.compatibility.zodiac.challenge.same.2" = "Needs conscious communication during conflict";
+
+"chat.compatibility.zodiac.challenge.complementary.1" = "Different emotional needs";
+"chat.compatibility.zodiac.challenge.complementary.2" = "May require patience to understand each other’s pace";
+
+"chat.compatibility.zodiac.challenge.contrast.1" = "Different expectations";
+"chat.compatibility.zodiac.challenge.contrast.2" = "Needs extra clarity around reassurance and boundaries";
+
+"chat.compatibility.mbti.summary.similar" = "A familiar personality rhythm with many shared instincts in how both people connect.";
+"chat.compatibility.mbti.summary.balanced" = "A balanced pairing with enough similarity for comfort and enough difference for curiosity.";
+"chat.compatibility.mbti.summary.contrast" = "A contrasting dynamic that may feel exciting when both people communicate with patience.";
+
+"chat.compatibility.mbti.strength.similar.1" = "Similar communication instincts";
+"chat.compatibility.mbti.strength.similar.2" = "Easy emotional familiarity";
+"chat.compatibility.mbti.strength.similar.3" = "Shared decision-making rhythm";
+
+"chat.compatibility.mbti.strength.balanced.1" = "Good mix of comfort and contrast";
+"chat.compatibility.mbti.strength.balanced.2" = "Different perspectives";
+"chat.compatibility.mbti.strength.balanced.3" = "Potential for balanced growth";
+
+"chat.compatibility.mbti.strength.contrast.1" = "Strong learning potential";
+"chat.compatibility.mbti.strength.contrast.2" = "Fresh perspective";
+"chat.compatibility.mbti.strength.contrast.3" = "Can complement each other when mature";
+
+"chat.compatibility.mbti.challenge.similar.1" = "May assume too much similarity";
+"chat.compatibility.mbti.challenge.similar.2" = "Needs space for individual differences";
+
+"chat.compatibility.mbti.challenge.balanced.1" = "Some habits may need adjustment";
+"chat.compatibility.mbti.challenge.balanced.2" = "Important to clarify expectations early";
+
+"chat.compatibility.mbti.challenge.contrast.1" = "Different pacing";
+"chat.compatibility.mbti.challenge.contrast.2" = "May need extra patience in communication";

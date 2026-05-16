@@ -3,32 +3,36 @@ import SwiftUI
 struct MatchesView: View {
     @EnvironmentObject var session: SessionViewModel
     @StateObject private var vm = MatchesViewModel()
+    @Binding var pendingChatRow: MatchRow?
+    @State private var navigationPath: [MatchRow] = []
     let navigationTitle: String
 
-    init(navigationTitle: String = "Matches") {
+    init(
+        navigationTitle: String = AppLanguageManager.localized("matches.title"),
+        pendingChatRow: Binding<MatchRow?> = .constant(nil)
+    ) {
         self.navigationTitle = navigationTitle
+        self._pendingChatRow = pendingChatRow
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             Group {
                 if session.currentProfile?.verificationStatus != .verified {
                     ContentUnavailableView(
-                        "Verification Required",
+                        AppLanguageManager.localized("matches.verificationRequired.title"),
                         systemImage: "checkmark.seal",
-                        description: Text("Only verified users can view matches.")
+                        description: Text(AppLanguageManager.localized("matches.verificationRequired.description"))
                     )
                 } else if vm.isLoading {
-                    ProgressView("Loading matches...")
+                    ProgressView(AppLanguageManager.localized("matches.loading"))
                 } else if let error = vm.errorMessage, vm.matches.isEmpty {
-                    ContentUnavailableView("Could Not Load Matches", systemImage: "exclamationmark.triangle", description: Text(error))
+                    ContentUnavailableView(AppLanguageManager.localized("matches.loadError.title"), systemImage: "exclamationmark.triangle", description: Text(error))
                 } else if vm.matches.isEmpty {
-                    ContentUnavailableView("No Matches Yet", systemImage: "heart", description: Text("When someone likes you back, they will appear here."))
+                    ContentUnavailableView(AppLanguageManager.localized("matches.empty.title"), systemImage: "heart", description: Text(AppLanguageManager.localized("matches.empty.description")))
                 } else {
                     List(vm.matches) { row in
-                        NavigationLink {
-                            ChatThreadView(row: row)
-                        } label: {
+                        NavigationLink(value: row) {
                             MatchRowView(row: row)
                         }
                     }
@@ -37,12 +41,32 @@ struct MatchesView: View {
                     }
                 }
             }
+            .navigationDestination(for: MatchRow.self) { row in
+                ChatThreadView(row: row)
+            }
             .navigationTitle(navigationTitle)
+            .navigationBarTitleDisplayMode(.inline)
             .task(id: session.currentUserId) {
                 await load()
                 await keepMatchesSynced()
             }
+            .onChange(of: pendingChatRow?.id) { _, _ in
+                openPendingChatIfNeeded()
+            }
+            .onAppear {
+                openPendingChatIfNeeded()
+            }
         }
+    }
+
+    private func openPendingChatIfNeeded() {
+        guard let row = pendingChatRow else { return }
+
+        if navigationPath.last?.id != row.id {
+            navigationPath.append(row)
+        }
+
+        pendingChatRow = nil
     }
 
     private func load() async {
@@ -63,6 +87,11 @@ struct MatchesView: View {
     }
 }
 
+private enum MatchMessagePreviewPlaceholder {
+    static let photo = "Photo"
+    static let video = "Video"
+}
+
 private struct MatchRowView: View {
     @EnvironmentObject private var session: SessionViewModel
     let row: MatchRow
@@ -73,7 +102,7 @@ private struct MatchRowView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
-                    Text(row.profile.fullName ?? "Verified User")
+                    Text(row.profile.publicName ?? AppLanguageManager.localized("matches.verifiedUser"))
                         .font(.headline)
 
                     PresenceDot(isOnline: isRecentlyOnline)
@@ -101,27 +130,18 @@ private struct MatchRowView: View {
             }
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(rowAccessibilityLabel)
     }
 
     private var avatar: some View {
-        Group {
-            if let urlString = row.profile.profilePhotoURL, let url = URL(string: urlString) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    default:
-                        avatarPlaceholder
-                    }
-                }
-            } else {
-                avatarPlaceholder
-            }
-        }
-        .frame(width: 56, height: 56)
-        .clipShape(Circle())
+        MatchAvatarView(photoPath: row.profile.profilePhotoURL, name: row.profile.publicName ?? AppLanguageManager.localized("matches.verifiedUser"))
+    }
+
+    private var rowAccessibilityLabel: String {
+        let name = row.profile.publicName ?? AppLanguageManager.localized("matches.verifiedUser")
+        let detail = subtitle.isEmpty ? lastMessageText : "\(subtitle), \(lastMessageText)"
+        return String.localizedStringWithFormat(AppLanguageManager.localized("matches.row.accessibilityLabelFormat"), name, detail)
     }
 
     private var avatarPlaceholder: some View {
@@ -134,7 +154,7 @@ private struct MatchRowView: View {
     }
 
     private var subtitle: String {
-        let age = row.profile.age.map { "\($0)" }
+        let age = row.profile.displayAge.map { "\($0)" }
         let city = row.profile.city?.trimmingCharacters(in: .whitespacesAndNewlines)
 
         return [age, city, presenceText]
@@ -147,22 +167,54 @@ private struct MatchRowView: View {
 
     private var lastMessageText: String {
         guard let lastMessage = row.lastMessage else {
-            return "Start the conversation"
+            return AppLanguageManager.localized("matches.startConversation")
         }
 
-        return lastMessage.body
+        if lastMessage.deletedAt != nil {
+            return AppLanguageManager.localized("chat_message_deleted")
+        }
+
+        let trimmedBody = lastMessage.body.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if lastMessage.attachmentKind == "image" {
+            if trimmedBody.isEmpty || trimmedBody == MatchMessagePreviewPlaceholder.photo {
+                return AppLanguageManager.localized("chat_photo_message")
+            }
+        }
+
+        if lastMessage.attachmentKind == "video" {
+            if trimmedBody.isEmpty || trimmedBody == MatchMessagePreviewPlaceholder.video {
+                return AppLanguageManager.localized("chat_video_message")
+            }
+        }
+
+        if lastMessage.attachmentKind == "audio" {
+            return AppLanguageManager.localized("chat_voice_message")
+        }
+
+        if lastMessage.attachmentFilePath != nil {
+            if let fileName = lastMessage.attachmentFileName?.trimmingCharacters(in: .whitespacesAndNewlines), !fileName.isEmpty {
+                return fileName
+            }
+            return AppLanguageManager.localized("chat_attachment_message")
+        }
+
+        return trimmedBody.isEmpty ? AppLanguageManager.localized("matches.startConversation") : trimmedBody
     }
 
     private var presenceText: String {
         if isRecentlyOnline {
-            return "Online"
+            return AppLanguageManager.localized("matches.presence.online")
         }
 
         guard let lastSeenAt = row.profile.lastSeenAt, let date = parseDate(lastSeenAt) else {
-            return "Offline"
+            return AppLanguageManager.localized("matches.presence.offline")
         }
 
-        return "Last seen \(date.formatted(.relative(presentation: .named)))"
+        return String(
+            format: AppLanguageManager.localized("matches.presence.lastSeenFormat"),
+            date.formatted(.relative(presentation: .named))
+        )
     }
 
     private var isRecentlyOnline: Bool {
@@ -171,7 +223,7 @@ private struct MatchRowView: View {
             return true
         }
 
-        return Date().timeIntervalSince(date) < 90
+        return Date().timeIntervalSince(date) < 45
     }
 
     private func parseDate(_ value: String) -> Date? {
@@ -182,6 +234,61 @@ private struct MatchRowView: View {
     }
 }
 
+private struct MatchAvatarView: View {
+    let photoPath: String?
+    let name: String
+    @State private var signedURL: URL?
+
+    var body: some View {
+        Group {
+            if let signedURL {
+                AsyncImage(url: signedURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    default:
+                        placeholder
+                    }
+                }
+            } else {
+                placeholder
+            }
+        }
+        .frame(width: 56, height: 56)
+        .clipShape(Circle())
+        .overlay {
+            Circle()
+                .stroke(Color.secondary.opacity(0.14), lineWidth: 1)
+        }
+        .accessibilityLabel(String.localizedStringWithFormat(AppLanguageManager.localized("matches.avatar.accessibilityLabelFormat"), name))
+        .task(id: photoPath) {
+            await loadSignedURL()
+        }
+    }
+
+    private var placeholder: some View {
+        ZStack {
+            Circle()
+                .fill(.secondary.opacity(0.12))
+            Image(systemName: "person.fill")
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private func loadSignedURL() async {
+        signedURL = nil
+        guard let photoPath, !photoPath.isEmpty else { return }
+
+        do {
+            signedURL = try await ProfilePhotoService.shared.signedURL(for: photoPath)
+        } catch {
+            signedURL = nil
+        }
+    }
+}
+
 private struct PresenceDot: View {
     let isOnline: Bool
 
@@ -189,7 +296,7 @@ private struct PresenceDot: View {
         Circle()
             .fill(isOnline ? .green : .secondary.opacity(0.45))
             .frame(width: 8, height: 8)
-            .accessibilityLabel(isOnline ? "Online" : "Offline")
+            .accessibilityLabel(isOnline ? AppLanguageManager.localized("matches.presence.online") : AppLanguageManager.localized("matches.presence.offline"))
     }
 }
 
@@ -197,34 +304,38 @@ struct MessageStatusTicks: View {
     let message: Message
 
     var body: some View {
-        HStack(spacing: -4) {
-            ForEach(0..<tickCount, id: \.self) { _ in
-                Image(systemName: "checkmark")
-                    .font(.caption2)
-                    .fontWeight(.bold)
-            }
-        }
-        .foregroundStyle(statusColor)
-        .accessibilityLabel(accessibilityText)
+        Image(systemName: systemImage)
+            .font(.caption2)
+            .fontWeight(.semibold)
+            .foregroundStyle(statusColor)
+            .accessibilityLabel(accessibilityText)
     }
 
     private var statusColor: Color {
-        message.isRead || message.readAt != nil ? .blue : .secondary
+        message.readAt != nil ? .blue : .secondary
     }
 
-    private var tickCount: Int {
-        message.deliveredAt != nil || message.isRead || message.readAt != nil ? 2 : 1
-    }
-
-    private var accessibilityText: String {
-        if message.isRead || message.readAt != nil {
-            return "Read"
+    private var systemImage: String {
+        if message.readAt != nil {
+            return "checkmark.circle.fill"
         }
 
         if message.deliveredAt != nil {
-            return "Delivered"
+            return "checkmark.circle.fill"
         }
 
-        return "Sent"
+        return "checkmark.circle"
+    }
+
+    private var accessibilityText: String {
+        if message.readAt != nil {
+            return AppLanguageManager.localized("matches.messageStatus.read")
+        }
+
+        if message.deliveredAt != nil {
+            return AppLanguageManager.localized("matches.messageStatus.delivered")
+        }
+
+        return AppLanguageManager.localized("matches.messageStatus.sent")
     }
 }

@@ -21,30 +21,33 @@ struct SafetyReportSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Reason") {
-                    Picker("Reason", selection: $reason) {
+                Section(AppLanguageManager.localized("safety.report.section.reason")) {
+                    Picker(AppLanguageManager.localized("safety.report.section.reason"), selection: $reason) {
                         ForEach(SafetyReportReason.allCases) { reason in
-                            Text(reason.rawValue).tag(reason)
+                            Text(reason.localizedTitle).tag(reason)
                         }
                     }
                 }
 
-                Section("Details") {
-                    TextField("Optional details", text: $details, axis: .vertical)
+                Section(AppLanguageManager.localized("safety.report.section.details")) {
+                    TextField(AppLanguageManager.localized("safety.report.details.placeholder"), text: $details, axis: .vertical)
                         .lineLimit(3...6)
                 }
 
-                Section("Proof") {
+                Section(AppLanguageManager.localized("safety.report.section.proof")) {
                     Button {
                         isPickingPhoto = true
                     } label: {
-                        Label(proof == nil ? "Attach Screenshot" : "Replace Screenshot", systemImage: "photo")
+                        Label(
+                            proof == nil ? AppLanguageManager.localized("safety.report.attachScreenshot") : AppLanguageManager.localized("safety.report.replaceScreenshot"),
+                            systemImage: "photo"
+                        )
                     }
 
                     Button {
                         isImportingFile = true
                     } label: {
-                        Label("Choose From Files", systemImage: "folder")
+                        Label(AppLanguageManager.localized("safety.report.chooseFromFiles"), systemImage: "folder")
                     }
 
                     if let proof {
@@ -52,7 +55,7 @@ struct SafetyReportSheet: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
-                        Button("Remove Attachment", role: .destructive) {
+                        Button(AppLanguageManager.localized("safety.report.removeAttachment"), role: .destructive) {
                             self.proof = nil
                         }
                     }
@@ -71,18 +74,18 @@ struct SafetyReportSheet: View {
                     }
                 }
             }
-            .navigationTitle("Report \(reportedName)")
+            .navigationTitle(String.localizedStringWithFormat(AppLanguageManager.localized("safety.report.navigationTitleFormat"), reportedName))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button(AppLanguageManager.localized("common_cancel")) {
                         dismiss()
                     }
                     .disabled(vm.isSubmitting)
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(vm.isSubmitting ? "Submitting..." : "Submit") {
+                    Button(vm.isSubmitting ? AppLanguageManager.localized("safety.report.submitting") : AppLanguageManager.localized("safety.report.submit")) {
                         Task {
                             let didSubmit = await vm.submitReport(
                                 reporterUserId: reporterUserId,
@@ -122,7 +125,7 @@ struct SafetyReportSheet: View {
 
         do {
             guard let data = try await item.loadTransferable(type: Data.self) else {
-                proofError = "Could not read that screenshot."
+                proofError = AppLanguageManager.localized("safety.report.error.readScreenshot")
                 return
             }
 

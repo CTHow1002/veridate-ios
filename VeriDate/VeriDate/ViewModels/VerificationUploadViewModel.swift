@@ -6,7 +6,6 @@ import Supabase
 final class VerificationUploadViewModel: ObservableObject {
     @Published var selfieVideoData: Data?
     @Published var selfieVideoFileName = "selfie-video.mov"
-    @Published var livenessPrompt = "Turn your head slightly left, then look back at the camera."
     @Published var idDocument: VerificationDocument?
     @Published var jobProof: VerificationDocument?
     @Published var educationProof: VerificationDocument?
@@ -16,9 +15,16 @@ final class VerificationUploadViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let supabase = SupabaseManager.shared.client
+    private var livenessPrompt: String {
+        AppLanguageManager.localized("verificationUpload.video.livenessPromptInstruction")
+    }
 
-    var canSubmit: Bool {
-        selfieVideoData != nil && idDocument != nil && jobProof != nil && educationProof != nil && !isSubmitting
+    func canSubmit(requiresJobProof: Bool = true, requiresEducationProof: Bool = true) -> Bool {
+        selfieVideoData != nil
+            && idDocument != nil
+            && (!requiresJobProof || jobProof != nil)
+            && (!requiresEducationProof || educationProof != nil)
+            && !isSubmitting
     }
 
     func loadRejectionReason(userId: UUID) async {
@@ -43,13 +49,27 @@ final class VerificationUploadViewModel: ObservableObject {
             rejectionReason = submissions.first?.rejection_reason
         } catch {
             rejectionReason = nil
-            errorMessage = "Could not load rejection reason. \(error.localizedDescription)"
+            errorMessage = String.localizedStringWithFormat(AppLanguageManager.localized("verificationUpload.error.loadRejectionReasonFormat"), error.localizedDescription)
         }
     }
 
-    func submitVerification(userId: UUID) async -> Bool {
-        guard let selfieVideoData, let idDocument, let jobProof, let educationProof else {
-            errorMessage = "Add your verification video and all three documents before submitting."
+    func submitVerification(
+        userId: UUID,
+        requiresJobProof: Bool = true,
+        requiresEducationProof: Bool = true
+    ) async -> Bool {
+        guard let selfieVideoData, let idDocument else {
+            errorMessage = AppLanguageManager.localized("verificationUpload.error.videoAndICRequired")
+            return false
+        }
+
+        guard !requiresJobProof || jobProof != nil else {
+            errorMessage = AppLanguageManager.localized("verificationUpload.error.jobProofRequired")
+            return false
+        }
+
+        guard !requiresEducationProof || educationProof != nil else {
+            errorMessage = AppLanguageManager.localized("verificationUpload.error.educationProofRequired")
             return false
         }
 
@@ -63,11 +83,15 @@ final class VerificationUploadViewModel: ObservableObject {
                 selfieVideoData,
                 path: "\(userId.uuidString)/selfie-video/\(selfieVideoFileName)",
                 contentType: "video/quicktime",
-                label: "selfie verification video"
+                label: AppLanguageManager.localized("verificationUpload.uploadLabel.selfieVideo")
             )
-            let idDocumentPath = try await uploadDocument(idDocument, userId: userId, folder: "id-document", label: "ID document")
-            let jobProofPath = try await uploadDocument(jobProof, userId: userId, folder: "job-proof", label: "job proof")
-            let educationProofPath = try await uploadDocument(educationProof, userId: userId, folder: "education-proof", label: "education proof")
+            let idDocumentPath = try await uploadDocument(idDocument, userId: userId, folder: "id-document", label: AppLanguageManager.localized("verificationUpload.uploadLabel.idDocument"))
+            let jobProofPath = requiresJobProof
+                ? try await uploadDocument(jobProof!, userId: userId, folder: "job-proof", label: AppLanguageManager.localized("verificationUpload.uploadLabel.jobProof"))
+                : ""
+            let educationProofPath = requiresEducationProof
+                ? try await uploadDocument(educationProof!, userId: userId, folder: "education-proof", label: AppLanguageManager.localized("verificationUpload.uploadLabel.educationProof"))
+                : ""
 
             try await createVerificationSubmission(
                 userId: userId,
@@ -294,11 +318,11 @@ private enum VerificationUploadError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .missingDocument(let label):
-            return "Could not read the \(label). Please choose a photo or file again."
+            return String.localizedStringWithFormat(AppLanguageManager.localized("verificationUpload.error.missingDocumentFormat"), label)
         case .blockedStep(let label, let path, let underlying):
-            return "Supabase blocked the \(label) upload at \(path). \(underlying)"
+            return String.localizedStringWithFormat(AppLanguageManager.localized("verificationUpload.error.blockedStepFormat"), label, path, underlying)
         case .submissionRow(let underlying):
-            return "Files uploaded, but Supabase blocked creating the verification submission row. \(underlying)"
+            return String.localizedStringWithFormat(AppLanguageManager.localized("verificationUpload.error.submissionRowFormat"), underlying)
         }
     }
 }

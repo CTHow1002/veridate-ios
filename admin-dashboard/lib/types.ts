@@ -14,6 +14,10 @@ export type Profile = {
   warning_message?: string | null;
   warning_details?: string | null;
   warned_at?: string | null;
+  warning_until?: string | null;
+  is_deactivated?: boolean | null;
+  account_deletion_requested_at?: string | null;
+  account_deletion_scheduled_at?: string | null;
 };
 
 export type SignedFile = {
@@ -56,4 +60,72 @@ export type SafetyReport = {
   createdAt: string | null;
   reporter: Profile;
   reportedUser: Profile;
+};
+
+export type AccountDeletionStatus = "pending" | "processing" | "completed" | "failed" | "canceled";
+
+export type AccountDeletionRequest = {
+  id: string;
+  userId: string;
+  status: AccountDeletionStatus;
+  reason: string | null;
+  requestedAt: string;
+  scheduledDeleteAt: string;
+  processedAt: string | null;
+  canceledAt: string | null;
+  errorMessage: string | null;
+  createdAt: string;
+  updatedAt: string;
+  profile: Profile | null;
+};
+
+export type ProfileChangeRequestStatus = "pending" | "approved" | "rejected";
+export type ProfileChangeRequestType = "legal_name" | "work" | "education";
+
+export type ProfileChangeRequest = {
+  id: string;
+  userId: string;
+  requestType: ProfileChangeRequestType;
+  status: ProfileChangeRequestStatus;
+  currentFullName: string | null;
+  requestedFullName: string | null;
+  currentJobTitle: string | null;
+  requestedJobTitle: string | null;
+  currentCompanyName: string | null;
+  requestedCompanyName: string | null;
+  currentEducationLevel: string | null;
+  requestedEducationLevel: string | null;
+  currentSchoolName: string | null;
+  requestedSchoolName: string | null;
+  message: string | null;
+  attachmentFile: SignedFile | null;
+  attachmentFileName: string | null;
+  attachmentContentType: string | null;
+  attachmentSource: string | null;
+  adminNotes: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  profile: Profile | null;
+};
+
+export type ModerationStatus = "banned" | "warned";
+
+export type ModeratedUser = {
+  id: string;
+  fullName: string | null;
+  verificationStatus: string | null;
+  status: ModerationStatus;
+  isBanned: boolean;
+  banUntil: string | null;
+  banMessage: string | null;
+  banDetails: string | null;
+  warningMessage: string | null;
+  warningDetails: string | null;
+  warnedAt: string | null;
+  warningUntil: string | null;
+  latestReportStatus: ReportStatus | null;
+  latestReportReason: string | null;
+  latestReportNotes: string | null;
+  latestReportReviewedAt: string | null;
 };

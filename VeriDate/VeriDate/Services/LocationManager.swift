@@ -1,9 +1,11 @@
 import Combine
 import CoreLocation
 import Foundation
+import MapKit
 
 final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published private(set) var coordinate: CLLocationCoordinate2D?
+    @Published private(set) var cityState: String?
     @Published private(set) var authorizationStatus: CLAuthorizationStatus
     @Published var errorMessage: String?
 
@@ -22,23 +24,24 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     var statusMessage: String {
         if coordinate != nil {
-            return "Location ready"
+            return AppLanguageManager.localized("location.status.ready")
         }
 
         switch authorizationStatus {
         case .notDetermined:
-            return "Location permission is needed for nearby matches."
+            return AppLanguageManager.localized("location.status.permissionNeeded")
         case .restricted, .denied:
-            return "Location is off. Turn it on in Settings to see nearby matches."
+            return AppLanguageManager.localized("location.status.off")
         case .authorizedAlways, .authorizedWhenInUse:
-            return "Finding your location..."
+            return AppLanguageManager.localized("location.status.finding")
         @unknown default:
-            return "Location status is unavailable."
+            return AppLanguageManager.localized("location.status.unavailable")
         }
     }
 
     func requestLocation() {
         errorMessage = nil
+        cityState = nil
 
         switch manager.authorizationStatus {
         case .notDetermined:
@@ -47,10 +50,10 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             manager.requestLocation()
         case .restricted, .denied:
             authorizationStatus = manager.authorizationStatus
-            errorMessage = "Allow location access in Settings to use distance matching."
+            errorMessage = AppLanguageManager.localized("location.error.allowAccessInSettings")
         @unknown default:
             authorizationStatus = manager.authorizationStatus
-            errorMessage = "Could not check location permission."
+            errorMessage = AppLanguageManager.localized("location.error.checkPermission")
         }
     }
 
@@ -63,11 +66,79 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        coordinate = locations.last?.coordinate
+        guard let location = locations.last else { return }
+
+        coordinate = location.coordinate
         errorMessage = nil
+
+        Task {
+            let resolvedCityState = await Self.cityState(for: location)
+
+            await MainActor.run {
+                self.cityState = resolvedCityState
+            }
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        errorMessage = "Could not get your location. \(error.localizedDescription)"
+        errorMessage = String.localizedStringWithFormat(
+            AppLanguageManager.localized("location.error.getLocationFormat"),
+            error.localizedDescription
+        )
+    }
+
+    @available(iOS 26.0, *)
+    static func cityState(for location: CLLocation) async -> String? {
+        do {
+            guard let request = MKReverseGeocodingRequest(location: location),
+                  let mapItem = try await request.mapItems.first else {
+                return nil
+            }
+
+            if let cityWithContext = mapItem.addressRepresentations?.cityWithContext,
+               let cityState = conciseCityState(from: cityWithContext) {
+                return cityState
+            }
+
+            if let fullAddress = mapItem.address?.fullAddress,
+               let cityState = conciseCityState(from: fullAddress) {
+                return cityState
+            }
+
+            return mapItem.name
+        } catch {
+            return nil
+        }
+    }
+
+    private static func conciseCityState(from address: String) -> String? {
+        var parts = address
+            .replacingOccurrences(of: "\n", with: ",")
+            .components(separatedBy: ",")
+            .map { cleanAddressPart($0) }
+            .filter { !$0.isEmpty }
+
+        parts.removeAll { part in
+            let lowercased = part.lowercased()
+            return lowercased == "malaysia" || lowercased == "my"
+        }
+
+        guard parts.count >= 2 else {
+            return parts.first
+        }
+
+        let city = parts[parts.count - 2]
+        let state = parts[parts.count - 1]
+        return "\(city), \(state)"
+    }
+
+    private static func cleanAddressPart(_ part: String) -> String {
+        part
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(
+                of: #"^\d{4,6}\s*"#,
+                with: "",
+                options: .regularExpression
+            )
     }
 }

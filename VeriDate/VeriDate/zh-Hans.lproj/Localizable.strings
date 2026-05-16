@@ -1,0 +1,1554 @@
+"welcome_title" = "欢迎来到 VeriDate";
+"welcome_subtitle" = "真心聊天，真實相遇。";
+"root_checking_session" = "正在检查登录状态...";
+"root_loading_profile" = "正在加载个人资料...";
+"root_profile_load_failed_title" = "个人资料加载失败";
+"root_profile_load_failed_message" = "请重试，或退出后重新登录。";
+
+"common_try_again" = "重试";
+"common_sign_out" = "退出登录";
+"common_i_understand" = "我明白了";
+
+"account_deletion_scheduled_title" = "账号删除已安排";
+"account_deletion_scheduled_message" = "您的个人资料目前已被隐藏，直到删除请求完成。您可以在预定删除时间前取消删除。";
+"account_deletion_scheduled_for_format" = "预计删除时间：%@";
+"account_deletion_cancel_button" = "取消删除";
+"account_deletion_cancel_failed_message" = "无法取消账号删除。";
+
+"account_restricted_title" = "账号受限";
+"account_restricted_message" = "此账号已无法继续使用 VeriDate。";
+"account_restricted_until_format" = "限制至 %@";
+
+"account_warning_title" = "账号警告";
+"account_warning_message" = "继续前请先阅读 VeriDate 安全规范。";
+"account_warning_until_format" = "警告有效至 %@";
+"auth_header_subtitle" = "使用手机号、Apple ID 或 Google 登录。完成手机号验证后即可开始设置个人资料。";
+
+"auth_login_with_title" = "登录方式";
+
+"auth_phone_login_subtitle" = "使用手机验证码继续";
+"auth_apple_login_subtitle" = "Apple 登录目前为演示模式，之后需验证手机号";
+"auth_google_login_subtitle" = "Google 登录目前为演示模式，之后需验证手机号";
+
+"auth_first_time_note" = "首次使用的用户将在手机号验证后自动创建账号。";
+
+"common_back" = "返回";
+
+"auth_verify_phone_title" = "验证手机号";
+
+"auth_phone_number_placeholder" = "手机号";
+"auth_otp_code_placeholder" = "验证码";
+
+"auth_demo_otp_note" = "测试验证码：123456";
+
+"auth_verify_continue_button" = "验证并继续";
+
+"auth_phone_otp_subtitle" = "请输入手机号。目前短信服务尚未接入，请使用测试验证码 123456。";
+
+"auth_apple_otp_subtitle" = "Apple ID 登录目前为演示模式，请继续完成手机号验证以体验完整流程。";
+
+"auth_google_otp_subtitle" = "Google 登录目前为演示模式，请继续完成手机号验证以体验完整流程。";
+
+"auth_social_placeholder_message_format" = "%@ 登录目前为演示模式，请继续使用手机验证码登录。";
+
+"auth_enter_phone_error" = "请输入手机号。";
+
+"auth_invalid_demo_otp_error" = "验证码错误，请使用 123456。";
+
+"auth_phone_method_title" = "手机号";
+"auth_apple_method_title" = "Apple ID";
+"auth_google_method_title" = "Google";
+"profile_setup_navigation_title" = "创建个人资料";
+
+"profile_setup_search_hometown_title" = "搜索家乡";
+"profile_setup_search_current_city_title" = "搜索当前城市";
+
+"profile_setup_name_title" = "先从你的名字开始";
+"profile_setup_name_subtitle" = "请输入身份证上的姓名用于验证，然后选择大家在 VeriDate 上看到的名字。";
+
+"profile_setup_full_name_placeholder" = "身份证姓名";
+"profile_setup_display_name_placeholder" = "显示名称";
+
+"profile_setup_name_hint" = "身份证姓名仅用于验证。显示名称可以更亲切、更简短，或使用你喜欢被称呼的名字。";
+
+"profile_setup_basics_title" = "基础资料";
+"profile_setup_basics_subtitle" = "这些资料能帮助我们推荐更合适的人选，并确保年龄匹配。";
+
+"profile_setup_date_of_birth_label" = "出生日期";
+"profile_setup_gender_label" = "性别";
+"profile_setup_height_label" = "身高";
+
+"profile_setup_photos_title" = "添加你的照片";
+"profile_setup_photos_subtitle" = "选择最能代表你的照片。第一张照片会成为主照片。";
+
+"profile_setup_photos_hint" = "最多可上传 6 张照片。第一张照片将作为主照片。";
+
+"profile_setup_location_title" = "别人应该在哪里找到你？";
+"profile_setup_location_subtitle" = "填写你的家乡和目前居住地，让附近的人更了解你。";
+
+"profile_setup_hometown_label" = "家乡";
+"profile_setup_currently_living_label" = "目前居住地";
+
+"profile_setup_search_hometown_button" = "搜索家乡";
+"profile_setup_search_current_city_button" = "搜索当前城市";
+
+"profile_setup_background_title" = "背景资料";
+"profile_setup_background_subtitle" = "请认真填写。工作与学历资料可能会在验证过程中进行审核，后续修改也可能需要重新审核。";
+
+"profile_setup_student_toggle_title" = "我目前是学生";
+"profile_setup_unemployed_toggle_title" = "我目前待业中";
+
+"profile_setup_no_work_verification_note" = "无需进行工作验证。";
+
+"profile_setup_job_title_placeholder" = "职位";
+"profile_setup_company_placeholder" = "公司";
+
+"profile_setup_education_level_label" = "学历";
+"profile_setup_school_placeholder" = "学校 / 大学";
+
+"profile_setup_dating_intentions_title" = "交友目的";
+"profile_setup_dating_intentions_subtitle" = "明确的交友目标能带来更好的匹配结果，之后仍可修改。";
+
+"profile_setup_looking_for_label" = "寻找";
+"profile_setup_interested_in_label" = "感兴趣对象";
+
+"profile_setup_more_details_title" = "更多资料";
+"profile_setup_more_details_subtitle" = "这些都是可选项。先填写你觉得轻松的部分，其余之后再补充即可。";
+
+"profile_setup_marital_status_label" = "婚姻状态";
+"profile_setup_race_label" = "种族";
+"profile_setup_religion_label" = "宗教";
+"profile_setup_family_plans_label" = "家庭计划";
+"profile_setup_smoking_label" = "是否吸烟？";
+"profile_setup_drinking_label" = "是否喝酒？";
+"profile_setup_exercise_label" = "是否运动？";
+"profile_setup_pets_label" = "宠物";
+"profile_setup_communication_style_label" = "沟通方式";
+"profile_setup_love_language_label" = "爱的语言";
+"profile_setup_mbti_label" = "MBTI";
+"profile_setup_languages_label" = "语言";
+
+"profile_setup_error_enter_name" = "请输入姓名后再继续。";
+"profile_setup_error_enter_display_name" = "请输入显示名称后再继续。";
+"profile_setup_error_add_photo" = "请至少添加一张照片后再继续。";
+"profile_setup_error_add_current_city" = "请填写目前居住地后再继续。";
+"profile_setup_error_enter_job_title" = "请输入职位，或选择学生 / 待业状态。";
+"profile_setup_error_enter_company" = "请输入公司名称，或选择学生 / 待业状态。";
+"profile_setup_error_enter_school" = "请输入学校或大学名称后再继续。";
+
+"profile_setup_step_name" = "姓名";
+"profile_setup_step_basics" = "基础";
+"profile_setup_step_photos" = "照片";
+"profile_setup_step_location" = "地点";
+"profile_setup_step_background" = "背景";
+"profile_setup_step_intentions" = "目的";
+"profile_setup_step_details" = "详情";
+
+"profile_setup_progress_format" = "第 %d / %d 步";
+
+"common_continue" = "继续";
+"common_save_continue" = "保存并继续";
+"common_done" = "完成";
+"common_close" = "关闭";
+"common_not_added" = "未填写";
+
+"profile_setup_photo_count_format" = "%d/%d 张照片";
+
+"profile_setup_primary_photo_label" = "主照片";
+"profile_setup_photo_slot_format" = "照片 %d";
+
+"profile_setup_choose_up_to_format" = "最多可选择 %d 项。";
+
+"profile_setup_bio_label" = "个人简介";
+
+"profile_setup_bio_placeholder" = "分享一些关于你的个性、周末生活或兴趣爱好。";
+
+"profile_setup_bio_hint" = "保持简单自然即可，之后也可以在编辑资料中继续完善。";
+
+"marital_status_single" = "单身";
+"marital_status_divorced" = "离婚";
+"marital_status_widowed" = "丧偶";
+"marital_status_separated" = "分居";
+"marital_status_prefer_not_to_say" = "不方便透露";
+"discovery_verification_required_title" = "需要完成验证";
+"discovery_verification_required_message" = "完成验证后即可开始探索附近的人。";
+"discovery_navigation_title" = "探索";
+"discovery_filters_button" = "筛选";
+"common_user" = "用户";
+
+"safety_block_user_title" = "屏蔽用户？";
+"safety_block_user_message" = "此用户将从探索页面移除，并从你的匹配中隐藏。";
+"safety_block_button" = "屏蔽";
+"safety_report_button" = "举报";
+"safety_alert_title" = "安全";
+"common_cancel" = "取消";
+"common_ok" = "确定";
+
+"discovery_no_swipe_to_undo_message" = "没有可撤回的滑动操作。";
+"discovery_undo_button" = "撤回";
+"discovery_undo_accessibility_label" = "撤回上一次滑动";
+"discovery_more_button" = "更多";
+
+"discovery_loading_title" = "正在寻找附近已验证的用户";
+"discovery_loading_message" = "我们正在为你准备更舒适、更精选的探索体验。";
+"discovery_error_title" = "无法加载探索页面";
+"discovery_empty_title" = "暂时没有已验证的用户";
+"discovery_empty_message" = "可以尝试放宽距离、年龄范围或偏好设置，查看更多附近的人。";
+"discovery_adjust_filters_button" = "调整筛选";
+"interested_in_you_title" = "对你感兴趣";
+"interested_in_you_see_all_format" = "查看全部（%d）";
+"interested_in_you_checking_likes" = "正在查看新的喜欢...";
+
+"interested_empty_fresh_title" = "你正在被更多人发现 ✨";
+"interested_empty_fresh_message" = "完善个人资料并保持活跃，让更多附近的人看到你。";
+"interested_empty_day_old_title" = "附近的人正在发现你的资料 ✨";
+"interested_empty_three_days_title" = "拥有 4 张以上照片的资料通常更容易获得互动 👀";
+"interested_empty_three_days_message" = "准备好时，可以添加几张清晰照片。";
+
+"interested_mutual_like_label" = "互相喜欢";
+"common_nearby" = "附近";
+"common_someone" = "某人";
+
+"interested_sheet_empty_title" = "暂时还没有喜欢";
+"interested_sheet_empty_message" = "继续滑动，让更多人发现你。";
+
+"interested_paywall_title" = "升级后查看谁喜欢你";
+"interested_paywall_message" = "VeriDate VIP 将解锁已经对你感兴趣的用户。付款功能目前尚未启用。";
+"common_verified_user" = "已验证用户";
+"common_not_provided" = "未提供";
+
+"profile_gender_not_added" = "未填写性别";
+"profile_relationship_goal_not_added" = "未填写交友目的";
+"profile_height_not_added" = "未填写身高";
+"profile_age_not_added" = "未填写年龄";
+"profile_location_not_added" = "未填写地点";
+
+"profile_distance_unavailable" = "距离不可用";
+"profile_distance_less_than_1km" = "距离少于 1 公里";
+"profile_distance_km_away_format" = "距离 %d 公里";
+
+"profile_proximity_very_near" = "非常靠近";
+"profile_proximity_nearby_now" = "就在附近";
+
+"profile_shared_both_like_format" = "都喜欢 %@";
+"profile_shared_both_speak_format" = "都说 %@";
+"profile_shared_both_format" = "都%@";
+"profile_shared_both_colon_format" = "共同点：%@";
+
+"compatibility_guide_subtitle" = "个人资料匹配参考";
+"compatibility_guide_message" = "这是根据个人资料和偏好生成的温和参考，用来辅助你的判断，而不是取代你的判断。";
+
+"profile_preview_title" = "预览";
+"profile_detail_title" = "个人资料";
+
+"profile_detail_location_label" = "地点";
+"profile_detail_work_label" = "工作";
+"profile_detail_education_label" = "学历";
+"profile_detail_height_label" = "身高";
+"profile_detail_marital_status_label" = "婚姻状态";
+"profile_detail_relationship_goal_label" = "交友目的";
+"profile_detail_bio_label" = "个人简介";
+
+"profile_location_from_format" = "%@\n来自 %@";
+
+"discovery_pass_button" = "跳过";
+"discovery_like_button" = "喜欢";
+"safety_section_title" = "安全";
+"filters_navigation_title" = "筛选";
+"filters_intro_title" = "微调探索偏好";
+"filters_intro_message" = "筛选可以缩小推荐范围。如果想看到更多附近已验证用户，建议保持条件宽松。";
+
+"filters_section_who_title" = "你想认识谁";
+"filters_section_who_subtitle" = "设置探索页面的核心偏好。";
+"filters_preferred_gender_title" = "偏好性别";
+"filters_age_range_title" = "年龄范围";
+"filters_years_old_unit" = "岁";
+"filters_distance_range_title" = "距离范围";
+"filters_height_range_title" = "身高范围";
+
+"filters_section_lifestyle_title" = "生活方式匹配";
+"filters_section_lifestyle_subtitle" = "这里建议保持轻松。筛选越宽，通常越容易找到合适的人。";
+"filters_marital_status_title" = "婚姻状态";
+"filters_race_title" = "种族";
+"filters_religion_title" = "宗教";
+"filters_education_title" = "学历";
+"filters_relationship_goal_title" = "交友目的";
+
+"filters_section_daily_life_title" = "日常生活";
+"filters_section_daily_life_subtitle" = "如果你可以接受不同类型，可以选择多个选项。";
+"filters_smoking_title" = "吸烟";
+"filters_drinking_title" = "喝酒";
+"filters_exercise_title" = "运动";
+"filters_pets_title" = "宠物";
+"filters_communication_title" = "沟通方式";
+"filters_love_language_title" = "爱的语言";
+"filters_mbti_title" = "MBTI";
+"filters_languages_title" = "语言";
+"filters_family_plans_title" = "家庭计划";
+
+"filters_section_trust_title" = "信任";
+"filters_section_trust_subtitle" = "VeriDate 探索页面目前只显示已验证用户。";
+"filters_verified_only_title" = "仅显示已验证用户";
+"filters_verified_only_message" = "MVP 阶段此功能默认开启。";
+
+"filters_reset_button" = "重置筛选";
+"common_save" = "保存";
+"common_any" = "不限";
+"filters_minimum_accessibility_label" = "最小值";
+"filters_maximum_accessibility_label" = "最大值";
+"chat_voice_playing" = "播放中";
+"chat_voice_message" = "语音消息";
+
+"chat_typing_format" = "正在输入%@";
+"chat_default_title" = "聊天";
+"chat_presence_online" = "在线";
+"chat_presence_offline" = "离线";
+"chat_presence_last_seen_format" = "最后上线于 %@";
+
+"chat_action_reply" = "回复";
+"chat_action_react" = "回应";
+"chat_action_copy" = "复制";
+"chat_action_edit" = "编辑";
+"chat_action_delete" = "删除";
+
+"chat_choose_reaction_title" = "选择回应";
+"chat_reply_label" = "回复";
+"chat_attach_title" = "附件";
+"chat_attach_subtitle" = "发送照片、相机拍摄内容或文件。";
+"chat_attach_photos_title" = "照片";
+"chat_attach_photos_subtitle" = "选择照片或视频";
+"chat_attach_camera_title" = "相机";
+"chat_attach_camera_subtitle" = "拍摄新照片";
+"chat_attach_files_title" = "文件";
+"chat_attach_files_subtitle" = "浏览文档";
+
+"chat_message_deleted" = "此消息已删除";
+"chat_video_message" = "视频";
+"chat_photo_message" = "照片";
+"chat_attachment_message" = "附件";
+"chat_generic_message" = "消息";
+
+"chat_not_sent_retry" = "未发送 • 点击重试";
+"chat_not_sent_retry_accessibility" = "未发送。点击重试。";
+"chat_edited_time_format" = "已编辑 %@";
+
+"chat_loading_voice_message" = "正在加载语音消息";
+"chat_photo_unavailable" = "照片无法显示";
+"chat_loading_photo" = "正在加载照片";
+"chat_loading_video" = "正在加载视频";
+"chat_opening_file" = "正在打开...";
+"chat_loading_file" = "正在加载...";
+"chat_tap_to_preview" = "点击预览";
+
+"chat_could_not_load_attachment" = "无法加载附件";
+"chat_could_not_preview_file" = "无法预览文件";
+"chat_could_not_load_photo" = "无法加载照片";
+"chat_could_not_load_photo_title" = "无法加载照片";
+"chat_saved_to_photos" = "已保存到照片";
+"chat_could_not_save_photo" = "无法保存照片";
+"chat_could_not_save_video" = "无法保存视频";
+
+"chat_status_sending" = "发送中";
+"chat_status_sent" = "已发送";
+"chat_status_delivered" = "已送达";
+"chat_status_read" = "已读";
+
+"chat_new_messages_separator" = "新消息";
+"common_today" = "今天";
+"common_yesterday" = "昨天";
+"chat_block_user_title" = "屏蔽用户";
+"chat_block_user_message" = "这会隐藏该匹配，并停止双方继续聊天。";
+"chat_delete_message_title" = "删除消息？";
+"chat_delete_message_message" = "这会从双方聊天中移除此消息。";
+"common_notice" = "提示";
+
+"chat_verification_required_title" = "需要完成验证";
+"chat_verification_required_message" = "只有已验证用户可以向匹配对象发送消息。";
+"chat_loading_messages" = "正在加载消息...";
+"chat_could_not_load_chat_title" = "无法加载聊天";
+
+"chat_empty_title" = "开始聊天";
+"chat_empty_message_format" = "和 %@ 说点什么吧";
+"chat_your_match" = "你的匹配对象";
+"chat_new_messages_button_format" = "%d 条新消息 ↓";
+"chat_new_message_button" = "新消息 ↓";
+
+"chat_messaging_unavailable_placeholder" = "暂时无法发送消息";
+"chat_message_placeholder_format" = "给 %@ 发消息…";
+"chat_message_copied" = "消息已复制。";
+"chat_blocked_composer_message" = "由于其中一方已屏蔽对方，目前无法发送消息。";
+
+"chat_replying_to_title" = "正在回复";
+"chat_editing_message_title" = "正在编辑";
+
+"chat_camera_unavailable_message" = "此设备无法使用相机，请使用照片或文件。";
+"chat_could_not_start_voice_recording_format" = "无法开始录音。%@";
+"chat_hold_longer_voice_message" = "请按住更久一点来录制语音消息。";
+"chat_could_not_send_voice_message_format" = "无法发送语音消息。%@";
+
+"chat_attachments_selected_format" = "已选择 %d 项";
+"common_clear" = "清除";
+
+"chat_could_not_read_attachment" = "无法读取其中一个附件。";
+"chat_could_not_read_attachment_format" = "无法读取其中一个附件。%@";
+"chat_could_not_read_camera_photo" = "无法读取这张相机照片。";
+"chat_could_not_import_file_format" = "无法导入该文件。%@";
+"chat_could_not_read_named_file_format" = "无法读取 %@。%@";
+
+"chat_microphone_permission_required" = "需要麦克风权限才能录制语音消息。";
+"chat_release_to_send_voice_accessibility" = "松开发送语音消息";
+"chat_hold_to_record_accessibility" = "按住录制语音消息";
+"matches.title" = "匹配";
+"matches.verificationRequired.title" = "需要完成认证";
+"matches.verificationRequired.description" = "只有已认证用户可以查看匹配。";
+"matches.loading" = "正在加载匹配...";
+"matches.loadError.title" = "无法加载匹配";
+"matches.empty.title" = "还没有匹配";
+"matches.empty.description" = "当对方也喜欢你时，就会出现在这里。";
+"matches.verifiedUser" = "已认证用户";
+"matches.startConversation" = "开始聊天";
+"matches.presence.online" = "在线";
+"matches.presence.offline" = "离线";
+"matches.presence.lastSeenFormat" = "最后上线 %@";
+"matches.messageStatus.read" = "已读";
+"matches.messageStatus.delivered" = "已送达";
+"matches.messageStatus.sent" = "已发送";
+"matches.error.verificationRequired" = "只有已认证用户可以查看匹配。";
+"matches.error.loadFailedFormat" = "无法加载匹配。%@";
+"matches.error.deliveryStatusUpdateFailedFormat" = "无法更新消息送达状态。%@";
+"profile.settings.shareMessage" = "试试看 VeriDate，一个严格认证的交友 App。";
+"profile.settings.shareVeriDate" = "分享 VeriDate";
+"profile.settings.deleteAccount" = "删除账号";
+"profile.settings.signOut" = "登出";
+"profile.settings.title" = "设置";
+"common.close" = "关闭";
+"profile.account.title" = "账号";
+"profile.account.section.account" = "账号";
+"profile.account.section.security" = "安全";
+"profile.account.section.accountControl" = "账号管理";
+"profile.account.deleteConfirm.title" = "删除账号？";
+"profile.account.deleteConfirm.message" = "你的个人资料会立即隐藏。永久删除会在短暂宽限期后安全处理。";
+"profile.account.requestDeletion" = "申请删除";
+"profile.account.deletionScheduled" = "账号删除已安排。你的个人资料已隐藏，你可以在预定删除时间前取消。";
+"profile.account.deleteRequestFailed" = "无法申请删除账号。";
+"common.ok" = "确定";
+"common.notAvailable" = "暂无资料";
+"common.pleaseWait" = "请稍候...";
+"common.cancel" = "取消";
+"common.share" = "分享";
+
+"profile.account.email" = "邮箱";
+"profile.account.userId" = "用户 ID";
+"profile.account.verification" = "认证状态";
+"profile.account.changePassword" = "更改密码";
+"profile.account.changePassword.subtitle" = "更新你的登入密码";
+"profile.account.changeEmail" = "更改邮箱";
+"profile.account.changeEmail.subtitle" = "将账号转移到另一个邮箱";
+"profile.account.downloadMyData" = "下载我的资料";
+"profile.account.downloadMyData.subtitle" = "准备一份可分享的 JSON 副本";
+"profile.account.deleteAccount.subtitle" = "申请永久删除账号";
+"profile.account.yourAccount" = "你的账号";
+"profile.account.header.subtitle" = "管理登入、安全与账号控制。";
+"profile.account.myData" = "我的资料";
+"profile.account.dataExportFailedFormat" = "无法准备你的资料导出。%@";
+"profile.settings.comingSoonFormat" = "%@ 即将推出。";
+
+"profile.verificationStatus.verified" = "已认证";
+"profile.verificationStatus.pendingReview" = "审核中";
+"profile.verificationStatus.rejected" = "已拒绝";
+"profile.verificationStatus.notSubmitted" = "未提交";
+
+"auth.error.signInAgain" = "请重新登入。";
+"common.save" = "保存";
+
+"profile.account.password" = "密码";
+"profile.account.changePassword.newPassword" = "新密码";
+"profile.account.changePassword.confirmPassword" = "确认密码";
+"profile.account.changePassword.footer" = "请使用至少 8 个字符。如果 Supabase Auth 设置需要重新认证，请先登出并使用密码重设。";
+"profile.account.changePassword.passwordMismatch" = "两次输入的密码不一致。";
+"profile.account.changePassword.updateFailed" = "无法更新你的密码。";
+
+"profile.account.changeEmail.emailAddress" = "邮箱地址";
+"profile.account.changeEmail.footer" = "你可能需要确认新的邮箱地址后，更改才会完全生效。";
+"profile.account.changeEmail.updateFailed" = "无法更新你的邮箱。";
+"common.done" = "完成";
+
+"profile.preview.title" = "预览我的资料";
+"profile.preview.subtitle" = "看看别人如何查看你的资料";
+
+"profile.visibility.title" = "可见性";
+"profile.visibility.discovery" = "发现";
+"profile.visibility.discoveryPriority" = "发现优先级";
+
+"profile.visibility.accountStatus" = "账号状态";
+"profile.visibility.active" = "活跃";
+"profile.visibility.hidden" = "隐藏";
+
+"profile.visibility.visibleInDiscovery" = "在发现页中可见";
+"profile.visibility.notVisible" = "不可见";
+"profile.visibility.discoveryPaused" = "发现已暂停";
+
+"profile.visibility.visibleDescription" = "附近已认证会员可以发现你的资料。";
+"profile.visibility.pausedDescription" = "你的资料已从发现页暂停显示。";
+"profile.visibility.visibleHeaderDescription" = "附近已认证会员可以找到你的资料。";
+"profile.visibility.hiddenHeaderDescription" = "你的资料已从新的发现结果中隐藏。";
+
+"profile.visibility.hiddenRestricted" = "账号限制期间，你的资料将被隐藏。";
+"profile.visibility.hiddenDeletionPending" = "账号删除处理中，你的资料将被隐藏。";
+
+"profile.visibility.settings" = "可见性设置";
+"profile.visibility.settings.subtitle" = "控制谁可以发现你";
+
+"profile.visibility.showInDiscovery" = "在发现页显示我";
+"profile.visibility.showInDiscovery.subtitle" = "关闭后，你的资料将不会显示给新的用户。";
+
+"profile.visibility.reduceResurfacing" = "减少再次出现";
+"profile.visibility.reduceResurfacing.subtitle" = "降低你再次出现在近期滑过你的用户面前的频率。";
+
+"profile.visibility.footer" = "关闭发现后，你将不会出现在新的发现结果中。现有匹配仍可继续聊天，除非被封锁。";
+
+"profile.visibility.privacyNotice" = "你的 IC 全名与认证文件会保持私密。可见性设置只影响公开交友资料。";
+
+"profile.visibility.updateFailed" = "无法更新可见性设置。";
+"profile.blocked.empty.title" = "没有已封锁账号";
+"profile.blocked.empty.description" = "你从个人资料或聊天中封锁的人会出现在这里。";
+"profile.blocked.defaultUser" = "VeriDate 用户";
+"profile.blocked.unblock" = "解除封锁";
+"profile.blocked.accountSubtitle" = "已封锁账号";
+"profile.blocked.avatarFallbackName" = "用户";
+"profile.dataStorage.title" = "数据与储存";
+"profile.dataStorage.mediaUsage" = "媒体使用";
+"profile.dataStorage.storage" = "储存";
+
+"profile.dataStorage.reducePhotoPreloading" = "减少照片预加载";
+"profile.dataStorage.reducePhotoPreloading.subtitle" = "减少提前加载照片，以节省数据用量。";
+"profile.dataStorage.useCellularForMedia" = "使用流量加载媒体";
+"profile.dataStorage.useCellularForMedia.subtitle" = "允许使用移动数据加载个人照片和附件。";
+"profile.dataStorage.autoDownloadReceivedMedia" = "自动下载收到的媒体";
+"profile.dataStorage.autoDownloadReceivedMedia.subtitle" = "保存此偏好，供未来媒体下载控制使用。";
+
+"profile.dataStorage.clearCachedMedia" = "清除缓存媒体";
+"profile.dataStorage.clearCachedMedia.subtitle" = "移除临时个人照片与签名链接缓存。";
+"profile.dataStorage.exportMyData" = "导出我的数据";
+"profile.dataStorage.exportMyData.subtitle" = "准备一份可分享的 JSON 副本，包含个人资料、照片、问答、兴趣和筛选设置。";
+
+"profile.dataStorage.cacheFooter" = "清除缓存媒体不会删除你上传的照片或消息，只会移除此设备上的临时文件和内存缓存。";
+"profile.dataStorage.header.subtitle" = "管理媒体使用、缓存和你的账号数据。";
+"profile.dataStorage.header.notice" = "你上传的个人照片、文件和消息会保留在 Supabase，除非你在 App 内删除它们。";
+"profile.dataStorage.cacheCleared" = "缓存媒体已清除。你上传的照片和消息没有被删除。";
+"profile.contact.title" = "联系我们";
+"profile.contact.headerMessage" = "如果你在账号、认证、安全或 Bug 方面需要帮助，可以通过这里联系 VeriDate 支援。";
+
+"profile.contact.support" = "支援";
+"profile.contact.emailSupport" = "邮件联系支援";
+
+"profile.contact.verificationHelp" = "认证协助";
+"profile.contact.verificationHelp.subtitle" = "关于身份证、工作或学历审核的问题。";
+
+"profile.contact.safetyConcern" = "安全问题";
+"profile.contact.safetyConcern.subtitle" = "如有紧急用户安全问题，请附上截图与详细说明。";
+
+"profile.contact.accountReference" = "账号资料";
+"profile.contact.accountEmail" = "账号邮箱";
+
+"profile.contact.copySupportDetails" = "复制支援资料";
+"profile.contact.copySupportDetails.subtitle" = "复制你的用户 ID 与账号邮箱，用于支援表单。";
+
+"profile.contact.footer" = "如遇紧急危险或事故，请先联系当地紧急服务。VeriDate 支援并非紧急应变服务。";
+
+"profile.contact.subject.supportRequest" = "VeriDate 支援请求";
+"profile.contact.subject.verificationHelp" = "VeriDate 认证协助";
+"profile.contact.subject.safetyConcern" = "VeriDate 安全问题";
+
+"profile.contact.mailOpenFailed" = "无法打开 Mail，已改为复制支援邮箱。";
+"profile.contact.supportDetailsHeader" = "VeriDate 支援资料";
+"profile.contact.supportDetailsCopied" = "支援资料已复制。";
+"profile.policies.title" = "政策";
+"profile.policies.headerTitle" = "VeriDate 政策";
+"profile.policies.headerMessage" = "简单说明 VeriDate 如何处理安全、隐私、认证与社区规范。";
+
+"profile.policies.privacy.title" = "隐私政策";
+"profile.policies.privacy.p1" = "我们会收集运营 VeriDate 所需的账号、个人资料、认证、安全与 App 使用资讯。";
+"profile.policies.privacy.p2" = "你的 IC 全名与认证文件只用于认证和安全审核，不应公开显示给其他用户。";
+"profile.policies.privacy.p3" = "你选择公开的资料，例如显示名称、年龄、照片、兴趣、工作、学历和交友偏好，可能会显示给合适的用户。";
+
+"profile.policies.verification.title" = "认证政策";
+"profile.policies.verification.p1" = "VeriDate 可能会要求身份、工作、学历与真人验证，以减少假资料并提升信任。";
+"profile.policies.verification.p2" = "如果提交的文件不清楚、不一致或存在安全疑虑，管理员可能会批准、拒绝或要求补充资料。";
+"profile.policies.verification.p3" = "日后更改重要认证资料时，可能需要再次审核。";
+
+"profile.policies.safety.title" = "安全与管理";
+"profile.policies.safety.p1" = "用户可以举报或封锁可疑、辱骂或不安全行为的人。";
+"profile.policies.safety.p2" = "对于违反安全规则或滥用平台的账号，管理员可能会警告、暂时限制或封禁。";
+"profile.policies.safety.p3" = "举报时可选择附上证明附件，帮助审核人员更清楚了解情况。";
+
+"profile.policies.dataStorage.title" = "数据与储存";
+"profile.policies.dataStorage.p1" = "上传的照片、聊天附件、举报、认证文件与个人资料会储存在 VeriDate 的后端服务中。";
+"profile.policies.dataStorage.p2" = "你可以在账号设置中申请删除账号。你的资料会立即隐藏，永久删除会安全处理。";
+"profile.policies.dataStorage.p3" = "你可以在数据与储存中清除设备缓存，而不会删除已上传内容。";
+
+"profile.policies.footer" = "这些初始政策用于 MVP 阶段的透明说明。正式上架 App Store 前，应经过法律审阅与最终确认。";
+"profile.strength.title" = "资料完整度";
+"profile.strength.completedFormat" = "已完成 %d / %d 个重点项目";
+"profile.strength.looksStrong" = "你的资料看起来很完整";
+
+"profile.strength.suggestion.addProfilePhoto" = "添加个人头像";
+"profile.strength.suggestion.addMorePhotos" = "添加更多照片";
+"profile.strength.suggestion.completeBio" = "完善自我介绍";
+"profile.strength.suggestion.addWorkTitle" = "添加工作职位";
+"profile.strength.suggestion.addEducation" = "添加学历";
+"profile.strength.suggestion.addRelationshipGoal" = "添加交友目标";
+"profile.strength.suggestion.addLifestyleDetails" = "添加生活方式资料";
+"profile.strength.suggestion.addLocation" = "添加你所在的位置";
+"profile.strength.suggestion.verifyProfile" = "认证你的资料";
+"profile.strength.suggestion.answerPrompts" = "回答个人问答";
+
+"profile.verification.title" = "认证";
+"profile.verification.identity" = "身份已认证";
+"profile.verification.work" = "工作已认证";
+"profile.verification.education" = "学历已认证";
+"profile.verification.reviewNotice" = "已认证资料如需更改，必须经过审核批准。";
+"profile.verificationStatus.underReview" = "审核中";
+"profile.verificationStatus.notCompleted" = "未完成";
+"profile.contact.supportDetails.userId" = "用户 ID";
+"profile.contact.supportDetails.accountEmail" = "账号邮箱";
+"profile.contact.supportDetails.app" = "App";
+"profile.terms.title" = "条款";
+"profile.terms.headerTitle" = "服务条款";
+"profile.terms.headerMessage" = "这些初始条款说明使用 VeriDate 时的基本规则，帮助大家安全、负责任地使用平台。";
+
+"profile.terms.eligibility.title" = "使用资格";
+"profile.terms.eligibility.p1" = "你必须年满 18 岁才可以使用 VeriDate。";
+"profile.terms.eligibility.p2" = "你同意提供准确的账号、个人资料与认证资讯。";
+"profile.terms.eligibility.p3" = "你有责任保护自己的登入资料安全。";
+
+"profile.terms.profile.title" = "你的个人资料";
+"profile.terms.profile.p1" = "你不应冒充他人、上传误导性照片，或提交虚假的认证文件。";
+"profile.terms.profile.p2" = "你需要为自己在 VeriDate 添加的照片、消息、附件与个人资料负责。";
+"profile.terms.profile.p3" = "对于看似虚假、有害、违法或不安全的内容或账号，VeriDate 可能会移除或限制。";
+
+"profile.terms.respectfulUse.title" = "尊重使用";
+"profile.terms.respectfulUse.p1" = "请勿骚扰、威胁、诈骗、洗版或强迫其他用户。";
+"profile.terms.respectfulUse.p2" = "未经允许，请勿分享他人的私人资讯。";
+"profile.terms.respectfulUse.p3" = "当你遇到违反安全规范的行为时，请使用举报和封锁功能。";
+
+"profile.terms.messaging.title" = "匹配与聊天";
+"profile.terms.messaging.p1" = "除非 VeriDate 未来推出其他已批准流程，否则只有互相匹配的用户可以聊天。";
+"profile.terms.messaging.p2" = "如果因安全或政策原因被举报，消息和附件可能会被审核。";
+"profile.terms.messaging.p3" = "封锁用户可能会隐藏匹配，并阻止进一步聊天。";
+
+"profile.terms.accountChanges.title" = "账号更改";
+"profile.terms.accountChanges.p1" = "你可以在编辑资料中更新许多个人资料，但已认证资料可能需要审核。";
+"profile.terms.accountChanges.p2" = "你可以在设置中登出、导出可用账号数据，或申请删除账号。";
+"profile.terms.accountChanges.p3" = "随着产品成长，VeriDate 可能会更新这些条款，尤其是在公开发布前。";
+
+"profile.terms.footer" = "这是适合 MVP 阶段使用的初始条款草稿，并不能取代正式法律条款。正式上线前，请交由合资格专业人士审阅。";
+"profile.empty.title" = "资料还没准备好";
+"profile.empty.message" = "完善你的资料，让附近已认证会员可以发现你。";
+"profile.edit.title" = "编辑资料";
+"profile.me.title" = "我的";
+
+"profile.location.updating" = "正在更新位置...";
+"profile.location.notAvailable" = "位置不可用";
+"profile.location.resolving" = "正在解析位置...";
+"profile.location.added" = "已添加位置";
+
+"profile.maritalStatus.single" = "单身";
+"profile.maritalStatus.divorced" = "离婚";
+"profile.maritalStatus.widowed" = "丧偶";
+"profile.maritalStatus.separated" = "分居";
+"profile.maritalStatus.preferNotToSay" = "不想透露";
+
+"profile.name.noName" = "未填写姓名";
+"profile.previewProfile.title" = "预览资料";
+
+"profile.settings.accountSecurity" = "账号与安全";
+"profile.notifications.settings" = "通知设置";
+"profile.privacy.settings" = "隐私设置";
+"profile.subscription.title" = "订阅";
+"profile.subscription.vipPremiumFeatures" = "VIP 与高级功能";
+
+"profile.settings.signOutConfirm.title" = "登出？";
+"profile.settings.signOutConfirm.message" = "你可以随时使用 VeriDate 账号重新登入。";
+"profile.account.fallbackInitial" = "V";
+"profile.notifications.section.inAppAlerts" = "App 内提醒";
+"profile.notifications.messageBanners" = "消息横幅";
+"profile.notifications.messageBanners.subtitle" = "当你正在使用 VeriDate 时显示小型横幅提醒。";
+"profile.notifications.newMatches" = "新匹配";
+"profile.notifications.newMatches.subtitle" = "为下一次匹配流程保留匹配提醒。";
+
+"profile.notifications.section.notificationTypes" = "通知类型";
+"profile.notifications.messages" = "消息";
+"profile.notifications.messages.subtitle" = "当匹配对象发送消息时通知你。";
+"profile.notifications.accountVerification" = "账号与认证";
+"profile.notifications.accountVerification.subtitle" = "重要账号、安全与认证更新。";
+
+"profile.notifications.footer" = "部分通知类型可能需要服务端推送功能，才能在 App 完全关闭时显示。App 内消息横幅目前可在这里控制。";
+"profile.notifications.systemNotifications" = "系统通知";
+"profile.notifications.allowPush" = "允许推送通知";
+"profile.notifications.allowPush.subtitle" = "当 iOS 权限允许时，用于 VeriDate 外部提醒。";
+"profile.notifications.openIPhoneSettings" = "打开 iPhone 设置";
+"profile.notifications.requesting" = "正在请求...";
+"profile.notifications.turnOnNotifications" = "开启通知";
+
+"profile.notifications.permission.allowed" = "iPhone 通知已允许。";
+"profile.notifications.permission.blocked" = "通知已在 iPhone 设置中被阻止。";
+"profile.notifications.permission.notDetermined" = "选择是否允许 VeriDate 发送 iPhone 通知。";
+"profile.notifications.permission.needsCheck" = "需要检查通知权限。";
+
+"profile.notifications.blockedNotice" = "通知已在 iPhone 设置中被阻止。请打开设置允许 VeriDate 通知。";
+"profile.notifications.notAllowedNotice" = "通知未被允许。你可以稍后在 iPhone 设置中开启。";
+"profile.privacy.title" = "隐私";
+"profile.privacy.chatPresence" = "聊天与在线状态";
+"profile.privacy.showOnlineStatus" = "显示在线状态";
+"profile.privacy.showOnlineStatus.subtitle" = "让匹配对象看到你目前是否在线。";
+"profile.privacy.sendReadReceipts" = "发送已读回执";
+"profile.privacy.sendReadReceipts.subtitle" = "让匹配对象知道你已阅读他们的消息。";
+"profile.privacy.discoveryPrivacy" = "发现隐私";
+"profile.privacy.showDistance" = "显示距离";
+"profile.privacy.showDistance.subtitle" = "在你的发现页资料中显示大约距离标签。";
+"profile.privacy.footer" = "在线状态、已读回执、距离可见性、举报和封锁现在都是可控制的功能。";
+"profile.privacy.controls" = "隐私控制";
+"profile.privacy.controls.subtitle" = "选择其他人在你使用 VeriDate 时可以看到什么。";
+"profile.privacy.privateDetailsNotice" = "仅用于认证的私人资料，包括 IC 全名，永远不会公开显示。";
+
+"profile.blocked.loading" = "正在加载已封锁账号...";
+"profile.blocked.section.blocked" = "已封锁";
+"profile.blocked.footer" = "已封锁账号无法给你发消息，也会从你的发现页与匹配体验中隐藏。";
+"profile.blocked.unblockConfirm.title" = "解除封锁账号？";
+"profile.blocked.unblockConfirm.message" = "如果你们已匹配，对方可能会再次出现在发现页，或再次给你发消息。";
+"profile.blocked.header.title" = "控制谁可以联系你";
+"profile.blocked.header.subtitle" = "查看已封锁账号，只在你觉得安心时才解除封锁。";
+"profile.blocked.loadFailedFormat" = "无法加载已封锁账号。%@";
+"profile.blocked.unblockSuccess" = "已解除封锁。";
+"profile.blocked.unblockStillBlocked" = "无法解除封锁。封锁记录仍然存在。";
+"profile.blocked.unblockFailedFormat" = "无法解除封锁此用户。%@";
+
+"profile.safety.title" = "安全";
+"profile.dataStorage.emptyExportFallback" = "{}";
+"profile.account.emptyExportFallback" = "{}";
+"common.toggle" = "切换";
+"editProfile.photos.primaryPhoto" = "主照片";
+"editProfile.photos.photoNumberFormat" = "照片 %d";
+"editProfile.photos.primary" = "主照片";
+"editProfile.photos.addPhotoToSlotFormat" = "添加照片到第 %d 格";
+"editProfile.photos.addPrimary" = "添加主照片";
+"editProfile.photos.addPhoto" = "添加照片";
+"editProfile.photos.slotNumberFormat" = "第 %d 格";
+
+"editProfile.photos.hint.firstPhotoTitle" = "第一张照片最重要";
+"editProfile.photos.hint.addAtLeastThreeTitle" = "至少添加 3 张照片";
+"editProfile.photos.hint.strongSetTitle" = "照片组合不错";
+"editProfile.photos.hint.completeTitle" = "照片部分已完成";
+
+"editProfile.photos.hint.firstPhotoMessage" = "先添加一张清晰、近期的正脸照片。这会成为你在发现页的第一印象。";
+"editProfile.photos.hint.addAtLeastThreeMessage" = "更完整的资料通常会包含正脸、生活方式，以及一张自然的全身或社交照片。";
+"editProfile.photos.hint.strongSetMessage" = "整体平衡不错。你还可以增加更多变化，但资料已经有足够的视觉背景。";
+"editProfile.photos.hint.completeMessage" = "你的照片组合已完整。请保持第一张照片清晰且可信。";
+
+"editProfile.photos.empty.title" = "先从一张清晰正脸照开始";
+"editProfile.photos.empty.message" = "添加能展示你的脸、生活方式和个性的照片。第一张照片会成为你的主要发现页照片。";
+"editProfile.location.title" = "地点";
+"editProfile.location.subtitle" = "帮助附近的会员了解你主要在哪里生活";
+"editProfile.location.hometown" = "家乡";
+"editProfile.location.searchHometown" = "搜索家乡";
+"editProfile.location.currentlyLiving" = "目前居住地";
+"editProfile.location.searchCurrentCity" = "搜索目前居住城市";
+"editProfile.location.hint.complete" = "已添加目前居住地";
+"editProfile.location.hint.incomplete" = "添加你目前居住的城市，让附近对象更好理解距离和生活背景。";
+
+"editProfile.work.title" = "工作";
+"editProfile.work.subtitle" = "职业资料有助于建立信任";
+"editProfile.work.jobTitle" = "职位";
+"editProfile.work.jobTitle.reason" = "工作资料是你已认证档案的一部分。";
+"editProfile.work.company" = "公司";
+"editProfile.work.requestUpdate" = "申请更新工作资料";
+"editProfile.work.updateRequest.unavailable" = "已认证工作资料的修改申请将在下一个审核流程中加入。";
+"editProfile.work.hint.complete" = "已添加认证工作资料";
+"editProfile.work.hint.incomplete" = "工作资料只能通过认证审核申请修改。";
+
+"editProfile.education.title" = "教育";
+"editProfile.education.subtitle" = "增加兼容性与可信度";
+"editProfile.education.level" = "学历";
+"editProfile.education.level.reason" = "学历是你已认证档案的一部分。";
+"editProfile.education.school" = "学校 / 大学";
+"editProfile.education.requestUpdate" = "申请更新教育资料";
+"editProfile.education.updateRequest.unavailable" = "已认证教育资料的修改申请将在下一个审核流程中加入。";
+"editProfile.education.hint.complete" = "已添加认证教育资料";
+"editProfile.education.hint.incomplete" = "教育资料只能通过认证审核申请修改。";
+
+"editProfile.verified.changeRequest.reason" = "如需日后更改，请提交修改申请进行审核。";
+
+"editProfile.prompts.title" = "问答提示";
+"editProfile.prompts.subtitle" = "让别人更容易开启有意义的对话";
+"editProfile.prompts.hint.allCompleted" = "已完成全部 3 个问答提示";
+"editProfile.prompts.hint.countCompletedFormat" = "已完成 %d 个问答提示";
+"editProfile.prompts.hint.incomplete" = "至少添加 1 个用心的问答提示，让别人更容易开启有意义的对话。";
+
+"editProfile.interests.title" = "生活方式与兴趣";
+"editProfile.interests.subtitle" = "小细节能带来自然的话题";
+"editProfile.interests.hint.complete" = "兴趣部分已完成";
+"editProfile.interests.hint.goodSelection" = "兴趣选择不错";
+"editProfile.interests.hint.incomplete" = "至少选择 3 个生活方式标签，让对象更容易找到自然话题。";
+
+"editProfile.navigationTitle" = "编辑档案";
+"editProfile.common.notProvided" = "未提供";
+"editProfile.common.notApplicable" = "不适用";
+"editProfile.common.notAdded" = "未添加";
+
+"editProfile.photos.deleteAlert.title" = "删除这张照片？";
+"editProfile.photos.deleteAlert.message" = "这张照片将从你的档案中移除。你之后可以随时上传新的照片。";
+
+"editProfile.basics.selectDateOfBirth" = "选择出生日期";
+"editProfile.error.displayNameRequired" = "显示名称是必填的，因为其他会员会看到这个名字。";
+"editProfile.multiSelect.maxSelectionFormat" = "最多选择 %d 个。";
+
+"editProfile.guidance.title" = "打造更完整的档案";
+"editProfile.guidance.message" = "照片、问答提示和清楚的意向，能帮助附近已认证会员更好了解你。";
+"editProfile.datingIntention.title" = "交友意向";
+"editProfile.datingIntention.subtitle" = "你想认识谁，以及你正在寻找什么";
+"editProfile.datingIntention.hint.complete" = "交友偏好已选择";
+"editProfile.datingIntention.hint.incomplete" = "选择最符合你目前想法的关系目标和感兴趣对象。";
+
+"common.saving" = "保存中...";
+"common.delete" = "删除";
+"common.verified" = "已认证";
+"editProfile.lifestyle.title" = "生活方式与个性";
+"editProfile.lifestyle.subtitle" = "日常习惯与沟通风格";
+"editProfile.lifestyle.hint.complete" = "已添加生活方式资料";
+"editProfile.lifestyle.hint.incomplete" = "添加一些生活方式资料，让更适合的人了解你的日常节奏。";
+
+"genderInterest.oppositeGender" = "异性";
+"genderInterest.men" = "男性";
+"genderInterest.women" = "女性";
+"genderInterest.everyone" = "所有人";
+
+"maritalStatus.single" = "单身";
+"maritalStatus.divorced" = "离异";
+"maritalStatus.widowed" = "丧偶";
+"maritalStatus.separated" = "分居";
+"maritalStatus.preferNotToSay" = "不方便透露";
+
+"citySelector.useCustomCityFormat" = "使用“%@”";
+"citySelector.addAsCustomCity" = "添加为自定义城市";
+"citySelector.searchPrompt" = "搜索城市";
+
+"editProfile.prompts.empty.message" = "最多添加 3 个问答提示，让别人更容易开启对话。";
+"editProfile.prompts.addPrompt" = "添加问答提示";
+"editProfile.prompts.removePrompt" = "删除问答提示";
+"editProfile.prompts.choosePrompt" = "选择问答提示";
+"editProfile.prompts.promptLabel" = "问答提示";
+"editProfile.prompts.answerPlaceholder" = "写一个简短回答";
+
+"editProfile.interests.chooseUpToFormat" = "最多选择 %d 个";
+"editProfile.interests.maxSelectionMessage" = "最多选择 5 个兴趣。";
+"profilePrompt.greenFlag" = "我重视的加分点是...";
+"profilePrompt.idealRelationship" = "我理想中的关系像是...";
+"profilePrompt.sundayUsuallyMeans" = "我的星期日通常是...";
+"profilePrompt.winMeOver" = "打动我的方式是...";
+"profilePrompt.misunderstood" = "别人常误会我的一点是...";
+"profilePrompt.happiestWhen" = "我最开心的时候是...";
+"profilePrompt.perfectWeekend" = "我理想的周末包括...";
+"profilePrompt.smallThingIAppreciate" = "我很珍惜的小细节是...";
+"profilePrompt.feelConnected" = "我最有连接感的时候是...";
+"profilePrompt.togetherLoveTo" = "如果在一起，我想一起...";
+"profilePrompt.supportMe" = "支持我最好的方式是...";
+"profilePrompt.valueILiveBy" = "我坚持的价值观是...";
+"profilePrompt.makeTimeFor" = "我一定会留时间给...";
+"profilePrompt.simpleJoy" = "我的小确幸是...";
+"profilePrompt.unforgettableDate" = "让我难忘的约会是...";
+"profilePrompt.knowILikeSomeone" = "当我喜欢一个人时，我会...";
+
+"interest.category.foodDrinks" = "美食与饮品";
+"interest.category.activeLifestyle" = "运动与健康生活";
+"interest.category.creativeCulture" = "创意与文化";
+"interest.category.homePersonality" = "居家与个性";
+"interest.category.funExploration" = "玩乐与探索";
+
+"interest.coffee" = "咖啡";
+"interest.cafeHopping" = "探店";
+"interest.foodie" = "美食";
+"interest.cooking" = "下厨";
+"interest.baking" = "烘焙";
+"interest.desserts" = "甜点";
+"interest.tea" = "茶";
+"interest.brunch" = "早午餐";
+"interest.gym" = "健身";
+"interest.running" = "跑步";
+"interest.hiking" = "爬山";
+"interest.yoga" = "瑜伽";
+"interest.cycling" = "骑脚车";
+"interest.swimming" = "游泳";
+"interest.badminton" = "羽球";
+"interest.football" = "足球";
+"interest.dancing" = "跳舞";
+"interest.music" = "音乐";
+"interest.movies" = "电影";
+"interest.books" = "阅读";
+"interest.art" = "艺术";
+"interest.photography" = "摄影";
+"interest.concerts" = "演唱会";
+"interest.museums" = "博物馆";
+"interest.karaoke" = "唱K";
+"interest.fashion" = "穿搭";
+"interest.pets" = "宠物";
+"interest.nightOwl" = "夜猫子";
+"interest.earlyBird" = "早起型";
+"interest.familyOriented" = "重视家庭";
+"interest.careerFocused" = "事业型";
+"interest.skincare" = "护肤";
+"interest.spirituality" = "身心灵";
+"interest.volunteering" = "志愿服务";
+"interest.travel" = "旅行";
+"interest.nature" = "大自然";
+"interest.beach" = "海边";
+"interest.roadTrips" = "自驾游";
+"interest.gaming" = "游戏";
+"interest.boardGames" = "桌游";
+"interest.anime" = "动漫";
+"interest.tech" = "科技";
+"interest.finance" = "理财";
+"editProfile.photos.deletePhoto" = "删除照片";
+"profile.contact.supportDetails.appValue" = "VeriDate iOS";
+"chat_download_photo" = "下载照片";
+"chat_download_video" = "下载视频";
+"chat_download_file" = "下载文件";
+"chat_attachment_default_file_name" = "attachment";
+"chat_error_generate_video_thumbnail" = "无法生成视频缩略图。";
+"chat_error_read_image_data" = "无法读取图片资料。";
+"chat_error_photos_permission_required" = "需要照片权限才能保存此附件。";
+"chat_more_reactions" = "更多表情回应";
+"chat_clear_composer_mode" = "清除模式";
+"chat_gallery_counter_format" = "%d / %d";
+"chat_react_with_emoji_format" = "用 %@ 回应";
+"chat_open_attachment_hint" = "打开附件";
+"chat_reaction_summary_item_format" = "%@，%d 个";
+"chat_reaction_summary_format" = "回应：%@";
+"matches.row.accessibilityLabelFormat" = "%@，%@";
+"matches.avatar.accessibilityLabelFormat" = "%@ 的头像";
+"gender.male" = "男性";
+"gender.female" = "女性";
+"gender.nonBinary" = "非二元性别";
+
+"relationshipGoal.seriousRelationship" = "认真交往";
+"relationshipGoal.lifePartner" = "人生伴侣";
+"relationshipGoal.marriage" = "以结婚为目标";
+"relationshipGoal.longTerm" = "长期关系";
+"relationshipGoal.shortTerm" = "短期约会";
+"relationshipGoal.friendship" = "交朋友";
+"relationshipGoal.friendshipFirst" = "先从朋友开始";
+"relationshipGoal.stillFiguringOut" = "还在探索中";
+"relationshipGoal.notSure" = "不确定";
+
+"lifestyle.daily" = "每天";
+"lifestyle.often" = "经常";
+"lifestyle.sometimes" = "有时";
+"lifestyle.rarely" = "很少";
+"lifestyle.never" = "从不";
+"interested_profile_accessibility_label_format" = "%@ 喜欢了你";
+
+"interested_locked_profile_accessibility_label" = "有人喜欢了你。升级后可查看此档案。";
+"discovery_card_accessibility_label_format" = "%@，%@，%@，寻找 %@";
+"profile_photo_accessibility_label" = "个人照片";
+"interested_in_you_see_all_accessibility_label_format" = "查看全部 %d 个喜欢你的人";
+"profile_height_cm_format" = "%d cm";
+"profile_name_age_format" = "%@，%d岁";
+"compatibility_score_accessibility_format" = "%@，%d%% 匹配度";
+"profile_detail_row_accessibility_format" = "%@：%@";
+"profile_age_format" = "%d岁";
+"compatibility_score_percent_format" = "%d%%";
+"common_list_separator" = "，";
+"discovery_error_verified_required" = "只有已认证用户可以使用探索。";
+"discovery_error_load_profiles_format" = "无法加载探索档案。%@";
+"discovery_error_load_filters_format" = "无法加载筛选条件。%@";
+"discovery_error_save_filters_format" = "无法保存筛选条件。%@";
+"discovery_error_save_action_format" = "无法保存你的%@。%@";
+"discovery_error_undo_swipe_format" = "无法撤销上一次滑动。%@";
+
+"discovery_action_like" = "喜欢";
+"discovery_action_pass" = "略过";
+
+"compatibility_reason_same_relationship_intention" = "关系目标一致";
+"compatibility_reason_education_preference_fits" = "符合学历偏好";
+"compatibility_reason_verified_profile" = "已认证档案";
+"compatibility_reason_nearby" = "距离较近";
+"compatibility_reason_comfortable_distance" = "在舒适距离内";
+"compatibility_reason_complete_profile" = "档案完整";
+"compatibility_reason_shared_interests" = "共同兴趣";
+"compatibility_reason_shared_language" = "共同语言";
+"compatibility_reason_lifestyle_alignment" = "生活方式契合";
+"compatibility_reason_matches_preferences" = "符合你的偏好";
+
+"compatibility_label_strong_match" = "高度匹配";
+"compatibility_label_good_match" = "不错的匹配";
+"compatibility_label_possible_match" = "有机会匹配";
+"compatibility_label_explore_slowly" = "慢慢了解";
+"filters_km_unit" = "km";
+"filters_cm_unit" = "cm";
+"filterOption.common.malay" = "马来人";
+"filterOption.common.other" = "其他";
+"filterOption.common.notSureYet" = "还不确定";
+"filterOption.common.notSure" = "不确定";
+"filterOption.mbti.notSure" = "不确定";
+
+"filterOption.race.chinese" = "华人";
+"filterOption.race.indian" = "印度人";
+"filterOption.race.iban" = "伊班族";
+"filterOption.race.kadazan" = "卡达山族";
+"filterOption.race.mixed" = "混血";
+
+"filterOption.religion.islam" = "伊斯兰教";
+"filterOption.religion.buddhism" = "佛教";
+"filterOption.religion.christianity" = "基督教";
+"filterOption.religion.hinduism" = "印度教";
+"filterOption.religion.taoism" = "道教";
+"filterOption.religion.atheist" = "无神论";
+"filterOption.religion.agnostic" = "不可知论";
+"filterOption.religion.spiritual" = "心灵信仰";
+
+"filterOption.frequency.never" = "从不";
+"filterOption.frequency.socially" = "社交时";
+"filterOption.frequency.sometimes" = "偶尔";
+"filterOption.frequency.often" = "经常";
+"filterOption.frequency.daily" = "每天";
+"filterOption.frequency.rarely" = "很少";
+"filterOption.exercise.fewTimesAWeek" = "每周几次";
+
+"filterOption.pet.dog" = "狗";
+"filterOption.pet.cat" = "猫";
+"filterOption.pet.fish" = "鱼";
+"filterOption.pet.bird" = "鸟";
+"filterOption.pet.rabbit" = "兔子";
+"filterOption.pet.hamster" = "仓鼠";
+"filterOption.pet.reptile" = "爬虫";
+"filterOption.pet.havePets" = "有养宠物";
+"filterOption.pet.wantPets" = "想养宠物";
+"filterOption.pet.noPetButLoveThem" = "没养但喜欢宠物";
+"filterOption.pet.notPetPerson" = "不喜欢宠物";
+"filterOption.pet.allergic" = "对宠物过敏";
+"filters_range_value_format" = "%d - %d %@";
+"filters_selected_count_format" = "已选择 %d 个";
+"filters_option_selected" = "已选择";
+"filters_option_not_selected" = "未选择";
+"filters_slider_value_format" = "%d %@";
+"filterOption.education.primarySchool" = "小学";
+"filterOption.education.secondarySchool" = "中学";
+"filterOption.education.highSchool" = "高中";
+"filterOption.education.diploma" = "文凭";
+"filterOption.education.degree" = "学士";
+"filterOption.education.bachelorsDegree" = "学士学位";
+"filterOption.education.master" = "硕士";
+"filterOption.education.mastersDegree" = "硕士学位";
+"filterOption.education.phd" = "博士";
+"filterOption.education.doctorate" = "博士学位";
+"filterOption.education.spm" = "SPM";
+"filterOption.education.stpm" = "STPM";
+"filterOption.education.aLevel" = "A-Level";
+"filterOption.education.foundation" = "预科";
+"filterOption.education.advancedDiploma" = "高级文凭";
+"filterOption.education.professionalDegree" = "专业学位";
+"filterOption.communication.responsiveTexter" = "回复及时";
+"filterOption.communication.thoughtfulTexter" = "用心回复";
+"filterOption.communication.phoneCalls" = "电话沟通";
+"filterOption.communication.videoCalls" = "视频通话";
+"filterOption.communication.voiceMessages" = "语音信息";
+"filterOption.communication.inPerson" = "面对面沟通";
+"filterOption.communication.plansAhead" = "喜欢提前安排";
+"filterOption.communication.spontaneousCheckIns" = "自然关心问候";
+"filterOption.communication.lowMaintenance" = "低压力沟通";
+
+"filterOption.loveLanguage.qualityTime" = "高质量陪伴";
+"filterOption.loveLanguage.wordsOfAffirmation" = "肯定的话语";
+"filterOption.loveLanguage.actsOfService" = "实际行动";
+"filterOption.loveLanguage.physicalTouch" = "肢体接触";
+"filterOption.loveLanguage.receivingGifts" = "收礼物";
+
+"filterOption.language.english" = "英语";
+"filterOption.language.malay" = "马来语";
+"filterOption.language.mandarin" = "华语";
+"filterOption.language.cantonese" = "广东话";
+"filterOption.language.tamil" = "淡米尔语";
+"filterOption.language.hokkien" = "福建话";
+"filterOption.language.hakka" = "客家话";
+"filterOption.language.teochew" = "潮州话";
+"filterOption.language.japanese" = "日语";
+"filterOption.language.korean" = "韩语";
+"filterOption.language.arabic" = "阿拉伯语";
+"filterOption.language.hindi" = "印地语";
+"filterOption.language.indonesian" = "印尼语";
+"filterOption.language.thai" = "泰语";
+
+"filterOption.familyPlans.wantChildren" = "想要孩子";
+"filterOption.familyPlans.openToChildren" = "对孩子持开放态度";
+"filterOption.familyPlans.doNotWantChildren" = "不想要孩子";
+"filterOption.familyPlans.haveChildren" = "已有孩子";
+"profile.card.currentlyLivingFormat" = "现居 %@";
+"profile.card.fromFormat" = "来自 %@";
+"profileSetup.navigationTitle" = "创建档案";
+
+"profileSetup.name.title" = "先从你的名字开始";
+"profileSetup.name.subtitle" = "请填写身份证上的姓名用于认证，然后选择其他人会看到的显示名称。";
+"profileSetup.name.fullNamePlaceholder" = "身份证姓名";
+"profileSetup.name.displayNamePlaceholder" = "显示名称";
+"profileSetup.name.hint" = "身份证姓名只用于认证。显示名称可以更亲切、更简短，或使用你希望别人称呼你的名字。";
+
+"profileSetup.basics.title" = "一些基本资料";
+"profileSetup.basics.subtitle" = "这些资料帮助我们推荐更适合的人，并确保应用符合年龄要求。";
+"profileSetup.basics.dateOfBirth" = "出生日期";
+"profileSetup.basics.gender" = "性别";
+"profileSetup.basics.height" = "身高";
+
+"profileSetup.photos.title" = "添加你的照片";
+"profileSetup.photos.subtitle" = "选择最能代表你的照片。第一张照片会成为你的主要档案照片。";
+"profileSetup.photos.hint" = "最多添加 6 张照片。第一张选择的照片会成为主要照片。";
+
+"profileSetup.location.title" = "你希望别人在哪里找到你？";
+"profileSetup.location.subtitle" = "添加你的家乡和目前居住地，让附近对象更了解你的生活背景。";
+"profileSetup.location.hometown" = "家乡";
+"profileSetup.location.currentlyLiving" = "目前居住地";
+"profileSetup.location.searchHometown" = "搜索家乡";
+"profileSetup.location.searchCurrentCity" = "搜索目前居住城市";
+
+"profileSetup.background.title" = "背景资料";
+"profileSetup.background.subtitle" = "请谨慎填写。工作和教育资料可能会在认证时进行核对，日后修改可能需要审核。";
+"profileSetup.background.studentToggle" = "我目前是学生";
+"profileSetup.background.unemployedToggle" = "我目前没有工作";
+"profileSetup.background.workVerificationNotRequired" = "不需要进行工作认证。";
+"profileSetup.background.jobTitlePlaceholder" = "职位";
+"profileSetup.background.companyPlaceholder" = "公司";
+"profileSetup.background.educationLevel" = "学历";
+"profileSetup.background.schoolPlaceholder" = "学校 / 大学";
+
+"profileSetup.intentions.title" = "交友意向";
+"profileSetup.intentions.subtitle" = "清楚的意向能带来更好的匹配。你之后仍然可以更新。";
+"profileSetup.intentions.lookingFor" = "寻找";
+"profileSetup.intentions.interestedIn" = "感兴趣对象";
+
+"profileSetup.moreDetails.title" = "更多资料";
+"profileSetup.moreDetails.subtitle" = "这些是选填资料。现在能填多少就填多少，也可以之后再回来补充。";
+"profileSetup.moreDetails.maritalStatus" = "婚姻状态";
+"profileSetup.moreDetails.race" = "种族";
+"profileSetup.moreDetails.religion" = "宗教";
+"profileSetup.moreDetails.familyPlans" = "家庭计划";
+"profileSetup.moreDetails.smoking" = "吸烟？";
+"profileSetup.moreDetails.drinking" = "喝酒？";
+"profileSetup.moreDetails.exercise" = "运动？";
+"profileSetup.moreDetails.pets" = "宠物？";
+"profileSetup.moreDetails.communicationStyle" = "沟通方式";
+"profileSetup.moreDetails.loveLanguage" = "爱的语言";
+"profileSetup.moreDetails.mbti" = "MBTI";
+"profileSetup.moreDetails.languages" = "语言";
+
+"profileSetup.error.fullNameRequired" = "请先填写你的姓名。";
+"profileSetup.error.displayNameRequired" = "请先填写显示名称。";
+"profileSetup.error.photoRequired" = "请至少添加 1 张档案照片。";
+"profileSetup.error.currentCityRequired" = "请填写你目前居住的城市。";
+"profileSetup.error.jobTitleRequired" = "请输入你的职位，或选择学生 / 暂无工作。";
+"profileSetup.error.companyRequired" = "请输入你的公司，或选择学生 / 暂无工作。";
+"profileSetup.error.schoolRequired" = "请先填写你的学校或大学。";
+
+"profileSetup.footer.saveContinue" = "保存并继续";
+"profileSetup.step.name" = "姓名";
+"profileSetup.step.basics" = "基本资料";
+"profileSetup.step.photos" = "照片";
+"profileSetup.step.location" = "地点";
+"profileSetup.step.background" = "背景";
+"profileSetup.step.intentions" = "交友意向";
+"profileSetup.step.details" = "更多资料";
+
+"profileSetup.progress.format" = "第 %d / %d 步";
+
+"profileSetup.photos.countFormat" = "%d/%d 张照片";
+"profileSetup.photos.primary" = "主要照片";
+"profileSetup.photos.slotFormat" = "照片 %d";
+
+"profileSetup.multiselect.limitFormat" = "最多只能选择 %d 个。";
+
+"profileSetup.bio.title" = "个人简介";
+"profileSetup.bio.placeholder" = "分享一点你的个性、周末生活，或你喜欢的事物。";
+"profileSetup.bio.hint" = "简单自然就好。之后也可以到编辑档案继续优化。";
+"profileSetup.bio.countFormat" = "%d/%d";
+"profileSetup.multiselect.countFormat" = "%d/%d";
+"citySearch.empty.title" = "搜索马来西亚城市";
+"citySearch.empty.description" = "输入城市、城镇或地区名称。";
+"citySearch.searching" = "正在搜索 MapKit...";
+"citySearch.noResults.title" = "找不到城市";
+"citySearch.noResults.description" = "试试附近的城镇或地区名称。";
+"citySearch.searchPrompt" = "搜索马来西亚城市";
+"citySearch.result.accessibilityLabelFormat" = "%@，%@";
+"verificationPending.navigationTitle" = "验证";
+"verificationPending.hero.title" = "验证审核中";
+"verificationPending.hero.subtitle" = "感谢你提交资料。我们的团队正在检查你的视频和文件，让 VeriDate 保持安全、可信。";
+"verificationPending.hero.reviewTime" = "通常会尽快完成审核";
+"verificationPending.reviewChecklist.title" = "审核清单";
+"verificationPending.step.video.title" = "真人视频检查";
+"verificationPending.step.video.subtitle" = "确认短视频是否正确拍摄。";
+"verificationPending.step.document.title" = "身份证与文件审核";
+"verificationPending.step.document.subtitle" = "检查提交的文件是否与你的个人资料一致。";
+"verificationPending.step.admin.title" = "管理员批准";
+"verificationPending.step.admin.subtitle" = "进入 Discovery 前的最后审核。";
+"verificationPending.whileYouWait.title" = "等待期间";
+"verificationPending.tip.keepInstalled" = "请保留 App，以便审核通过后自动更新你的资料状态。";
+"verificationPending.tip.changes" = "如果你的提交需要修改，我们会在这个页面清楚显示原因。";
+"verificationPending.tip.approved" = "审核通过后，你就可以开始探索附近已验证的会员。";
+"verificationPending.refresh.checking" = "正在检查状态...";
+"verificationPending.refresh.title" = "刷新状态";
+"verificationPending.step.status.complete" = "已完成";
+"verificationPending.step.status.pending" = "待处理";
+"verificationUpload.feedback.title" = "审核反馈";
+"verificationUpload.feedback.loading" = "正在加载反馈...";
+"verificationUpload.feedback.defaultRejected" = "你的验证已被拒绝。请上传更新后的文件并重新提交。";
+"verificationUpload.video.title" = "视频验证";
+"verificationUpload.video.record" = "录制短视频";
+"verificationUpload.video.retake" = "重新录制验证视频";
+"verificationUpload.video.recordSubtitle" = "打开相机并录制一段简短的真人验证视频。";
+"verificationUpload.video.captured" = "视频已拍摄";
+"verificationUpload.documents.title" = "文件";
+"verificationUpload.document.icPhoto" = "身份证照片";
+"verificationUpload.document.jobProof" = "工作证明";
+"verificationUpload.document.jobProofSkipped" = "已跳过，因为你的工作状态不需要工作验证。";
+"verificationUpload.document.educationProof" = "学历证明";
+"verificationUpload.document.educationProofSkipped" = "小学或中学学历已跳过。";
+"verificationUpload.error.cameraUnavailableVideo" = "此设备无法使用相机。请在真实 iPhone 上测试视频验证。";
+"verificationUpload.error.signInAgain" = "提交验证前请重新登录。";
+"verificationUpload.error.statusUpdateBlocked" = "文件已上传，但 Supabase 阻止了验证状态更新。";
+"verificationUpload.error.readVideoFormat" = "无法读取该验证视频。%@";
+"verificationUpload.submit.title" = "提交验证";
+"verificationUpload.submit.submitting" = "正在提交验证...";
+"verificationUpload.navigationTitle" = "验证账号";
+"verificationUpload.editSetup" = "编辑资料设置";
+"verificationUpload.intro.title" = "安全验证";
+"verificationUpload.intro.subtitle" = "快完成了。请录制一段短视频，用相机拍摄身份证，然后添加适用的工作或学历证明。我们会私下审核这些资料，让 VeriDate 更安全。";
+"verificationUpload.item.status.complete" = "已完成";
+"verificationUpload.item.status.incomplete" = "未完成";
+"verificationUpload.document.chooseSourceFormat" = "选择 %@";
+"verificationUpload.document.source.photos" = "照片";
+"verificationUpload.document.source.camera" = "相机";
+"verificationUpload.document.source.files" = "文件";
+"verificationUpload.document.cameraOnly" = "仅限相机";
+"verificationUpload.document.chooseSources" = "从照片、相机或文件中选择";
+"verificationUpload.error.cameraRequiredForIC" = "身份证验证需要使用相机。请使用有相机权限的真实 iPhone。";
+"verificationUpload.error.cameraUnavailableUsePhotosFiles" = "此设备无法使用相机。请使用照片或文件。";
+"verificationUpload.error.readPhoto" = "无法读取该照片。";
+"verificationUpload.error.readCameraPhoto" = "无法读取该相机照片。";
+"verificationUpload.document.selectHint" = "点两下以选择或拍摄此文件。";
+"verificationUpload.document.disabledHint" = "你的个人资料不需要此文件。";
+"verificationUpload.video.livenessPrompt" = "请录制一段清晰的短视频，让我们确认你是真人。";
+"verificationUpload.error.noFileSelected" = "未选择任何文件。";
+"verificationUpload.error.readPhotoFormat" = "无法读取该照片。%@";
+"verificationUpload.error.importFileFormat" = "无法导入该文件。%@";
+"session.auth.accountCreatedConfirmEmail" = "账号已创建。请先确认你的电邮，然后再登录。";
+"session.auth.error.createAccount" = "无法创建你的账号。";
+"session.auth.error.signIn" = "无法为你登录。";
+"session.auth.error.enterPhone" = "继续前请输入你的手机号码。";
+"session.auth.error.demoRequiresEmailConfirmation" = "测试账号已创建，但 Supabase 需要电邮确认。此测试流程需关闭电邮确认，或之后启用真实手机 OTP。";
+"session.auth.error.loginMethod" = "无法继续使用此登录方式。";
+"session.auth.error.signOut" = "无法退出登录。";
+"session.account.error.validEmail" = "请输入有效的电邮地址。";
+"session.account.error.updateEmail" = "无法更新你的电邮。";
+"session.account.error.passwordMin8" = "密码必须至少 8 个字符。";
+"session.account.error.updatePassword" = "无法更新你的密码。";
+"session.profile.error.prepareProfile" = "已登录，但无法准备你的个人资料。";
+"session.profile.error.loadProfile" = "无法加载你的个人资料。";
+"session.auth.error.emailPasswordRequired" = "请输入电邮和密码。";
+"session.auth.error.passwordMin6" = "密码必须至少 6 个字符。";
+"session.auth.error.invalidCredentials" = "电邮或密码不正确。";
+"session.auth.error.emailNotConfirmed" = "请先确认你的电邮后再登录。";
+"session.auth.error.emailAlreadyRegistered" = "此电邮已有账号。请尝试登录。";
+"session.error.network" = "网络问题。请检查连接后再试。";
+"session.accountDeletion.error.signInAgainRequest" = "申请删除账号前请重新登录。";
+"session.accountDeletion.error.request" = "无法申请删除账号。";
+"session.accountDeletion.error.signInAgainCancel" = "取消删除账号前请重新登录。";
+"session.accountDeletion.error.cancel" = "无法取消删除账号。";
+"session.verification.error.signInAgainSubmit" = "提交验证前请重新登录。";
+"session.verification.error.submit" = "文件已上传，但无法提交验证。";
+"session.location.error.signInAgainUpdate" = "更新位置前请重新登录。";
+"session.location.error.update" = "无法更新你的位置。";
+"session.visibility.error.signInAgainChange" = "更改可见状态前请重新登录。";
+"session.visibility.error.update" = "无法更新可见状态。";
+"session.presence.error.updateFormat" = "无法更新在线状态。%@";
+"session.error.fallbackWithDetailFormat" = "%@ %@";
+"auth_verifying_button" = "正在验证...";
+"profileSetup.error.saveProfileFormat" = "无法保存你的个人资料。%@";
+"verificationUpload.video.livenessPromptInstruction" = "请稍微向左转头，然后看回镜头。";
+"verificationUpload.error.loadRejectionReasonFormat" = "无法加载拒绝原因。%@";
+"verificationUpload.error.videoAndICRequired" = "提交前请添加验证视频和身份证照片。";
+"verificationUpload.error.jobProofRequired" = "提交前请添加工作证明。";
+"verificationUpload.error.educationProofRequired" = "提交前请添加学历证明。";
+"verificationUpload.uploadLabel.selfieVideo" = "自拍验证视频";
+"verificationUpload.uploadLabel.idDocument" = "身份证文件";
+"verificationUpload.uploadLabel.jobProof" = "工作证明";
+"verificationUpload.uploadLabel.educationProof" = "学历证明";
+"verificationUpload.error.missingDocumentFormat" = "无法读取%@。请重新选择照片或文件。";
+"verificationUpload.error.blockedStepFormat" = "Supabase 阻止了%@上传，路径为 %@。%@";
+"verificationUpload.error.submissionRowFormat" = "文件已上传，但 Supabase 阻止创建验证提交记录。%@";
+"photoUpload.uploading" = "正在上传...";
+"photoUpload.addPrimary" = "添加主照片";
+"photoUpload.addPhoto" = "添加照片";
+"photoUpload.tapToChoose" = "点按选择";
+"photoUpload.slot.accessibilityLabelFormat" = "照片位置 %d";
+"photoUpload.error.readSelectedPhoto" = "无法读取所选照片。";
+"photoUpload.error.uploadFailedFormat" = "照片上传失败。%@";
+"chat_error_verified_users_only_message_matches" = "只有已验证用户可以给配对对象发消息。";
+"chat_error_message_after_match_only" = "只有配对后才可以给对方发消息。";
+"chat_error_load_messages_format" = "无法加载消息。%@";
+"chat_error_refresh_messages_format" = "无法刷新消息。%@";
+"chat_error_verified_users_only_send_messages" = "只有已验证用户可以发送消息。";
+"chat_error_type_message_before_sending" = "发送前请输入消息。";
+"chat_error_messaging_unavailable_blocked" = "由于其中一方已屏蔽对方，消息功能暂不可用。";
+"chat_error_send_message_retry" = "无法发送消息。点按失败的消息以重试。";
+"chat_error_still_could_not_send" = "仍然无法发送。请检查网络连接后再试。";
+"chat_error_verified_users_only_send_attachments" = "只有已验证用户可以发送附件。";
+"chat_error_attachment_after_match_only" = "只有配对后才可以发送附件。";
+"chat_error_check_message_safety_format" = "无法检查消息安全状态。%@";
+"chat_error_upload_attachment_format" = "无法上传附件文件。%@";
+"chat_error_create_attachment_message_format" = "附件已上传，但无法创建聊天消息。%@";
+"chat_attachment_body_photo" = "照片";
+"chat_attachment_body_video" = "视频";
+"chat_attachment_body_voice_message" = "语音消息";
+"chat_attachment_body_attachment" = "附件";
+"chat_error_block_matched_users_only" = "你只能屏蔽已配对的用户。";
+"chat_action_user_blocked" = "用户已屏蔽。";
+"chat_error_block_user_format" = "无法屏蔽此用户。%@";
+"chat_error_report_matched_users_only" = "你只能举报已配对的用户。";
+"chat_error_report_reason_required" = "举报前请填写简短原因。";
+"chat_action_report_submitted" = "举报已提交。";
+"chat_error_submit_report_format" = "无法提交举报。%@";
+"safety.report.submitted" = "举报已提交。感谢你协助维护 VeriDate 安全。";
+"safety.report.submitFailedFormat" = "无法提交举报。%@";
+"chat_error_mark_read_format" = "无法将消息标记为已读。%@";
+"chat_error_edit_own_messages_only" = "你只能编辑自己的消息。";
+"chat_error_deleted_messages_cannot_be_edited" = "已删除的消息无法编辑。";
+"chat_error_voice_messages_cannot_be_edited" = "语音消息无法编辑。";
+"chat_error_edited_message_empty" = "编辑后的消息不能为空。";
+"chat_error_edit_message_format" = "无法编辑消息。%@";
+"chat_error_delete_own_messages_only" = "你只能删除自己的消息。";
+"chat_message_deleted_body" = "此消息已删除";
+"chat_error_delete_message_format" = "无法删除消息。%@";
+"chat_error_react_message_format" = "无法对消息添加反应。%@";
+"chat_error_reactions_could_not_load" = "消息已加载，但反应无法加载。如果这是新数据库，请运行最新的聊天 SQL。";
+"chat_no_active_recording_found" = "未找到正在进行的录音。";
+"location.status.ready" = "位置已准备好";
+"location.status.permissionNeeded" = "附近配对需要位置权限。";
+"location.status.off" = "定位已关闭。请在设置中开启以查看附近配对。";
+"location.status.finding" = "正在获取你的位置...";
+"location.status.unavailable" = "位置状态不可用。";
+
+"location.error.allowAccessInSettings" = "请在设置中允许位置权限以使用距离配对。";
+"location.error.checkPermission" = "无法检查位置权限。";
+"location.error.getLocationFormat" = "无法获取你的位置。%@";
+"discovery_like_badge" = "喜欢";
+"discovery_pass_badge" = "跳过";
+"genderInterest.sameGender" = "同性";
+"profile.blocked.title" = "已屏蔽账号";
+"profile.notifications.title" = "通知";
+"profile.settings.termsOfService" = "服务条款";
+"safety.report.section.reason" = "原因";
+"safety.report.section.details" = "详细说明";
+"safety.report.section.proof" = "证明";
+"safety.report.details.placeholder" = "补充说明（可选）";
+"safety.report.attachScreenshot" = "附上截图";
+"safety.report.replaceScreenshot" = "更换截图";
+"safety.report.chooseFromFiles" = "从文件选择";
+"safety.report.removeAttachment" = "移除附件";
+"safety.report.navigationTitleFormat" = "举报 %@";
+"safety.report.submitting" = "正在提交...";
+"safety.report.submit" = "提交";
+"safety.report.error.readScreenshot" = "无法读取该截图。";
+"safety.report.reason.inappropriateBehavior" = "不当行为";
+"safety.report.reason.harassment" = "骚扰";
+"safety.report.reason.fakeProfile" = "虚假资料";
+"safety.report.reason.scam" = "诈骗或可疑行为";
+"safety.report.reason.underage" = "未成年用户";
+"safety.report.reason.other" = "其他";
+"mainTab.discover" = "探索";
+"mainTab.matches" = "匹配";
+"mainTab.me" = "我的";
+"matchCelebration.title" = "配对成功！";
+"matchCelebration.subtitleFormat" = "你和 %@ 互相喜欢了。";
+"matchCelebration.thisUser" = "这位用户";
+"matchCelebration.sendMessage" = "发送消息";
+"matchCelebration.keepDiscovering" = "继续探索";
+"editProfile.photos.title" = "照片";
+"editProfile.photos.subtitle" = "你的第一印象";
+"editProfile.photos.guidanceTitle" = "展现你的生活方式";
+"editProfile.photos.guidanceMessage" = "点按空白位置添加照片。拖放照片即可调整顺序。";
+"editProfile.basicIdentity.title" = "基本身份资料";
+"editProfile.basicIdentity.subtitle" = "会显示在个人资料上的核心信息";
+"editProfile.basicIdentity.legalNamePrivateReason" = "这是身份验证资料，不会显示给其他会员。";
+"editProfile.basicIdentity.legalNameRequestComingSoon" = "已验证姓名修改申请会在后续审核流程中加入。";
+"editProfile.basicIdentity.requestLegalNameUpdate" = "申请修改身份证姓名";
+"editProfile.basicIdentity.displayNameComplete" = "显示名称已添加";
+"editProfile.basicIdentity.displayNameIncomplete" = "添加你希望其他会员看到的名字。身份证姓名会保持私密。";
+"editProfile.basicIdentity.bioComplete" = "个人简介已添加";
+"editProfile.basicIdentity.bioIncomplete" = "添加一段简短简介，让别人从照片以外更了解你的个性。";
+"profile.prompts.title" = "问答提示";
+"profile.interests.title" = "兴趣";
+"profile.preview.previewingPublicProfile" = "正在预览你的公开资料";
+"profile.preview.lifestyleHighlights" = "生活亮点";
+"profile.preview.lookingFor" = "寻找";
+"profile.preview.sharedIntentions" = "相同的交友意向能带来更好的匹配。";
+"profile.preview.about" = "关于我";
+"profile.preview.datingBasics" = "交友基本资料";
+"profile.preview.gender" = "性别";
+"profile.preview.maritalStatus" = "婚姻状态";
+"profile.preview.race" = "种族";
+"profile.preview.religion" = "宗教";
+"profile.preview.height" = "身高";
+"profile.preview.familyPlans" = "家庭计划";
+"profile.preview.lifestylePersonality" = "生活方式与个性";
+"profile.preview.smoking" = "吸烟";
+"profile.preview.drinking" = "饮酒";
+"profile.preview.exercise" = "运动";
+"profile.preview.pets" = "宠物";
+"profile.preview.communication" = "沟通方式";
+"profile.preview.loveLanguage" = "爱的语言";
+"profile.preview.horoscope" = "星座";
+"profile.preview.mbti" = "MBTI";
+"profile.preview.languages" = "语言";
+"profile.preview.background" = "背景资料";
+"profile.preview.work" = "工作";
+"profile.preview.education" = "学历";
+"profile.preview.hometown" = "家乡";
+"profile.preview.currentlyLiving" = "现居地";
+"profile.preview.distanceFromYou" = "与你的距离";
+"profile.preview.prompts" = "问答提示";
+"profile.preview.lifestyleInterests" = "生活方式与兴趣";
+"profile.preview.locationNotAdded" = "未添加地点";
+"profile.preview.lessThanOneKmAway" = "距离少于 1 公里";
+"profile.preview.kmAwayFormat" = "距离 %d 公里";
+"profile.preview.noName" = "未填写名字";
+"profile.language.settings" = "语言";
+"language.title" = "App 语言";
+"language.chooseLanguage" = "选择语言";
+"language.currentFormat" = "当前语言：%@";
+"language.note" = "语言更改会立即套用到 VeriDate。";
+"language.english" = "英文";
+"language.chineseSimplified" = "中文";
+"filterOption.common.student" = "学生";
+"filterOption.common.unemployed" = "待业";
+"filterOption.zodiac.aries" = "白羊座";
+"filterOption.zodiac.taurus" = "金牛座";
+"filterOption.zodiac.gemini" = "双子座";
+"filterOption.zodiac.cancer" = "巨蟹座";
+"filterOption.zodiac.leo" = "狮子座";
+"filterOption.zodiac.virgo" = "处女座";
+"filterOption.zodiac.libra" = "天秤座";
+"filterOption.zodiac.scorpio" = "天蝎座";
+"filterOption.zodiac.sagittarius" = "射手座";
+"filterOption.zodiac.capricorn" = "摩羯座";
+"filterOption.zodiac.aquarius" = "水瓶座";
+"filterOption.zodiac.pisces" = "双鱼座";
+"profile_card_primary_info_format" = "%@，%@";
+"profile_photo_placeholder_accessibility_label" = "个人资料照片占位图";
+"profile.verifiedBadge.accessibilityLabel" = "已验证个人资料";
+"editProfile.displayName.changeLimit" = "昵称每30天只能修改一次。";
+
+"editProfile.displayName.changeLimitWithDate" = "昵称每30天只能修改一次。你可以在 %@ 后再次修改。";
+
+"editProfile.displayName.changeHint" = "昵称每30天只能修改一次。";
+
+"editProfile.changeRequest.legalName.title" = "申请修改身份证姓名";
+"editProfile.changeRequest.legalName.message" = "提交正确的身份证姓名给管理员审核。我们可能会要求你提供新的身份证明。";
+"editProfile.changeRequest.work.title" = "申请修改工作资料";
+"editProfile.changeRequest.work.message" = "提交新的职位或公司。工作资料可能需要新的证明，审核后才会显示在已验证资料中。";
+"editProfile.changeRequest.education.title" = "申请修改学历资料";
+"editProfile.changeRequest.education.message" = "提交新的学历资料。学历变更可能需要新的证明，审核后才会通过。";
+"editProfile.changeRequest.currentValue" = "目前资料";
+"editProfile.changeRequest.requestedValue" = "申请修改为";
+"editProfile.changeRequest.currentName" = "目前姓名";
+"editProfile.changeRequest.updateName" = "更新姓名";
+"editProfile.changeRequest.currentJobDetails" = "目前工作资料";
+"editProfile.changeRequest.updateJobDetails" = "更新工作资料";
+"editProfile.changeRequest.currentEducationDetails" = "目前学历资料";
+"editProfile.changeRequest.updateEducationDetails" = "更新学历资料";
+"editProfile.changeRequest.attachment" = "附件";
+"editProfile.changeRequest.attachment.add" = "附上证明";
+"editProfile.changeRequest.attachment.remove" = "移除附件";
+"editProfile.changeRequest.attachment.chooseSource" = "选择附件来源";
+"editProfile.changeRequest.note" = "备注";
+"editProfile.changeRequest.notePlaceholder" = "补充说明给管理员";
+"editProfile.changeRequest.submit" = "提交";
+"editProfile.changeRequest.noChange" = "请至少修改一个内容后再提交。";
+"editProfile.changeRequest.submitted" = "修改申请已提交给管理员审核。";
+"editProfile.changeRequest.submitFailedFormat" = "无法提交修改申请。%@";
+
+"zodiac.aries" = "白羊座";
+"zodiac.taurus" = "金牛座";
+"zodiac.gemini" = "双子座";
+"zodiac.cancer" = "巨蟹座";
+"zodiac.leo" = "狮子座";
+"zodiac.virgo" = "处女座";
+"zodiac.libra" = "天秤座";
+"zodiac.scorpio" = "天蝎座";
+"zodiac.sagittarius" = "射手座";
+"zodiac.capricorn" = "摩羯座";
+"zodiac.aquarius" = "水瓶座";
+"zodiac.pisces" = "双鱼座";
+"chat.compatibility.zodiac.title" = "星座默契";
+"chat.compatibility.mbti.title" = "人格互动";
+"chat.compatibility.tapToKnowMore" = "点击查看更多";
+
+"chat.compatibility.section.overview" = "整体感觉";
+"chat.compatibility.section.strengths" = "优势";
+"chat.compatibility.section.challenges" = "需要留意";
+"chat.compatibility.section.communication" = "沟通模式";
+"chat.compatibility.section.outlook" = "关系展望";
+
+"chat.compatibility.zodiac.overview" = "这个组合可以轻轻看出两个人的情绪节奏、吸引方式，以及彼此表达好感的自然模式。";
+"chat.compatibility.zodiac.communication" = "可以把它当成一个轻松的聊天开场。与其把它当成固定规则，不如问问对方哪些部分觉得像自己。";
+"chat.compatibility.shared.outlook" = "好的连接仍然取决于成熟度、时机、共同价值观，以及持续经营的意愿。";
+
+"chat.compatibility.mbti.overview" = "这个人格组合可以帮助理解两个人在情绪、决定、能量和沟通上的互动方式。";
+"chat.compatibility.mbti.communication" = "可以留意对方更喜欢直接清楚的表达、情绪背景、安静思考，还是比较即兴自然的交流。";
+"chat.compatibility.mbti.outlook" = "人格类型只是一个参考。真正的契合来自沟通、尊重，以及相近的关系期待。";
+
+"chat.compatibility.zodiac.summary.sameElement" = "两个人的节奏比较相近，容易有熟悉感和自然的理解。";
+"chat.compatibility.zodiac.summary.complementary" = "这是一个比较平衡的组合，双方可能把不同的优势带进关系里。";
+"chat.compatibility.zodiac.summary.contrast" = "这个组合带有有趣的差异感，容易产生好奇、吸引，也有互相学习的空间。";
+
+"chat.compatibility.zodiac.strength.same.1" = "情绪节奏相近";
+"chat.compatibility.zodiac.strength.same.2" = "比较容易理解彼此";
+"chat.compatibility.zodiac.strength.same.3" = "相处能量较自然";
+
+"chat.compatibility.zodiac.strength.complementary.1" = "个性互补";
+"chat.compatibility.zodiac.strength.complementary.2" = "各自带来不同优势";
+"chat.compatibility.zodiac.strength.complementary.3" = "有共同成长的潜力";
+
+"chat.compatibility.zodiac.strength.contrast.1" = "带来新的视角";
+"chat.compatibility.zodiac.strength.contrast.2" = "容易产生好奇和吸引";
+"chat.compatibility.zodiac.strength.contrast.3" = "有机会了解彼此不同的相处方式";
+
+"chat.compatibility.zodiac.challenge.same.1" = "可能会放大彼此相似的盲点";
+"chat.compatibility.zodiac.challenge.same.2" = "冲突时需要更有意识地沟通";
+
+"chat.compatibility.zodiac.challenge.complementary.1" = "情绪需求可能不同";
+"chat.compatibility.zodiac.challenge.complementary.2" = "需要耐心理解彼此的节奏";
+
+"chat.compatibility.zodiac.challenge.contrast.1" = "对关系的期待可能不太一样";
+"chat.compatibility.zodiac.challenge.contrast.2" = "需要更清楚表达安全感和界限";
+
+"chat.compatibility.mbti.summary.similar" = "两个人在人格节奏上比较熟悉，连接方式上有不少相似直觉。";
+"chat.compatibility.mbti.summary.balanced" = "这是一个平衡的组合，既有熟悉感，也有让人好奇的差异。";
+"chat.compatibility.mbti.summary.contrast" = "这个组合差异感较强，如果双方愿意耐心沟通，可能会带来新鲜而有趣的互动。";
+
+"chat.compatibility.mbti.strength.similar.1" = "沟通直觉相近";
+"chat.compatibility.mbti.strength.similar.2" = "情绪上较容易有熟悉感";
+"chat.compatibility.mbti.strength.similar.3" = "做决定的节奏较接近";
+
+"chat.compatibility.mbti.strength.balanced.1" = "熟悉感和差异感兼具";
+"chat.compatibility.mbti.strength.balanced.2" = "能带来不同视角";
+"chat.compatibility.mbti.strength.balanced.3" = "有平衡成长的潜力";
+
+"chat.compatibility.mbti.strength.contrast.1" = "有很强的互相学习空间";
+"chat.compatibility.mbti.strength.contrast.2" = "能带来新鲜视角";
+"chat.compatibility.mbti.strength.contrast.3" = "成熟相处时可以形成互补";
+
+"chat.compatibility.mbti.challenge.similar.1" = "可能会以为彼此完全一样";
+"chat.compatibility.mbti.challenge.similar.2" = "仍然需要保留个人差异的空间";
+
+"chat.compatibility.mbti.challenge.balanced.1" = "某些习惯可能需要磨合";
+"chat.compatibility.mbti.challenge.balanced.2" = "早期清楚表达期待会更好";
+
+"chat.compatibility.mbti.challenge.contrast.1" = "互动节奏可能不同";
+"chat.compatibility.mbti.challenge.contrast.2" = "沟通上可能需要更多耐心";

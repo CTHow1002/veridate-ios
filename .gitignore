@@ -4,3 +4,9 @@ admin-dashboard/.env
 admin-dashboard/.next/
 admin-dashboard/node_modules/
 admin-dashboard/tsconfig.tsbuildinfo
+VeriDate/.vscode/
+VeriDate/Untitled.swift
+VeriDate/seed-test-users/.env
+VeriDate/seed-test-users/node_modules/
+VeriDate/VeriDate.xcodeproj/project.xcworkspace/xcuserdata/
+VeriDate/VeriDate.xcodeproj/xcuserdata/

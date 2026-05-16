@@ -24,6 +24,7 @@ export type ReportAction = "dismiss" | "warn" | "ban";
 type ModerationInput = {
   moderationNotes?: string;
   banDays?: number | null;
+  warningDays?: number | null;
 };
 
 export async function getOpenReports(): Promise<SafetyReport[]> {
@@ -77,16 +78,19 @@ export async function moderateReport(id: string, action: ReportAction, input: Mo
   const moderationNotes = cleanText(input.moderationNotes);
 
   if (action === "warn") {
+    const warningUntil = durationFromDays(input.warningDays);
+
     await supabaseRequest(`/rest/v1/profiles?id=eq.${encodeURIComponent(report.reported_user_id)}`, {
       method: "PATCH",
       body: {
         warning_message: moderationNotes || "You received a warning from VeriDate moderation.",
-        warning_details: moderationNotes,
+        warning_details: null,
         warned_at: reviewedAt,
+        warning_until: warningUntil,
       },
     });
   } else if (action === "ban") {
-    const banUntil = banUntilFromDays(input.banDays);
+    const banUntil = durationFromDays(input.banDays);
 
     await supabaseRequest(`/rest/v1/profiles?id=eq.${encodeURIComponent(report.reported_user_id)}`, {
       method: "PATCH",
@@ -122,7 +126,7 @@ async function fetchProfilesById(userIds: string[]) {
   if (userIds.length === 0) return new Map<string, Profile>();
 
   const profiles = await supabaseRequest<Profile[]>(
-    `/rest/v1/profiles?id=in.(${userIds.join(",")})&select=id,full_name,date_of_birth,job_title,company_name,education_level,school_name,verification_status,is_banned,ban_until,ban_message,ban_details,warning_message,warning_details,warned_at`
+    `/rest/v1/profiles?id=in.(${userIds.join(",")})&select=id,full_name,date_of_birth,job_title,company_name,education_level,school_name,verification_status,is_banned,ban_until,ban_message,ban_details,warning_message,warning_details,warned_at,warning_until`
   );
 
   return new Map(profiles.map((profile) => [profile.id, profile]));
@@ -139,7 +143,7 @@ function cleanText(value?: string) {
   return cleaned || null;
 }
 
-function banUntilFromDays(days?: number | null) {
+function durationFromDays(days?: number | null) {
   const numericDays = Number(days || 0);
   if (!Number.isFinite(numericDays) || numericDays <= 0) return null;
 
