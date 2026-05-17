@@ -1789,4 +1789,116 @@ alter table public.admin_users enable row level security;
 -- Add your admin user once:
 -- insert into public.admin_users (username) values ('admin') on conflict (username) do update set is_active = true;
 
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create table if not exists public.user_push_tokens (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  token text not null,
+  platform text not null default 'ios',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (user_id, token)
+);
+
+alter table public.user_push_tokens enable row level security;
+
+grant select, insert, update, delete on public.user_push_tokens to authenticated;
+
+drop policy if exists "Users can manage own push tokens" on public.user_push_tokens;
+create policy "Users can manage own push tokens"
+on public.user_push_tokens
+for all
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+drop trigger if exists user_push_tokens_touch_updated_at on public.user_push_tokens;
+create trigger user_push_tokens_touch_updated_at
+before update on public.user_push_tokens
+for each row
+execute function public.set_updated_at();
+
+create table if not exists public.app_notifications (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  category text not null default 'system' check (
+    category in (
+      'announcement',
+      'verification',
+      'profile_change',
+      'moderation',
+      'safety',
+      'account',
+      'feature',
+      'system'
+    )
+  ),
+  title text not null,
+  body text not null,
+  action_url text,
+  metadata jsonb not null default '{}'::jsonb,
+  read_at timestamptz,
+  expires_at timestamptz,
+  created_by text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists app_notifications_user_created_idx
+on public.app_notifications (user_id, created_at desc);
+
+create index if not exists app_notifications_user_unread_idx
+on public.app_notifications (user_id, read_at)
+where read_at is null;
+
+alter table public.app_notifications enable row level security;
+
+grant select, update on public.app_notifications to authenticated;
+
+drop policy if exists "Users can read own app notifications" on public.app_notifications;
+create policy "Users can read own app notifications"
+on public.app_notifications
+for select
+to authenticated
+using (
+  auth.uid() = user_id
+  and (expires_at is null or expires_at > now())
+);
+
+drop policy if exists "Users can mark own app notifications read" on public.app_notifications;
+create policy "Users can mark own app notifications read"
+on public.app_notifications
+for update
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+drop trigger if exists app_notifications_touch_updated_at on public.app_notifications;
+create trigger app_notifications_touch_updated_at
+before update on public.app_notifications
+for each row
+execute function public.set_updated_at();
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'app_notifications'
+  ) then
+    alter publication supabase_realtime add table public.app_notifications;
+  end if;
+end $$;
+
 notify pgrst, 'reload schema';

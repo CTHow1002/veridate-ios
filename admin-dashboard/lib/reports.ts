@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getSupabaseConfig } from "@/lib/config";
+import { createAppNotification } from "@/lib/notifications";
 import { supabaseRequest } from "@/lib/supabase-admin";
 import type { Profile, ReportStatus, SafetyReport, SignedFile } from "@/lib/types";
 
@@ -89,6 +90,14 @@ export async function moderateReport(id: string, action: ReportAction, input: Mo
         warning_until: warningUntil,
       },
     });
+
+    await createAppNotification({
+      userId: report.reported_user_id,
+      category: "safety",
+      title: "Account warning",
+      body: moderationNotes || "You received a warning from VeriDate moderation.",
+      metadata: { reportId: id, action, warningUntil },
+    });
   } else if (action === "ban") {
     const banUntil = durationFromDays(input.banDays);
 
@@ -109,6 +118,14 @@ export async function moderateReport(id: string, action: ReportAction, input: Mo
     if (profile?.is_banned !== true) {
       throw new Error("The reported user's ban status did not update.");
     }
+
+    await createAppNotification({
+      userId: report.reported_user_id,
+      category: "safety",
+      title: "Account restricted",
+      body: moderationNotes || "Your VeriDate account has been temporarily restricted.",
+      metadata: { reportId: id, action, banUntil },
+    });
   }
 
   await supabaseRequest(`/rest/v1/reports?id=eq.${encodeURIComponent(id)}`, {

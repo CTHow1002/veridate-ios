@@ -72,6 +72,9 @@ export default function ProfileChangeRequestsClient() {
           <Link className="nav-link" href="/dashboard/deletions">
             Deletions
           </Link>
+          <Link className="nav-link" href="/dashboard/announcements">
+            Announcements
+          </Link>
           <button className="secondary-button" onClick={logout}>
             Sign Out
           </button>

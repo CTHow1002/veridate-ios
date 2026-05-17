@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getSupabaseConfig } from "@/lib/config";
+import { createAppNotification } from "@/lib/notifications";
 import { supabaseRequest } from "@/lib/supabase-admin";
 import type { Profile, ProfileChangeRequest, ProfileChangeRequestStatus, ProfileChangeRequestType, SignedFile } from "@/lib/types";
 
@@ -69,6 +70,17 @@ export async function reviewProfileChangeRequest(
       admin_notes: cleanText(adminNotes),
       reviewed_at: new Date().toISOString(),
     },
+  });
+
+  await createAppNotification({
+    userId: request.user_id,
+    category: "profile_change",
+    title: action === "approve" ? "Profile change approved" : "Profile change rejected",
+    body:
+      action === "approve"
+        ? `${requestTypeLabel(request.request_type)} was approved and applied to your profile.`
+        : `${requestTypeLabel(request.request_type)} was rejected.${cleanText(adminNotes) ? ` Note: ${cleanText(adminNotes)}` : ""}`,
+    metadata: { requestId: id, requestType: request.request_type, status: action },
   });
 }
 
@@ -187,4 +199,10 @@ function storageObjectUrl(signedURL: string) {
 function cleanText(value?: string | null) {
   const trimmed = String(value || "").trim();
   return trimmed.length > 0 ? trimmed : null;
+}
+
+function requestTypeLabel(type: ProfileChangeRequestType) {
+  if (type === "legal_name") return "Legal name update";
+  if (type === "work") return "Job details update";
+  return "Education details update";
 }

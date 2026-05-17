@@ -72,6 +72,9 @@ export default function AccountDeletionsClient() {
           <Link className="nav-link" href="/dashboard/profile-changes">
             Profile Changes
           </Link>
+          <Link className="nav-link" href="/dashboard/announcements">
+            Announcements
+          </Link>
           <button className="secondary-button" onClick={logout}>
             Sign Out
           </button>

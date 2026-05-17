@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getSupabaseConfig } from "@/lib/config";
+import { createAppNotification } from "@/lib/notifications";
 import { supabaseRequest } from "@/lib/supabase-admin";
 import type { PendingSubmission, Profile, SignedFile } from "@/lib/types";
 
@@ -85,6 +86,17 @@ export async function reviewSubmission(id: string, status: "verified" | "rejecte
   if (profile?.verification_status !== status) {
     throw new Error("Review saved, but the user's profile status did not update. Check the profiles table.");
   }
+
+  await createAppNotification({
+    userId: submission.user_id,
+    category: "verification",
+    title: status === "verified" ? "Verification approved" : "Verification rejected",
+    body:
+      status === "verified"
+        ? "Your VeriDate verification was approved. You can now enter the main app."
+        : `Your VeriDate verification was rejected.${rejectionReason ? ` Reason: ${rejectionReason}` : ""}`,
+    metadata: { submissionId: id, status },
+  });
 }
 
 async function fetchProfilesById(userIds: string[]) {

@@ -1,5 +1,6 @@
 import "server-only";
 
+import { createAppNotification } from "@/lib/notifications";
 import { supabaseRequest } from "@/lib/supabase-admin";
 import type { ModeratedUser, Profile, ReportStatus } from "@/lib/types";
 
@@ -81,6 +82,13 @@ export async function updateModeratedUser(userId: string, input: UserModerationI
         ban_details: null,
       },
     });
+    await createAppNotification({
+      userId,
+      category: "moderation",
+      title: "Account restriction ended",
+      body: "Your VeriDate account restriction has ended. You can use the app again.",
+      metadata: { action: input.action },
+    });
     return;
   }
 
@@ -93,6 +101,13 @@ export async function updateModeratedUser(userId: string, input: UserModerationI
         warned_at: null,
         warning_until: null,
       },
+    });
+    await createAppNotification({
+      userId,
+      category: "moderation",
+      title: "Warning ended",
+      body: "Your VeriDate account warning has ended.",
+      metadata: { action: input.action },
     });
     return;
   }
@@ -111,6 +126,13 @@ export async function updateModeratedUser(userId: string, input: UserModerationI
         warning_until: warningUntil,
       },
     });
+    await createAppNotification({
+      userId,
+      category: "moderation",
+      title: "Account warning",
+      body: moderationNotes || "You received a warning from VeriDate moderation.",
+      metadata: { action: input.action, warningUntil },
+    });
     return;
   }
 
@@ -127,6 +149,14 @@ export async function updateModeratedUser(userId: string, input: UserModerationI
       ban_message: moderationNotes || "Your VeriDate account has been temporarily restricted.",
       ban_details: moderationNotes,
     },
+  });
+
+  await createAppNotification({
+    userId,
+    category: "moderation",
+    title: "Account restricted",
+    body: moderationNotes || "Your VeriDate account has been temporarily restricted.",
+    metadata: { action: input.action, banUntil },
   });
 }
 
